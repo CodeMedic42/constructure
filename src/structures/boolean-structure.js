@@ -1,6 +1,6 @@
-const { isNil, isBoolean } = require('lodash');
-const Structure = require('./structure');
-const processAttributes = require('../common/process-attributes');
+import isNil from 'lodash/isNil';
+import isBoolean from 'lodash/isBoolean';
+import processAttributes from '../common/process-attributes';
 
 function verifier(value) {
     if (isNil(value) || isBoolean(value)) {
@@ -14,10 +14,7 @@ function validator(attributes, context, value) {
     return processAttributes(attributes, context, value);
 }
 
-module.exports = (Structure) => {
-    Structure.boolean = attributes =>
-        new Structure(
-            verifier, 
-            validator.bind(null, attributes)
-        );
-};
+export default (Structure) => (attributes) => new Structure(
+    verifier,
+    validator.bind(null, attributes),
+);

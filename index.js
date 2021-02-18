@@ -1,5 +1,5 @@
-const Structure = require('./src');
-const Validator = require('./src/validators/validator');
+const Structure from'./src');
+const Validator from'./src/validators/validator');
 
 const fatal = true;
 const nonFatal = false;

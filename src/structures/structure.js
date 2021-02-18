@@ -1,21 +1,22 @@
-const Symbol = require("es6-symbol");
-const { isNil, get } = require('lodash');
-const anyStructure = require('./any-structure');
-const stringStructure = require('./string-structure');
-const numberStructure = require('./number-structure');
-const booleanStructure = require('./boolean-structure');
-const shapeStructure = require('./shape-structure');
-const objectStructure = require('./object-structure');
-const arrayStructure = require('./array-structure');
-const objectOfStructure = require('./object-of-structure');
-const arrayOfStructure = require('./array-of-structure');
-const oneOfTypeStructure = require('./one-of-type-structure');
+import Symbol from 'es6-symbol';
+import get from 'lodash/get';
+import isNil from 'lodash/isNil';
+import anyStructure from './any-structure';
+import stringStructure from './string-structure';
+import numberStructure from './number-structure';
+import booleanStructure from './boolean-structure';
+import shapeStructure from './shape-structure';
+import objectStructure from './object-structure';
+import arrayStructure from './array-structure';
+import objectOfStructure from './object-of-structure';
+import arrayOfStructure from './array-of-structure';
+import oneOfTypeStructure from './one-of-type-structure';
 
 const FIELDS = {
     verifier: Symbol('verifier'),
     validator: Symbol('validator'),
     overrideStructure: Symbol('overrideStructure'),
-}
+};
 
 class Structure {
     constructor(verifier, validator) {
@@ -44,7 +45,7 @@ class Structure {
                 }
 
                 return get(value, path);
-            }
+            },
         };
 
         this.verify(value);
@@ -53,15 +54,15 @@ class Structure {
     }
 }
 
-anyStructure(Structure);
-stringStructure(Structure);
-numberStructure(Structure);
-booleanStructure(Structure);
-shapeStructure(Structure);
-objectStructure(Structure);
-arrayStructure(Structure);
-objectOfStructure(Structure);
-arrayOfStructure(Structure);
-oneOfTypeStructure(Structure);
+Structure.any = anyStructure(Structure);
+Structure.string = stringStructure(Structure);
+Structure.number = numberStructure(Structure);
+Structure.boolean = booleanStructure(Structure);
+Structure.shape = shapeStructure(Structure);
+Structure.object = objectStructure(Structure);
+Structure.array = arrayStructure(Structure);
+Structure.objectOf = objectOfStructure(Structure);
+Structure.arrayOf = arrayOfStructure(Structure);
+Structure.oneOfType = oneOfTypeStructure(Structure);
 
-module.exports = Structure;
+export default Structure;

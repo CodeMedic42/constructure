@@ -1,7 +1,9 @@
-const { isNil, isPlainObject, forEach, reduce } = require('lodash');
-const Structure = require('./structure');
-const processAttributes = require('../common/process-attributes');
-const getWorstResultLevel = require('../common/get-worst-level');
+import isNil from 'lodash/isNil';
+import forEach from 'lodash/forEach';
+import isPlainObject from 'lodash/isPlainObject';
+import reduce from 'lodash/reduce';
+import processAttributes from '../common/process-attributes';
+import getWorstResultLevel from '../common/get-worst-level';
 
 function verifier(properties, value) {
     if (isNil(value)) {
@@ -31,10 +33,7 @@ function validator(properties, attributes, context, value) {
     }, results);
 }
 
-module.exports = (Structure) => {
-    Structure.shape = (properties, attributes) => 
-        new Structure(
-            verifier.bind(null, properties), 
-            validator.bind(null, properties, attributes)
-        );
-};
+export default (Structure) => (properties, attributes) => new Structure(
+    verifier.bind(null, properties),
+    validator.bind(null, properties, attributes),
+);

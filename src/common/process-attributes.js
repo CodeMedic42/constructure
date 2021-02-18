@@ -1,5 +1,11 @@
-const { isNil, forEach, isFunction, isArray, set, get } = require('lodash');
-const getWorstResultLevel = require('./get-worst-level');
+/* eslint-disable no-param-reassign */
+import isNil from 'lodash/isNil';
+import forEach from 'lodash/forEach';
+import isFunction from 'lodash/isFunction';
+import isArray from 'lodash/isArray';
+import set from 'lodash/set';
+import get from 'lodash/get';
+import getWorstResultLevel from './get-worst-level';
 
 function getDefaultTo(obj, path, def) {
     const target = get(obj, path);
@@ -24,8 +30,7 @@ function processAttributes(attributes, context, value, attributeResults = {}) {
         let validator = null;
 
         if (isArray(attribute)) {
-            attributeValue = attribute[0];
-            validator = attribute[1];
+            [attributeValue, validator] = attribute;
         }
 
         if (isFunction(attributeValue)) {
@@ -47,14 +52,19 @@ function processAttributes(attributes, context, value, attributeResults = {}) {
             const execute = () => {
                 let blocked = false;
 
-                forEach(requiredAttributes, requiredAttribute => {
+                forEach(requiredAttributes, (requiredAttribute) => {
                     blocked = requiredAttribute.result === 'fatal' || requiredAttribute.result === 'blocked';
 
                     return !blocked;
                 });
 
                 if (!blocked) {
-                    const validationResult = validator.run(context, value, attributeValue, requiredAttributes);
+                    const validationResult = validator.run(
+                        context,
+                        value,
+                        attributeValue,
+                        requiredAttributes,
+                    );
 
                     attributeResult.result = 'pass';
 
@@ -63,13 +73,16 @@ function processAttributes(attributes, context, value, attributeResults = {}) {
                         attributeResult.result = validationResult.isFatal() ? 'fatal' : 'non-fatal';
                     }
 
-                    attributeResults.$r = getWorstResultLevel(attributeResults.$r, attributeResult.result);
+                    attributeResults.$r = getWorstResultLevel(
+                        attributeResults.$r,
+                        attributeResult.result,
+                    );
                 }
 
-                forEach(waiting[attributeId], callback => callback(attributeResult));
+                forEach(waiting[attributeId], (callback) => callback(attributeResult));
             };
 
-            forEach(validator.getRequirements(), requirement => {
+            forEach(validator.getRequirements(), (requirement) => {
                 const requiredAttribute = attributeResults.$a[requirement];
 
                 requiredAttributes[requirement] = requiredAttribute;
@@ -86,7 +99,7 @@ function processAttributes(attributes, context, value, attributeResults = {}) {
 
                         if (needs <= 0) {
                             execute();
-                        } 
+                        }
                     });
                 }
             });
@@ -96,7 +109,10 @@ function processAttributes(attributes, context, value, attributeResults = {}) {
             } else {
                 attributeResult.result = 'blocked';
 
-                attributeResults.$r = getWorstResultLevel(attributeResults.$r, attributeResult.result);
+                attributeResults.$r = getWorstResultLevel(
+                    attributeResults.$r,
+                    attributeResult.result,
+                );
             }
         }
     });
@@ -104,4 +120,5 @@ function processAttributes(attributes, context, value, attributeResults = {}) {
     return attributeResults;
 }
 
-module.exports = processAttributes;
+// module.exports = processAttributes;
+export default processAttributes;

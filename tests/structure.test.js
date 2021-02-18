@@ -1,8 +1,8 @@
-const Structure = require('../src');
-const chai = require('chai');
-const spies = require('chai-spies');
+import chai from 'chai';
+import spies from 'chai-spies';
+import Structure from '../src';
 
-const expect = chai.expect;
+const { expect } = chai;
 
 chai.use(spies);
 
@@ -22,7 +22,7 @@ describe('Structure', () => {
     it('validate', () => {
         const testContext = {};
         const testValue = 'test';
-        
+
         const spy = chai.spy();
 
         const structure = new Structure(null, spy);
@@ -37,7 +37,7 @@ describe('Structure', () => {
         const testValue = 'test';
 
         const validatorSpy = chai.spy();
-        
+
         const toBeReturned = new Structure(null, validatorSpy);
 
         const verifySpy = chai.spy(() => toBeReturned);

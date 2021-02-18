@@ -1,4 +1,5 @@
-const { isNil } = require('lodash');
+// const { isNil } from'lodash');
+import isNil from 'lodash/isNil';
 
 const levels = {
     pass: 0,
@@ -22,4 +23,5 @@ function getWorstResultLevel(current, next) {
     return currentLevel < nextLevel ? next : current;
 }
 
-module.exports = getWorstResultLevel;
+// module.exports = getWorstResultLevel;
+export default getWorstResultLevel;

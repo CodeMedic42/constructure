@@ -1,8 +1,8 @@
-const Validator = require('../src/validators/validator');
-const chai = require('chai');
-const spies = require('chai-spies');
+import chai from 'chai';
+import spies from 'chai-spies';
+import Validator from '../src/validators/validator';
 
-const expect = chai.expect;
+const { expect } = chai;
 
 chai.use(spies);
 

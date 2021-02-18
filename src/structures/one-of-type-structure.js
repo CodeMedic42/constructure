@@ -1,20 +1,21 @@
-const { isNil, isPlainObject, forEach, reduce } = require('lodash');
-const Structure = require('./structure');
-const processAttributes = require('../common/process-attributes');
-const getWorstResultLevel = require('../common/get-worst-level');
+import isNil from 'lodash/isNil';
+import forEach from 'lodash/forEach';
+import reduce from 'lodash/reduce';
+import processAttributes from '../common/process-attributes';
+import getWorstResultLevel from '../common/get-worst-level';
 
 function verifier(structures, value) {
     if (isNil(value)) {
-        return;
+        return null;
     }
 
     let passingStructure = null;
 
-    forEach(structures, structure => {
+    forEach(structures, (structure) => {
         try {
             structure.verify(value);
 
-            pass = structure;
+            passingStructure = structure;
         } catch {
             // We are just going to ignore this for now.
         }
@@ -24,7 +25,7 @@ function verifier(structures, value) {
         throw new Error('Must match one of the given structures');
     }
 
-    return structure;
+    return passingStructure;
 }
 
 function validator(valueType, attributes, context, value) {
@@ -41,10 +42,7 @@ function validator(valueType, attributes, context, value) {
     }, results);
 }
 
-module.exports = (Structure) => {
-    Structure.oneOfType = (valueType, attributes) => 
-        new Structure(
-            verifier.bind(null, valueType), 
-            validator.bind(null, valueType, attributes)
-        );
-};
+export default (Structure) => (valueType, attributes) => new Structure(
+    verifier.bind(null, valueType),
+    validator.bind(null, valueType, attributes),
+);

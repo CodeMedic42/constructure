@@ -1,9 +1,9 @@
-const Symbol = require("es6-symbol");
+import Symbol from 'es6-symbol';
 
 const FIELDS = {
     message: Symbol('message'),
     fatal: Symbol('fatal'),
-}
+};
 
 class Result {
     constructor(message, fatal) {
@@ -20,4 +20,4 @@ class Result {
     }
 }
 
-module.exports = Result;
+export default Result;

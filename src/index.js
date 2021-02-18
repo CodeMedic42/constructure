@@ -1,3 +1,3 @@
-const Structure = require('./structures/structure');
+import Structure from './structures/structure';
 
-module.exports = Structure;
+export default Structure;

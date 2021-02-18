@@ -1,6 +1,9 @@
-const { isNil, isArray, forEach, reduce } = require('lodash');
-const processAttributes = require('../common/process-attributes');
-const getWorstResultLevel = require('../common/get-worst-level');
+import isNil from 'lodash/isNil';
+import forEach from 'lodash/forEach';
+import reduce from 'lodash/reduce';
+import isArray from 'lodash/isArray';
+import processAttributes from '../common/process-attributes';
+import getWorstResultLevel from '../common/get-worst-level';
 
 function verifier(structure, value) {
     if (isNil(value)) {
@@ -17,7 +20,7 @@ function verifier(structure, value) {
 }
 
 function validator(structure, attributes, context, value) {
-    let results = processAttributes(attributes, context, value, []);
+    const results = processAttributes(attributes, context, value, []);
 
     return reduce(value, (acc, propertyValue, propertyId) => {
         const propertyResults = structure.validate(context, propertyValue);
@@ -30,10 +33,7 @@ function validator(structure, attributes, context, value) {
     }, results);
 }
 
-module.exports = (Structure) => {
-    Structure.arrayOf = (structure, attributes) => 
-        new Structure(
-            verifier.bind(null, structure), 
-            validator.bind(null, structure, attributes)
-        );
-};
+export default (Structure) => (structure, attributes) => new Structure(
+    verifier.bind(null, structure),
+    validator.bind(null, structure, attributes),
+);

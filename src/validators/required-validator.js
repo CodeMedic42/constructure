@@ -1,19 +1,18 @@
-const { isNil, isFunction } = require("lodash");
+import isNil from 'lodash/isNil';
+import isFunction from 'lodash/isFunction';
 
-module.exports = (Validator) => {
-    Validator.required = (attributeValue = true, message = 'Required', fatal, requirements) => {
-        const logic = (context) => {
-            if (context.attributeValue !== true || !isNil(context.value)) {
-                return null;
-            }
+export default (Validator) => (attributeValue = true, message = 'Required', fatal, requirements) => {
+    const logic = (context) => {
+        if (context.attributeValue !== true || !isNil(context.value)) {
+            return null;
+        }
 
-            if (isFunction(message)) {
-                return message(context);
-            }
+        if (isFunction(message)) {
+            return message(context);
+        }
 
-            return message;
-        };
+        return message;
+    };
 
-        return [attributeValue, new Validator(logic, fatal, requirements)];
-    }
-}
+    return [attributeValue, new Validator(logic, fatal, requirements)];
+};
