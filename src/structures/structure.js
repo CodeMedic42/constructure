@@ -1,6 +1,7 @@
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
+import Attribute from '../attribute.js';
 import anyStructure from './any-structure';
 import stringStructure from './string-structure';
 import numberStructure from './number-structure';
@@ -16,6 +17,7 @@ const FIELDS = {
     verifier: Symbol('verifier'),
     validator: Symbol('validator'),
     overrideStructure: Symbol('overrideStructure'),
+    attributes: Symbol('attributes'),
 };
 
 class Structure {
@@ -23,6 +25,7 @@ class Structure {
         this[FIELDS.verifier] = verifier;
         this[FIELDS.validator] = validator;
         this[FIELDS.overrideStructure] = null;
+        this[FIELDS.attributes] = {};
     }
 
     verify(value) {
@@ -31,10 +34,17 @@ class Structure {
 
     validate(context, value) {
         if (!isNil(this[FIELDS.overrideStructure])) {
+            // TODO should really run the other validator as well
             return this[FIELDS.overrideStructure].validate(context, value);
         }
 
-        return this[FIELDS.validator](context, value);
+        return this[FIELDS.validator](context, value, this[FIELDS.attributes]);
+    }
+
+    attributes(attributes) {
+        this[FIELDS.attributes] = attributes || {};
+
+        return this;
     }
 
     run(value) {
@@ -50,7 +60,9 @@ class Structure {
 
         this.verify(value);
 
-        return this.validate(context, value);
+        const results = this.validate(context, value);
+
+        return results.$r.then(() => results);
     }
 }
 
@@ -64,5 +76,9 @@ Structure.array = arrayStructure(Structure);
 Structure.objectOf = objectOfStructure(Structure);
 Structure.arrayOf = arrayOfStructure(Structure);
 Structure.oneOfType = oneOfTypeStructure(Structure);
+
+Structure.attribute = (attributeValue) => {
+    return new Attribute(attributeValue);
+};
 
 export default Structure;

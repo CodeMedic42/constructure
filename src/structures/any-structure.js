@@ -2,11 +2,11 @@ import processAttributes from '../common/process-attributes';
 
 function verifier() {}
 
-function validator(attributes, context, value) {
-    return processAttributes(attributes, context, value);
+function validator(context, value, attributes) {
+    return processAttributes(context, value, attributes);
 }
 
-export default (Structure) => (attributes) => new Structure(
+export default (Structure) => () => new Structure(
     verifier,
-    validator.bind(null, attributes),
+    validator,
 );

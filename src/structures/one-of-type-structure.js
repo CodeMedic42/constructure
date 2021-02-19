@@ -28,8 +28,8 @@ function verifier(structures, value) {
     return passingStructure;
 }
 
-function validator(valueType, attributes, context, value) {
-    const results = processAttributes(attributes, context, value);
+function validator(valueType, context, value, attributes) {
+    const results = processAttributes(context, value, attributes);
 
     return reduce(value, (acc, propertyValue, propertyId) => {
         const propertyResults = valueType.validate(context, propertyValue);
@@ -42,7 +42,7 @@ function validator(valueType, attributes, context, value) {
     }, results);
 }
 
-export default (Structure) => (valueType, attributes) => new Structure(
+export default (Structure) => (valueType) => new Structure(
     verifier.bind(null, valueType),
-    validator.bind(null, valueType, attributes),
+    validator.bind(null, valueType),
 );

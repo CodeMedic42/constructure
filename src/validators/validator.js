@@ -6,6 +6,7 @@ import maxLengthValidator from './max-length-validator';
 import maxValidator from './max-validator';
 import minLengthValidator from './min-length-validator';
 import minValidator from './min-validator';
+import Requirements from '../requirements';
 
 const FIELDS = {
     logic: Symbol('logic'),
@@ -17,7 +18,7 @@ class Validator {
     constructor(logic = null, fatal = true, requirements = []) {
         this[FIELDS.logic] = logic;
         this[FIELDS.fatal] = fatal;
-        this[FIELDS.requirements] = requirements;
+        this[FIELDS.requirements] = new Requirements(requirements);
     }
 
     run(context, value, attributeValue, requiredAttributes) {

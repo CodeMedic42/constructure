@@ -1,7 +1,7 @@
 import isNil from 'lodash/isNil';
+import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import isPlainObject from 'lodash/isPlainObject';
-import reduce from 'lodash/reduce';
 import processAttributes from '../common/process-attributes';
 import getWorstResultLevel from '../common/get-worst-level';
 
@@ -19,21 +19,39 @@ function verifier(properties, value) {
     });
 }
 
-function validator(properties, attributes, context, value) {
-    const results = processAttributes(attributes, context, value);
+function validator(properties, context, value, attributes) {
+    const groupResults = [];
 
-    return reduce(properties, (acc, property, propertyId) => {
+    const childResults = reduce(properties, (acc, property, propertyId) => {
         const propertyResults = property.validate(context, value[propertyId]);
 
-        acc.$r = getWorstResultLevel(acc.$r, propertyResults.$r);
+        groupResults.push(propertyResults.$r);
 
         acc[propertyId] = propertyResults;
 
         return acc;
-    }, results);
+    }, {});
+
+    const { $r, $a } = processAttributes(context, value, attributes);
+
+    groupResults.push($r);
+
+    childResults.$a = $a;
+    childResults.$r = Promise.all(groupResults)
+        .then((results) => reduce(
+            results,
+            (acc, result) => getWorstResultLevel(acc, result),
+            null,
+        )).then((finalResult) => {
+            childResults.$r = finalResult;
+
+            return finalResult;
+        });
+
+    return childResults;
 }
 
-export default (Structure) => (properties, attributes) => new Structure(
+export default (Structure) => (properties) => new Structure(
     verifier.bind(null, properties),
-    validator.bind(null, properties, attributes),
+    validator.bind(null, properties),
 );

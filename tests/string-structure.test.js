@@ -1,5 +1,6 @@
 import chai from 'chai';
 import Structure from '../src';
+import Attribute from '../src/attribute';
 import Validator from '../src/validators/validator';
 
 const { expect } = chai;
@@ -8,33 +9,33 @@ describe('String Structure', () => {
     it('Null Value', () => {
         const structure = Structure.string();
 
-        const attributeValues = structure.run('');
-
-        expect(attributeValues).to.eql({
-            $r: null,
-            $a: {},
+        return structure.run(null).then((attributeValues) => {
+            expect(attributeValues).to.eql({
+                $r: null,
+                $a: {},
+            });
         });
     });
 
     it('Empty String', () => {
         const structure = Structure.string();
 
-        const attributeValues = structure.run('');
-
-        expect(attributeValues).to.eql({
-            $r: null,
-            $a: {},
+        return structure.run('').then((attributeValues) => {
+            expect(attributeValues).to.eql({
+                $r: null,
+                $a: {},
+            });
         });
     });
 
     it('Basic String', () => {
         const structure = Structure.string();
 
-        const attributeValues = structure.run('test');
-
-        expect(attributeValues).to.eql({
-            $r: null,
-            $a: {},
+        return structure.run('test').then((attributeValues) => {
+            expect(attributeValues).to.eql({
+                $r: null,
+                $a: {},
+            });
         });
     });
 
@@ -71,40 +72,42 @@ describe('String Structure', () => {
     });
 
     it('Basic Required Passed', () => {
-        const structure = Structure.string({
-            required: Validator.required(),
-        });
+        const structure = Structure.string()
+            .attributes({
+                required: Attribute.required(),
+            });
 
-        const attributeValues = structure.run('test');
-
-        expect(attributeValues).to.eql({
-            $r: 'pass',
-            $a: {
-                required: {
-                    value: true,
-                    result: 'pass',
-                    message: null,
+        return structure.run('test').then((attributeValues) => {
+            expect(attributeValues).to.eql({
+                $r: 'pass',
+                $a: {
+                    required: {
+                        value: true,
+                        result: 'pass',
+                        message: null,
+                    },
                 },
-            },
+            });
         });
     });
 
     it('Basic Required Fails', () => {
-        const structure = Structure.string({
-            required: Validator.required(),
-        });
+        const structure = Structure.string()
+            .attributes({
+                required: Attribute.required(),
+            });
 
-        const attributeValues = structure.run();
-
-        expect(attributeValues).to.eql({
-            $r: 'fatal',
-            $a: {
-                required: {
-                    value: true,
-                    result: 'fatal',
-                    message: 'Required',
+        return structure.run().then((attributeValues) => {
+            expect(attributeValues).to.eql({
+                $r: 'fatal',
+                $a: {
+                    required: {
+                        value: true,
+                        result: 'fatal',
+                        message: 'Required',
+                    },
                 },
-            },
+            });
         });
     });
 });

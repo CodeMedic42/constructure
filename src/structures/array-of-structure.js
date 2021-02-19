@@ -19,8 +19,8 @@ function verifier(structure, value) {
     });
 }
 
-function validator(structure, attributes, context, value) {
-    const results = processAttributes(attributes, context, value, []);
+function validator(structure, context, value, attributes) {
+    const results = processAttributes(context, value, attributes, []);
 
     return reduce(value, (acc, propertyValue, propertyId) => {
         const propertyResults = structure.validate(context, propertyValue);
@@ -33,7 +33,7 @@ function validator(structure, attributes, context, value) {
     }, results);
 }
 
-export default (Structure) => (structure, attributes) => new Structure(
+export default (Structure) => (structure) => new Structure(
     verifier.bind(null, structure),
-    validator.bind(null, structure, attributes),
+    validator.bind(null, structure),
 );

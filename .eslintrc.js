@@ -13,10 +13,8 @@ module.exports = {
     },
     rules: {
         indent: ['error', 4],
+        'arrow-body-style': false,
     },
-    plugins: [
-        'mocha',
-    ],
     overrides: [
         {
             files: ['*.test.js', '*.spec.js'],
