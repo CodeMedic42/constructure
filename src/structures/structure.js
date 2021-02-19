@@ -1,7 +1,7 @@
 import Symbol from 'es6-symbol';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import Attribute from '../attribute.js';
+import Attribute from '../attributes/attribute.js';
 import anyStructure from './any-structure';
 import stringStructure from './string-structure';
 import numberStructure from './number-structure';
@@ -12,6 +12,7 @@ import arrayStructure from './array-structure';
 import objectOfStructure from './object-of-structure';
 import arrayOfStructure from './array-of-structure';
 import oneOfTypeStructure from './one-of-type-structure';
+import lazyStructure from './lazy-structure';
 
 const FIELDS = {
     verifier: Symbol('verifier'),
@@ -76,6 +77,7 @@ Structure.array = arrayStructure(Structure);
 Structure.objectOf = objectOfStructure(Structure);
 Structure.arrayOf = arrayOfStructure(Structure);
 Structure.oneOfType = oneOfTypeStructure(Structure);
+Structure.lazy = lazyStructure(Structure);
 
 Structure.attribute = (attributeValue) => {
     return new Attribute(attributeValue);

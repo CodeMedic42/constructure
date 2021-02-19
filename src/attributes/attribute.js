@@ -1,8 +1,12 @@
 import Symbol from 'es6-symbol';
-import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
-import Validator from './validators/validator';
-import Requirements from './requirements';
+import Validator from '../validators/validator';
+import Requirements from '../requirements';
+import requiredAttribute from './required-attribute';
+import maxLengthAttribute from './max-length-attribute';
+import maxAttribute from './max-attribute';
+import minLengthAttribute from './min-length-attribute';
+import minAttribute from './min-attribute';
 
 const FIELDS = {
     value: Symbol('value'),
@@ -41,21 +45,10 @@ class Attribute {
     }
 }
 
-Attribute.required = (attributeValue = true, message = 'Required', fatal = true) => {
-    const logic = (context) => {
-        if (context.attributeValue !== true || !isNil(context.value)) {
-            return null;
-        }
-
-        if (isFunction(message)) {
-            return message(context);
-        }
-
-        return message;
-    };
-
-    return (new Attribute(attributeValue)).setValidator(logic, fatal)
-};
-
+Attribute.required = requiredAttribute(Attribute);
+Attribute.maxLength = maxLengthAttribute(Attribute);
+Attribute.max = maxAttribute(Attribute);
+Attribute.minLength = minLengthAttribute(Attribute);
+Attribute.min = minAttribute(Attribute);
 
 export default Attribute;

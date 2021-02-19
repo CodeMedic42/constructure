@@ -2,7 +2,7 @@ import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isFinite from 'lodash/isFinite';
 
-export default (Validator) => (attributeValue, message = 'Max', fatal, requirements) => {
+export default (Attribute) => (attributeValue, message = 'Max', fatal) => {
     if (!isFinite(attributeValue) && !isFunction(attributeValue)) {
         throw new Error('Attribute Value must be a number or a function which returns a number');
     }
@@ -19,5 +19,5 @@ export default (Validator) => (attributeValue, message = 'Max', fatal, requireme
         return message;
     };
 
-    return [attributeValue, new Validator(logic, fatal, requirements)];
+    return (new Attribute(attributeValue)).setValidator(logic, fatal)
 };

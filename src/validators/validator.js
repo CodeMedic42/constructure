@@ -1,12 +1,12 @@
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import Result from '../result';
-import requiredValidator from './required-validator';
-import maxLengthValidator from './max-length-validator';
-import maxValidator from './max-validator';
-import minLengthValidator from './min-length-validator';
-import minValidator from './min-validator';
-import Requirements from '../requirements';
+// import requiredValidator from './required-attribute';
+// import maxLengthValidator from '../attributes/max-length-attribute';
+// import maxValidator from './max-validator';
+// import minLengthValidator from './min-length-validator';
+// import minValidator from './min-validator';
+// import Requirements from '../requirements';
 
 const FIELDS = {
     logic: Symbol('logic'),
@@ -15,10 +15,9 @@ const FIELDS = {
 };
 
 class Validator {
-    constructor(logic = null, fatal = true, requirements = []) {
+    constructor(logic = null, fatal = true) {
         this[FIELDS.logic] = logic;
         this[FIELDS.fatal] = fatal;
-        this[FIELDS.requirements] = new Requirements(requirements);
     }
 
     run(context, value, attributeValue, requiredAttributes) {
@@ -31,16 +30,6 @@ class Validator {
 
         return !isNil(message) ? new Result(message, this[FIELDS.fatal]) : null;
     }
-
-    getRequirements() {
-        return this[FIELDS.requirements];
-    }
 }
-
-Validator.required = requiredValidator(Validator);
-Validator.maxLength = maxLengthValidator(Validator);
-Validator.max = maxValidator(Validator);
-Validator.minLength = minLengthValidator(Validator);
-Validator.min = minValidator(Validator);
 
 export default Validator;

@@ -4,9 +4,9 @@ import Attribute from '../src/attributes/attribute';
 
 const { expect } = chai;
 
-describe('String Structure', () => {
+describe('Number Structure', () => {
     it('Null Value', () => {
-        const structure = Structure.string();
+        const structure = Structure.number();
 
         return structure.run(null).then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -16,10 +16,10 @@ describe('String Structure', () => {
         });
     });
 
-    it('Empty String', () => {
-        const structure = Structure.string();
+    it('Zero number', () => {
+        const structure = Structure.number();
 
-        return structure.run('').then((attributeValues) => {
+        return structure.run(0).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: null,
                 $a: {},
@@ -27,10 +27,10 @@ describe('String Structure', () => {
         });
     });
 
-    it('Basic String', () => {
-        const structure = Structure.string();
+    it('Basic number', () => {
+        const structure = Structure.number();
 
-        return structure.run('test').then((attributeValues) => {
+        return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: null,
                 $a: {},
@@ -38,45 +38,45 @@ describe('String Structure', () => {
         });
     });
 
-    it('Number', () => {
-        const structure = Structure.string();
+    it('String', () => {
+        const structure = Structure.number();
 
         expect(() => {
-            structure.run(42);
-        }).to.throw('Must be a string');
+            structure.run('test');
+        }).to.throw('Must be a number');
     });
 
     it('Boolean', () => {
-        const structure = Structure.string();
+        const structure = Structure.number();
 
         expect(() => {
             structure.run(true);
-        }).to.throw('Must be a string');
+        }).to.throw('Must be a number');
     });
 
     it('Object', () => {
-        const structure = Structure.string();
+        const structure = Structure.number();
 
         expect(() => {
             structure.run({});
-        }).to.throw('Must be a string');
+        }).to.throw('Must be a number');
     });
 
     it('Array', () => {
-        const structure = Structure.string();
+        const structure = Structure.number();
 
         expect(() => {
             structure.run([]);
-        }).to.throw('Must be a string');
+        }).to.throw('Must be a number');
     });
 
     it('Basic Required Passed', () => {
-        const structure = Structure.string()
+        const structure = Structure.number()
             .attributes({
                 required: Attribute.required(),
             });
 
-        return structure.run('test').then((attributeValues) => {
+        return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: 'pass',
                 $a: {
@@ -91,7 +91,7 @@ describe('String Structure', () => {
     });
 
     it('Basic Required Fails', () => {
-        const structure = Structure.string()
+        const structure = Structure.number()
             .attributes({
                 required: Attribute.required(),
             });
@@ -110,17 +110,17 @@ describe('String Structure', () => {
         });
     });
 
-    it('Basic MinLength Passed', () => {
-        const structure = Structure.string()
+    it('Basic Min Passed', () => {
+        const structure = Structure.number()
             .attributes({
-                minLength: Attribute.minLength(3),
+                min: Attribute.min(3),
             });
 
-        return structure.run('test').then((attributeValues) => {
+        return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: 'pass',
                 $a: {
-                    minLength: {
+                    min: {
                         value: 3,
                         result: 'pass',
                         message: null,
@@ -130,37 +130,37 @@ describe('String Structure', () => {
         });
     });
 
-    it('Basic MinLength Fails', () => {
-        const structure = Structure.string()
+    it('Basic Min Fails', () => {
+        const structure = Structure.number()
             .attributes({
-                minLength: Attribute.minLength(8),
+                min: Attribute.min(8),
             });
 
-        return structure.run('test').then((attributeValues) => {
+        return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: 'fatal',
                 $a: {
-                    minLength: {
+                    min: {
                         value: 8,
                         result: 'fatal',
-                        message: 'Min Length',
+                        message: 'Min',
                     },
                 },
             });
         });
     });
 
-    it('Basic MaxLength Passed', () => {
-        const structure = Structure.string()
+    it('Basic Max Passed', () => {
+        const structure = Structure.number()
             .attributes({
-                maxLength: Attribute.maxLength(8),
+                max: Attribute.max(8),
             });
 
-        return structure.run('test').then((attributeValues) => {
+        return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: 'pass',
                 $a: {
-                    maxLength: {
+                    max: {
                         value: 8,
                         result: 'pass',
                         message: null,
@@ -170,20 +170,20 @@ describe('String Structure', () => {
         });
     });
 
-    it('Basic MaxLength Fails', () => {
-        const structure = Structure.string()
+    it('Basic Max Fails', () => {
+        const structure = Structure.number()
             .attributes({
-                maxLength: Attribute.maxLength(3),
+                max: Attribute.max(3),
             });
 
-        return structure.run('test').then((attributeValues) => {
+        return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
                 $r: 'fatal',
                 $a: {
-                    maxLength: {
+                    max: {
                         value: 3,
                         result: 'fatal',
-                        message: 'Max Length',
+                        message: 'Max',
                     },
                 },
             });

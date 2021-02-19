@@ -4,28 +4,20 @@ import reduce from 'lodash/reduce';
 import processAttributes from '../common/process-attributes';
 import getWorstResultLevel from '../common/get-worst-level';
 
-function verifier(structures, value) {
+function verifier(callback, value) {
     if (isNil(value)) {
         return null;
     }
 
-    let passingStructure = null;
+    const structure = callback();
 
-    forEach(structures, (structure) => {
-        try {
-            structure.verify(value);
-
-            passingStructure = structure;
-        } catch {
-            // We are just going to ignore this for now.
-        }
-    });
-
-    if (isNil(passingStructure)) {
-        throw new Error('Must match one of the given structures');
+    if (isNil(structure)) {
+        throw new Error('Lazy structure callbacks must return a structure.');
     }
 
-    return passingStructure;
+    structure.verify(value);
+
+    return structure;
 }
 
 function validator(valueType, context, value, attributes) {
@@ -42,7 +34,7 @@ function validator(valueType, context, value, attributes) {
     }, results);
 }
 
-export default (Structure) => (structures) => new Structure(
-    verifier.bind(null, structures),
-    validator.bind(null, structures),
+export default (Structure) => (callback) => new Structure(
+    verifier.bind(null, callback),
+    validator.bind(null, callback),
 );

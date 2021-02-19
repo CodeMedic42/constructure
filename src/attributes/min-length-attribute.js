@@ -2,13 +2,13 @@ import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isFinite from 'lodash/isFinite';
 
-export default (Validator) => (attributeValue, message = 'Min', fatal, requirements) => {
+export default (Attribute) => (attributeValue, message = 'Min Length', fatal = true) => {
     if (!isFinite(attributeValue) && !isFunction(attributeValue)) {
         throw new Error('Attribute Value must be a number or a function which returns a number');
     }
 
     const logic = (context) => {
-        if (isNil(context.value) || context.attributeValue <= context.value) {
+        if (isNil(context.value) || context.attributeValue <= context.value.length) {
             return null;
         }
 
@@ -19,5 +19,5 @@ export default (Validator) => (attributeValue, message = 'Min', fatal, requireme
         return message;
     };
 
-    return [attributeValue, new Validator(logic, fatal, requirements)];
+    return (new Attribute(attributeValue)).setValidator(logic, fatal)
 };
