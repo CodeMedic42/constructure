@@ -10,8 +10,8 @@ function verifier(value) {
     throw new Error('Must be a number');
 }
 
-function validator(context, value, attributes) {
-    return processAttributes(context, value, attributes);
+function validator(runtime, attributes) {
+    return processAttributes(runtime, attributes);
 }
 
 export default (Structure) => () => new Structure(

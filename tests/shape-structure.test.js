@@ -467,8 +467,7 @@ describe('Shape Structure', () => {
                 const structure = Structure.shape({
                     testString: Structure.string()
                         .attributes({
-                            flagged: Structure.attribute((context, value, requirements) => {
-                                expect(context).to.not.be.null;
+                            flagged: Structure.attribute((value, requirements) => {
                                 expect(value).to.equal('test');
                                 expect(requirements).to.eql([42]);
 
@@ -503,8 +502,7 @@ describe('Shape Structure', () => {
                     testString: Structure.string()
                         .attributes({
                             requiredAttB: Structure.attribute('test'),
-                            flagged: Structure.attribute((context, value, requirements) => {
-                                expect(context).to.not.be.null;
+                            flagged: Structure.attribute((value, requirements) => {
                                 expect(value).to.equal('test');
                                 expect(requirements).to.eql([42, 'test']);
 

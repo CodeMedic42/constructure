@@ -3,10 +3,93 @@ import isNil from 'lodash/isNil';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
+import clone from 'lodash/clone';
+import slice from 'lodash/slice';
 import getWorstResultLevel from './get-worst-level';
+import getter from './getter';
 
-function getPathAttribute() {
-    throw new Error('TODO');
+function getFromThis(runtime, path, attribute) {
+    if (!isNil(attribute)) {
+        // Get attribute
+        const attributeResults = getter(runtime.$this.attributeResults, slice(path, 1));
+
+        return attributeResults.$a[attribute];
+    }
+
+    // Get Value
+    return {
+        value: getter(runtime.$this.value, slice(path, 1)),
+        result: null,
+    };
+}
+
+function getFromParent(runtime, path, attribute) {
+    let lastIndex = 0;
+
+    forEach(path, (segment, segmentIndex) => {
+        if (segment === '$parent') {
+            lastIndex = segmentIndex;
+
+            // Keep looping
+            return true;
+        }
+
+        // Stop looping
+        return true;
+    });
+
+    const targetPath = slice(runtime.absolutePath, 0, runtime.absolutePath.length - lastIndex);
+
+    if (!isNil(attribute)) {
+        // Get attribute
+        const attributeResults = getter(runtime.$root.attributeResults, targetPath);
+
+        return attributeResults.$a[attribute];
+    }
+
+    // Get Value
+    return {
+        value: getter(runtime.$root.value, targetPath),
+        result: null,
+    };
+}
+
+function getFromRoot(runtime, path, attribute) {
+    const finalPath = clone(path);
+
+    let fromIndex = 0;
+
+    forEach(runtime.indexes, (runtimeIndex) => {
+        const pathIndex = findIndex(path, (segment) => segment === '$index', fromIndex);
+
+        finalPath[pathIndex] = runtimeIndex;
+        fromIndex = pathIndex + 1;
+    }); 
+
+    if (!isNil(attribute)) {
+        // Get attribute
+        const attributeResults = getter(runtime.$root.attributeResults, finalPath);
+
+        return attributeResults.$a[attribute];
+    }
+
+    // Get Value
+    return {
+        value: getter(runtime.$root.value, finalPath),
+        result: null,
+    };
+}
+
+function getRequirement(runtime, path, attribute) {
+    if (path[0] === '$this') {
+        return getFromThis(runtime, path, attribute);
+    }
+    
+    if (path[0] === '$parent') {
+        return getFromParent(runtime, path, attribute);
+    }
+
+    getFromRoot(runtime, path, attribute);
 }
 
 function runValidator(value, attributeValue, validator, requirements) {
@@ -19,7 +102,6 @@ function runValidator(value, attributeValue, validator, requirements) {
     }
 
     return Promise.resolve(validator.run(
-        context,
         value,
         attributeValue,
         requirements,
@@ -40,19 +122,16 @@ function runValidator(value, attributeValue, validator, requirements) {
     });
 }
 
-function processAttributes(context, value, attributes = {}, attributeResults = {}) {
+function processAttributes(runtime, attributes = {}, attributeResults = {}) {
     attributeResults.$r = null;
     attributeResults.$a = {};
+    runtime.$this.attributeResults = attributeResults;
 
     attributeResults.$r = Promise.all(map(attributes, (attribute, attributeId) => {
         let attributeValue = attribute.getValue();
 
         const attributeResultPromise = Promise.map(attribute.getRequirements().get(), (requirement) => {
-            if (isNil(requirement.path)) {
-                return Promise.resolve(attributeResults.$a[requirement.attribute]);
-            }
-    
-            return getPathAttribute(requirement.path, requirement.attribute);
+            return getRequirement(runtime, requirement.path, requirement.attribute);
         }).then((requirements) => {
             let blocked = false;
             const requirementValues = [];
@@ -76,10 +155,10 @@ function processAttributes(context, value, attributes = {}, attributeResults = {
                 };
             }
 
-            return Promise.resolve(attributeValue(context, value, requirementValues))
+            return Promise.resolve(attributeValue(runtime.$this.value, requirementValues))
             .then((attributeValueResult) => {
                 return runValidator(
-                    value,
+                    runtime.$this.value,
                     attributeValueResult || null,
                     attribute.getValidator(),
                     requirementValues,

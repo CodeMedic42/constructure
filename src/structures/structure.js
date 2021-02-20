@@ -33,13 +33,13 @@ class Structure {
         this[FIELDS.overrideStructure] = this[FIELDS.verifier](value);
     }
 
-    validate(context, value) {
+    validate(runtime) {
         if (!isNil(this[FIELDS.overrideStructure])) {
             // TODO should really run the other validator as well
-            return this[FIELDS.overrideStructure].validate(context, value);
+            return this[FIELDS.overrideStructure].validate(runtime);
         }
 
-        return this[FIELDS.validator](context, value, this[FIELDS.attributes]);
+        return this[FIELDS.validator](runtime, this[FIELDS.attributes]);
     }
 
     attributes(attributes) {
@@ -49,21 +49,26 @@ class Structure {
     }
 
     run(value) {
-        const context = {
-            get: (path) => {
-                if (isNil(path) || path.length <= 0) {
-                    return value;
-                }
-
-                return get(value, path);
-            },
-        };
-
         this.verify(value);
 
-        const results = this.validate(context, value);
+        const runtime = {
+            $root: {
+                value,
+                attributeResults: null,
+            },
+            $this: {
+                value,
+                attributeResults: null,
+            },
+            absolutePath: ''
+        };
 
-        return results.$r.then(() => results);
+        const attributeResults = this.validate(runtime);
+
+        runtime.$root.attributeResults = attributeResults;
+        runtime.$this.attributeResults = attributeResults;
+
+        return attributeResults.$r.then(() => attributeResults);
     }
 }
 

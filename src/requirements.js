@@ -1,4 +1,5 @@
 import Symbol from 'es6-symbol';
+import toPath from 'lodash/toPath';
 import isString from 'lodash/isString';
 import reduce from 'lodash/reduce';
 
@@ -11,11 +12,14 @@ class Requirements {
         this[FIELDS.requirements] = reduce(requirements, (acc, requirement) => {
             if (isString(requirement)) {
                 acc.push({
-                    path: null,
+                    path: ['$this'],
                     attribute: requirement,
                 });
             } else {
-                acc.push(requirement);
+                acc.push({
+                    path: toPath(requirement.path),
+                    attribute: requirement.attribute,
+                });
             }
 
             return acc;

@@ -82,7 +82,7 @@
 // }, {
 //     // flagged: [42, new Validator(({
 //     //     requirements: []
-//     // }) => 'Message', fatal, ['reg', { path: 'asdas.$index.asdas', attribute: '' },
+//     // }) => 'Message', fatal, ['reg', { path: '$this' }, { path: 'asdas.$index.asdas', attribute: '' },
 //     //  '$parent.asdas.asdas', '$this.asdas.asdas'])],
 // });
 

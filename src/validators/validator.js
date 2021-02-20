@@ -20,9 +20,8 @@ class Validator {
         this[FIELDS.fatal] = fatal;
     }
 
-    run(context, value, attributeValue, requiredAttributes) {
+    run(value, attributeValue, requiredAttributes) {
         const message = this[FIELDS.logic]({
-            ...context,
             value,
             attributeValue,
             requiredAttributes,

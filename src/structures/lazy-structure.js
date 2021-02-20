@@ -21,7 +21,7 @@ function verifier(callback, value) {
 }
 
 function validator(valueType, context, value, attributes) {
-    const results = processAttributes(context, value, attributes);
+    const results = processAttributes(runtime, attributes);
 
     return reduce(value, (acc, propertyValue, propertyId) => {
         const propertyResults = valueType.validate(context, propertyValue);

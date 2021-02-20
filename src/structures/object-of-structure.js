@@ -20,7 +20,7 @@ function verifier(structure, value) {
 }
 
 function validator(structure, context, value, attributes) {
-    const results = processAttributes(context, value, attributes);
+    const results = processAttributes(runtime, attributes);
 
     return reduce(value, (acc, propertyValue, propertyId) => {
         const propertyResults = structure.validate(context, propertyValue);

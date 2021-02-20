@@ -75,7 +75,7 @@ xdescribe('Required Validator', () => {
         const value = 'test';
         const requiredAttributes = {};
 
-        const result = validator.run(context, value, attributeConfiguration[0], requiredAttributes);
+        const result = validator.run(runtime, attributeConfiguration[0], requiredAttributes);
 
         expect(result).to.be.null;
     });
@@ -91,7 +91,7 @@ xdescribe('Required Validator', () => {
         const value = null;
         const requiredAttributes = {};
 
-        const result = validator.run(context, value, attributeConfiguration[0], requiredAttributes);
+        const result = validator.run(runtime, attributeConfiguration[0], requiredAttributes);
 
         expect(result).to.not.be.null;
         expect(result.getMessage()).to.equal('Required');
@@ -109,7 +109,7 @@ xdescribe('Required Validator', () => {
         const value = null;
         const requiredAttributes = {};
 
-        const result = validator.run(context, value, attributeConfiguration[0], requiredAttributes);
+        const result = validator.run(runtime, attributeConfiguration[0], requiredAttributes);
 
         expect(result).to.be.null;
     });
@@ -127,7 +127,7 @@ xdescribe('Required Validator', () => {
         const value = null;
         const requiredAttributes = {};
 
-        const result = validator.run(context, value, attributeConfiguration[0], requiredAttributes);
+        const result = validator.run(runtime, attributeConfiguration[0], requiredAttributes);
 
         expect(result).to.not.be.null;
         expect(result.getMessage()).to.equal(testMessage);
@@ -147,7 +147,7 @@ xdescribe('Required Validator', () => {
         const value = null;
         const requiredAttributes = {};
 
-        const result = validator.run(context, value, attributeConfiguration[0], requiredAttributes);
+        const result = validator.run(runtime, attributeConfiguration[0], requiredAttributes);
 
         expect(result).to.not.be.null;
         expect(result.getMessage()).to.equal(testMessage);
