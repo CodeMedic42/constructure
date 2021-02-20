@@ -552,10 +552,7 @@ describe('Shape Structure', () => {
 
                         return attributeValue;
                     })
-                        .setRequirements([{
-                            path: '$this.testString',
-                            attribute: 'requiredAttA'
-                        }]),
+                        .setRequirements(['$this.testString:requiredAttA']),
                 });
 
                 const value = {
@@ -583,10 +580,7 @@ describe('Shape Structure', () => {
                     testString: Structure.string()
                         .attributes({
                             requiredAttA: Structure.attribute(42)
-                                .setRequirements([{
-                                    path: '$parent.testNumber',
-                                    attribute: 'requiredAttB'
-                                }]),
+                                .setRequirements(['$parent.testNumber:requiredAttB']),
                         }),
                     testNumber: Structure.number()
                         .attributes({
@@ -603,13 +597,7 @@ describe('Shape Structure', () => {
 
                         return attributeValue;
                     })
-                        .setRequirements([{
-                            path: '$this.testString',
-                            attribute: 'requiredAttA'
-                        },{
-                            path: '$this.testNumber',
-                            attribute: 'requiredAttB'
-                        }]),
+                        .setRequirements(['$this.testString:requiredAttA', '$this.testNumber:requiredAttB']),
                 });
 
                 const value = {
