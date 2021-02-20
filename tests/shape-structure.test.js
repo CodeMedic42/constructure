@@ -473,7 +473,7 @@ describe('Shape Structure', () => {
 
                                 return attributeValue;
                             })
-                                .setRequirements(['requiredAttA']),
+                                .setRequirements([':requiredAttA']),
                             requiredAttA: Structure.attribute(42),
                         })
                 });
@@ -508,9 +508,9 @@ describe('Shape Structure', () => {
 
                                 return attributeValue;
                             })
-                                .setRequirements(['requiredAttA', 'requiredAttB']),
+                                .setRequirements([':requiredAttA', ':requiredAttB']),
                             requiredAttA: Structure.attribute(42)
-                                .setRequirements(['requiredAttB']),
+                                .setRequirements([':requiredAttB']),
                         })
                 });
 
@@ -552,7 +552,7 @@ describe('Shape Structure', () => {
 
                         return attributeValue;
                     })
-                        .setRequirements(['$this.testString:requiredAttA']),
+                        .setRequirements(['testString:requiredAttA']),
                 });
 
                 const value = {
@@ -597,7 +597,7 @@ describe('Shape Structure', () => {
 
                         return attributeValue;
                     })
-                        .setRequirements(['$this.testString:requiredAttA', '$this.testNumber:requiredAttB']),
+                        .setRequirements(['testString:requiredAttA', 'testNumber:requiredAttB']),
                 });
 
                 const value = {

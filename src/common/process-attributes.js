@@ -60,7 +60,7 @@ function getFromParent(runtime, path, attribute) {
 }
 
 function getFromRoot(runtime, path, attribute) {
-    const finalPath = clone(path);
+    const finalPath = slice(path, 1);
 
     let fromIndex = 0;
 
@@ -94,7 +94,11 @@ function getRequirement(runtime, path, attribute) {
         return getFromParent(runtime, path, attribute);
     }
 
-    getFromRoot(runtime, path, attribute);
+    if (path[0] === '$root') {
+        return getFromRoot(runtime, path, attribute);
+    }
+
+    throw new Error('Invalid requirement path');
 }
 
 function runValidator(value, attributeValue, validator, requirements) {
@@ -133,8 +137,6 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
     runtime.$this.attributeResults = attributeResults;
 
     attributeResults.$r = Promise.all(map(attributes, (attribute, attributeId) => {
-        let attributeValue = attribute.getValue();
-
         const attributeResultPromise = Promise.map(attribute.getRequirements().get(), (requirement) => {
             return getRequirement(runtime, requirement.path, requirement.attribute);
         }).then((requirements) => {
@@ -160,7 +162,7 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
                 };
             }
 
-            return Promise.resolve(attributeValue(runtime.$this.value, requirementValues))
+            return Promise.resolve(attribute.getValue()(runtime.$this.value, requirementValues))
             .then((attributeValueResult) => {
                 return runValidator(
                     runtime.$this.value,
@@ -177,7 +179,7 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
         })
         .catch((error) => {
             return {
-                value: attributeValue,
+                value: null,
                 result: 'fatal',
                 message: error.message,
             };
