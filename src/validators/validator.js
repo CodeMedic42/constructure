@@ -21,11 +21,11 @@ class Validator {
     }
 
     run(value, attributeValue, requiredAttributes) {
-        const message = this[FIELDS.logic]({
+        const message = this[FIELDS.logic](
             value,
             attributeValue,
             requiredAttributes,
-        });
+        );
 
         return !isNil(message) ? new Result(message, this[FIELDS.fatal]) : null;
     }

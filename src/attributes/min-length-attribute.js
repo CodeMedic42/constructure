@@ -2,22 +2,22 @@ import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isFinite from 'lodash/isFinite';
 
-export default (Attribute) => (attributeValue, message = 'Min Length', fatal = true) => {
-    if (!isFinite(attributeValue) && !isFunction(attributeValue)) {
-        throw new Error('Attribute Value must be a number or a function which returns a number');
+function minLengthLogic(message, value, attributeValue) {
+    if (!isFinite(attributeValue)) {
+        throw new Error('Attribute Value must be a number');
     }
 
-    const logic = (context) => {
-        if (isNil(context.value) || context.attributeValue <= context.value.length) {
-            return null;
-        }
+    if (isNil(value) || attributeValue <= value.length) {
+        return null;
+    }
 
-        if (isFunction(message)) {
-            return message(context);
-        }
+    if (isFunction(message)) {
+        return message(context);
+    }
 
-        return message;
-    };
+    return message;
+};
 
-    return (new Attribute(attributeValue)).setValidator(logic, fatal)
+export default (Attribute) => (attributeValue, message = 'Min Length', fatal = true) => {
+    return (new Attribute(attributeValue)).setValidator(minLengthLogic.bind(null, message), fatal)
 };
