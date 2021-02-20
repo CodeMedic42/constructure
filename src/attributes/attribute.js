@@ -11,6 +11,7 @@ import minAttribute from './min-attribute';
 const FIELDS = {
     value: Symbol('value'),
     validator: Symbol('validator'),
+    requirements: Symbol('requirements'),
 };
 
 class Attribute {
