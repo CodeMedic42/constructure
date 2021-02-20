@@ -38,7 +38,12 @@ function getFromParent(runtime, path, attribute) {
         return true;
     });
 
-    const targetPath = slice(runtime.absolutePath, 0, runtime.absolutePath.length - lastIndex);
+    lastIndex += 1;
+
+    let targetPath = slice(runtime.absolutePath, 0, runtime.absolutePath.length - lastIndex);
+    const extension = slice(path, lastIndex);
+
+    targetPath = targetPath.concat(extension);
 
     if (!isNil(attribute)) {
         // Get attribute

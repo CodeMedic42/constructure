@@ -60,7 +60,7 @@ class Structure {
                 value,
                 attributeResults: null,
             },
-            absolutePath: ''
+            absolutePath: []
         };
 
         const attributeResults = this.validate(runtime);

@@ -19,7 +19,8 @@ function verifier(structure, value) {
     });
 }
 
-function validator(structure, context, value, attributes) {
+function validator(structure, context, attributes) {
+    throw new Error('Not ready yet');
     const results = processAttributes(runtime, attributes);
 
     return reduce(value, (acc, propertyValue, propertyId) => {

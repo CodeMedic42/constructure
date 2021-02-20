@@ -20,7 +20,8 @@ function verifier(callback, value) {
     return structure;
 }
 
-function validator(valueType, context, value, attributes) {
+function validator(valueType, context, attributes) {
+    throw new Error('Not ready yet');
     const results = processAttributes(runtime, attributes);
 
     return reduce(value, (acc, propertyValue, propertyId) => {

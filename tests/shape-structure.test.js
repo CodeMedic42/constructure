@@ -501,10 +501,10 @@ describe('Shape Structure', () => {
                 const structure = Structure.shape({
                     testString: Structure.string()
                         .attributes({
-                            requiredAttB: Structure.attribute('test'),
+                            requiredAttB: Structure.attribute('foo'),
                             flagged: Structure.attribute((value, requirements) => {
                                 expect(value).to.equal('test');
-                                expect(requirements).to.eql([42, 'test']);
+                                expect(requirements).to.eql([42, 'foo']);
 
                                 return attributeValue;
                             })
@@ -527,7 +527,112 @@ describe('Shape Structure', () => {
                             $a: {
                                 flagged: buildFlaggedResult(attributeValue, 'pass', null),
                                 requiredAttA: buildFlaggedResult(42, 'pass', null),
-                                requiredAttB: buildFlaggedResult('test', 'pass', null),
+                                requiredAttB: buildFlaggedResult('foo', 'pass', null),
+                            },
+                        },
+                    });
+                });
+            });
+        });
+
+        describe('Child Requirements', () => {
+            it('Static Property Attribute flagged => requiredAttA', () => {
+                const structure = Structure.shape({
+                    testString: Structure.string()
+                        .attributes({
+                            requiredAttA: Structure.attribute(42),
+                        })
+                })
+                .attributes({
+                    flagged: Structure.attribute((value, requirements) => {
+                        expect(value).to.eql({
+                            testString: 'test'
+                        });
+                        expect(requirements).to.eql([42]);
+
+                        return attributeValue;
+                    })
+                        .setRequirements([{
+                            path: '$this.testString',
+                            attribute: 'requiredAttA'
+                        }]),
+                });
+
+                const value = {
+                    testString: 'test',
+                };
+
+                return structure.run(value).then((result) => {
+                    expect(result).to.eql({
+                        $r: 'pass',
+                        $a: {
+                            flagged: buildFlaggedResult(attributeValue, 'pass', null),
+                        },
+                        testString: {
+                            $r: 'pass',
+                            $a: {
+                                requiredAttA: buildFlaggedResult(42, 'pass', null),
+                            },
+                        },
+                    });
+                });
+            });
+
+            it('Static Property Attribute flagged => requiredAttA => requiredAttB', () => {
+                const structure = Structure.shape({
+                    testString: Structure.string()
+                        .attributes({
+                            requiredAttA: Structure.attribute(42)
+                                .setRequirements([{
+                                    path: '$parent.testNumber',
+                                    attribute: 'requiredAttB'
+                                }]),
+                        }),
+                    testNumber: Structure.number()
+                        .attributes({
+                            requiredAttB: Structure.attribute('foo'),
+                        }),
+                })
+                .attributes({
+                    flagged: Structure.attribute((value, requirements) => {
+                        expect(value).to.eql({
+                            testString: 'test',
+                            testNumber: 237
+                        });
+                        expect(requirements).to.eql([42, 'foo']);
+
+                        return attributeValue;
+                    })
+                        .setRequirements([{
+                            path: '$this.testString',
+                            attribute: 'requiredAttA'
+                        },{
+                            path: '$this.testNumber',
+                            attribute: 'requiredAttB'
+                        }]),
+                });
+
+                const value = {
+                    testString: 'test',
+                    testNumber: 237
+                };
+
+                return structure.run(value).then((result) => {
+                    expect(result).to.eql({
+                        $r: 'pass',
+                        $a: {
+                            flagged: buildFlaggedResult(attributeValue, 'pass', null),
+                        },
+                        testString: {
+                            $r: 'pass',
+                            $a: {
+                                requiredAttA: buildFlaggedResult(42, 'pass', null),
+                            },
+                        },
+                        testNumber: {
+                            $r: 'pass',
+                            $a: {
+                                requiredAttB: buildFlaggedResult('foo', 'pass', null),
                             },
                         },
                     });
