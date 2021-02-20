@@ -10,7 +10,7 @@ describe('String Structure', () => {
 
         return structure.run(null).then((attributeValues) => {
             expect(attributeValues).to.eql({
-                $r: null,
+                $r: 'pass',
                 $a: {},
             });
         });
@@ -21,7 +21,7 @@ describe('String Structure', () => {
 
         return structure.run('').then((attributeValues) => {
             expect(attributeValues).to.eql({
-                $r: null,
+                $r: 'pass',
                 $a: {},
             });
         });
@@ -32,7 +32,7 @@ describe('String Structure', () => {
 
         return structure.run('test').then((attributeValues) => {
             expect(attributeValues).to.eql({
-                $r: null,
+                $r: 'pass',
                 $a: {},
             });
         });

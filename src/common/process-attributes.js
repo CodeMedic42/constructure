@@ -2,7 +2,7 @@ import Promise from 'bluebird';
 import isNil from 'lodash/isNil';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
-import find from 'lodash/find';
+import forEach from 'lodash/forEach';
 import getWorstResultLevel from './get-worst-level';
 
 function getPathAttribute() {
@@ -13,7 +13,7 @@ function runValidator(value, attributeValue, validator, requirements) {
     if (isNil(attributeValue) || isNil(validator)) {
         return {
             value: attributeValue,
-            result: null,
+            result: 'pass',
             message: null,
         };
     }
@@ -49,15 +49,24 @@ function processAttributes(context, value, attributes = {}, attributeResults = {
 
         const attributeResultPromise = Promise.map(attribute.getRequirements().get(), (requirement) => {
             if (isNil(requirement.path)) {
-                return Promise.resolve(internalAttributes[requirement.attribute]);
+                return Promise.resolve(attributeResults.$a[requirement.attribute]);
             }
     
             return getPathAttribute(requirement.path, requirement.attribute);
         }).then((requirements) => {
-            const blocked = !isNil(find(
+            let blocked = false;
+            const requirementValues = [];
+
+            forEach(
                 requirements,
-                (requirement) => requirement.result === 'fatal' || requirement.result === 'blocked',
-            ));
+                (requirement) => {
+                    blocked = requirement.result === 'fatal' || requirement.result === 'blocked';
+
+                    requirementValues.push(requirement.value);
+
+                    return !blocked;
+                },
+            );
 
             if (blocked) {
                 return {
@@ -67,13 +76,13 @@ function processAttributes(context, value, attributes = {}, attributeResults = {
                 };
             }
 
-            return Promise.resolve(attributeValue(context, value, requirements))
+            return Promise.resolve(attributeValue(context, value, requirementValues))
             .then((attributeValueResult) => {
                 return runValidator(
                     value,
                     attributeValueResult || null,
                     attribute.getValidator(),
-                    requirements,
+                    requirementValues,
                     attributeResults.$a);
             });
         })
@@ -97,7 +106,7 @@ function processAttributes(context, value, attributes = {}, attributeResults = {
         });
     }))
     .then((results) => {
-        return reduce(results, (acc, result) => getWorstResultLevel(acc, result), null);
+        return reduce(results, (acc, result) => getWorstResultLevel(acc, result), 'pass');
     })
     .then((finalResult) => {
         attributeResults.$r = finalResult;

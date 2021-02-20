@@ -2,6 +2,7 @@ import chai from 'chai';
 import Promise from 'bluebird';
 import Structure from '../src';
 import Validator from '../src/validators/validator';
+import Requirements from '../src/requirements';
 
 const { expect } = chai;
 
@@ -36,10 +37,10 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {},
                     },
                 });
@@ -60,12 +61,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(attributeValue, null, null),
+                            flagged: buildFlaggedResult(attributeValue, 'pass', null),
                         },
                     },
                 });
@@ -86,12 +87,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(null, null, null),
+                            flagged: buildFlaggedResult(null, 'pass', null),
                         },
                     },
                 });
@@ -112,12 +113,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(null, null, null),
+                            flagged: buildFlaggedResult(null, 'pass', null),
                         },
                     },
                 });
@@ -138,12 +139,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(attributeValue, null, null),
+                            flagged: buildFlaggedResult(attributeValue, 'pass', null),
                         },
                     },
                 });
@@ -164,12 +165,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(null, null, null),
+                            flagged: buildFlaggedResult(null, 'pass', null),
                         },
                     },
                 });
@@ -190,12 +191,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(null, null, null),
+                            flagged: buildFlaggedResult(null, 'pass', null),
                         },
                     },
                 });
@@ -216,12 +217,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(attributeValue, null, null),
+                            flagged: buildFlaggedResult(attributeValue, 'pass', null),
                         },
                     },
                 });
@@ -242,12 +243,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(null, null, null),
+                            flagged: buildFlaggedResult(null, 'pass', null),
                         },
                     },
                 });
@@ -268,12 +269,12 @@ describe('Shape Structure', () => {
 
             return structure.run(value).then((result) => {
                 expect(result).to.eql({
-                    $r: null,
+                    $r: 'pass',
                     $a: {},
                     testString: {
-                        $r: null,
+                        $r: 'pass',
                         $a: {
-                            flagged: buildFlaggedResult(null, null, null),
+                            flagged: buildFlaggedResult(null, 'pass', null),
                         },
                     },
                 });
@@ -302,12 +303,12 @@ describe('Shape Structure', () => {
 
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
-                            $r: null,
+                            $r: 'pass',
                             $a: {},
                             testString: {
-                                $r: null,
+                                $r: 'pass',
                                 $a: {
-                                    flagged: buildFlaggedResult(null, null, null),
+                                    flagged: buildFlaggedResult(null, 'pass', null),
                                 },
                             },
                         });
@@ -330,12 +331,12 @@ describe('Shape Structure', () => {
 
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
-                            $r: null,
+                            $r: 'pass',
                             $a: {},
                             testString: {
-                                $r: null,
+                                $r: 'pass',
                                 $a: {
-                                    flagged: buildFlaggedResult(null, null, null),
+                                    flagged: buildFlaggedResult(null, 'pass', null),
                                 },
                             },
                         });
@@ -386,12 +387,12 @@ describe('Shape Structure', () => {
 
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
-                            $r: null,
+                            $r: 'pass',
                             $a: {},
                             testString: {
-                                $r: null,
+                                $r: 'pass',
                                 $a: {
-                                    flagged: buildFlaggedResult(null, null, null),
+                                    flagged: buildFlaggedResult(null, 'pass', null),
                                 },
                             },
                         });
@@ -414,12 +415,12 @@ describe('Shape Structure', () => {
 
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
-                            $r: null,
+                            $r: 'pass',
                             $a: {},
                             testString: {
-                                $r: null,
+                                $r: 'pass',
                                 $a: {
-                                    flagged: buildFlaggedResult(null, null, null),
+                                    flagged: buildFlaggedResult(null, 'pass', null),
                                 },
                             },
                         });
@@ -460,34 +461,80 @@ describe('Shape Structure', () => {
         runValidationTests(false);
     });
 
-    // xdescribe('With Requirements', () => {
-    //     it('Static Property Attribute', () => {
-    //         const structure = Structure.shape({
-    //             testString: Structure.string()
-    //                 .attributes({
-    //                     flagged: Structure.attribute(attributeValue)
-    //                         .setRequirements()
-    //                         .setValidator(),
-    //                 })
-    //             }),
-    //         });
+    describe('With Requirements', () => {
+        describe('Internal Requirements', () => {
+            it('Static Property Attribute flagged => requiredAttA', () => {
+                const structure = Structure.shape({
+                    testString: Structure.string()
+                        .attributes({
+                            flagged: Structure.attribute((context, value, requirements) => {
+                                expect(context).to.not.be.null;
+                                expect(value).to.equal('test');
+                                expect(requirements).to.eql([42]);
 
-    //         const value = {
-    //             testString: 'test',
-    //         };
+                                return attributeValue;
+                            })
+                                .setRequirements(['requiredAttA']),
+                            requiredAttA: Structure.attribute(42),
+                        })
+                });
 
-    //         return structure.run(value).then((result) => {
-    //             expect(result).to.eql({
-    //                 $r: null,
-    //                 $a: {},
-    //                 testString: {
-    //                     $r: null,
-    //                     $a: {
-    //                         flagged: buildFlaggedResult(attributeValue, null, null),
-    //                     },
-    //                 },
-    //             });
-    //         });
-    //     });
-    // });
+                const value = {
+                    testString: 'test',
+                };
+
+                return structure.run(value).then((result) => {
+                    expect(result).to.eql({
+                        $r: 'pass',
+                        $a: {},
+                        testString: {
+                            $r: 'pass',
+                            $a: {
+                                flagged: buildFlaggedResult(attributeValue, 'pass', null),
+                                requiredAttA: buildFlaggedResult(42, 'pass', null),
+                            },
+                        },
+                    });
+                });
+            });
+
+            it('Static Property Attribute flagged => requiredAttA => requiredAttB', () => {
+                const structure = Structure.shape({
+                    testString: Structure.string()
+                        .attributes({
+                            requiredAttB: Structure.attribute('test'),
+                            flagged: Structure.attribute((context, value, requirements) => {
+                                expect(context).to.not.be.null;
+                                expect(value).to.equal('test');
+                                expect(requirements).to.eql([42, 'test']);
+
+                                return attributeValue;
+                            })
+                                .setRequirements(['requiredAttA', 'requiredAttB']),
+                            requiredAttA: Structure.attribute(42)
+                                .setRequirements(['requiredAttB']),
+                        })
+                });
+
+                const value = {
+                    testString: 'test',
+                };
+
+                return structure.run(value).then((result) => {
+                    expect(result).to.eql({
+                        $r: 'pass',
+                        $a: {},
+                        testString: {
+                            $r: 'pass',
+                            $a: {
+                                flagged: buildFlaggedResult(attributeValue, 'pass', null),
+                                requiredAttA: buildFlaggedResult(42, 'pass', null),
+                                requiredAttB: buildFlaggedResult('test', 'pass', null),
+                            },
+                        },
+                    });
+                });
+            });
+        });
+    });
 });

@@ -10,7 +10,7 @@ describe('Number Structure', () => {
 
         return structure.run(null).then((attributeValues) => {
             expect(attributeValues).to.eql({
-                $r: null,
+                $r: 'pass',
                 $a: {},
             });
         });
@@ -21,7 +21,7 @@ describe('Number Structure', () => {
 
         return structure.run(0).then((attributeValues) => {
             expect(attributeValues).to.eql({
-                $r: null,
+                $r: 'pass',
                 $a: {},
             });
         });
@@ -32,7 +32,7 @@ describe('Number Structure', () => {
 
         return structure.run(5).then((attributeValues) => {
             expect(attributeValues).to.eql({
-                $r: null,
+                $r: 'pass',
                 $a: {},
             });
         });
