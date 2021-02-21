@@ -1,5 +1,7 @@
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
+import forEach from 'lodash/forEach';
+import reduce from 'lodash/reduce';
 import Attribute from '../attributes/attribute';
 import anyStructure from './any-structure';
 import stringStructure from './string-structure';
@@ -12,11 +14,12 @@ import objectOfStructure from './object-of-structure';
 import arrayOfStructure from './array-of-structure';
 import oneOfTypeStructure from './one-of-type-structure';
 import lazyStructure from './lazy-structure';
+import getWorstResultLevel from '../common/get-worst-level';
 
 const FIELDS = {
     verifier: Symbol('verifier'),
     validator: Symbol('validator'),
-    overrideStructure: Symbol('overrideStructure'),
+    additionalStructure: Symbol('additionalStructure'),
     attributes: Symbol('attributes'),
 };
 
@@ -24,21 +27,60 @@ class Structure {
     constructor(verifier, validator) {
         this[FIELDS.verifier] = verifier;
         this[FIELDS.validator] = validator;
-        this[FIELDS.overrideStructure] = null;
+        this[FIELDS.additionalStructure] = null;
         this[FIELDS.attributes] = {};
     }
 
     verify(value) {
-        this[FIELDS.overrideStructure] = this[FIELDS.verifier](value);
+        this[FIELDS.additionalStructure] = this[FIELDS.verifier](value);
     }
 
     validate(runtime) {
-        if (!isNil(this[FIELDS.overrideStructure])) {
+        let additionalResults = null;
+
+        if (!isNil(this[FIELDS.additionalStructure])) {
             // TODO should really run the other validator as well
-            return this[FIELDS.overrideStructure].validate(runtime);
+            additionalResults = this[FIELDS.additionalStructure].validate(runtime);
         }
 
-        return this[FIELDS.validator](runtime, this[FIELDS.attributes]);
+        const finalResults = this[FIELDS.validator](runtime, this[FIELDS.attributes]);
+
+        if (!isNil(additionalResults)) {
+            const {
+                $a,
+                $r,
+                ...rest
+            } = additionalResults;
+
+            forEach($a, (attributeResult, attributeId) => {
+                if (!isNil(finalResults[attributeId])) {
+                    throw new Error(`Attribute ${attributeId} already exists`);
+                }
+
+                finalResults[attributeId] = attributeResult;
+            });
+
+            forEach(rest, (property, propertyId) => {
+                if (!isNil(finalResults[propertyId])) {
+                    throw new Error(`Property ${propertyId} already exists`);
+                }
+
+                finalResults[propertyId] = property;
+            });
+
+            finalResults.$r = Promise.all([finalResults.$r, $r])
+                .then((results) => reduce(
+                    results,
+                    (acc, result) => getWorstResultLevel(acc, result),
+                    null,
+                )).then((finalResult) => {
+                    finalResults.$r = finalResult;
+
+                    return finalResult;
+                });
+        }
+
+        return finalResults;
     }
 
     attributes(attributes) {

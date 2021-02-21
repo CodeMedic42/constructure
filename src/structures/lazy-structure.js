@@ -1,8 +1,5 @@
 import isNil from 'lodash/isNil';
-// import forEach from 'lodash/forEach';
-// import reduce from 'lodash/reduce';
-// import processAttributes from '../common/process-attributes';
-// import getWorstResultLevel from '../common/get-worst-level';
+import processAttributes from '../common/process-attributes';
 
 function verifier(callback, value) {
     if (isNil(value)) {
@@ -20,21 +17,8 @@ function verifier(callback, value) {
     return structure;
 }
 
-function validator(
-    // valueType, context, attributes
-) {
-    throw new Error('Not ready yet');
-    // const results = processAttributes(runtime, attributes);
-
-    // return reduce(value, (acc, propertyValue, propertyId) => {
-    //     const propertyResults = valueType.validate(context, propertyValue);
-
-    //     acc.$r = getWorstResultLevel(acc.$r, propertyResults.$r);
-
-    //     acc[propertyId] = propertyResults;
-
-    //     return acc;
-    // }, results);
+function validator(runtime, attributes) {
+    return processAttributes(runtime, attributes);
 }
 
 export default (Structure) => (callback) => new Structure(
