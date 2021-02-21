@@ -57,7 +57,7 @@ class Structure {
                     throw new Error(`Attribute ${attributeId} already exists`);
                 }
 
-                finalResults[attributeId] = attributeResult;
+                finalResults.$a[attributeId] = attributeResult;
             });
 
             forEach(rest, (property, propertyId) => {
@@ -79,6 +79,9 @@ class Structure {
                     return finalResult;
                 });
         }
+
+        // eslint-disable-next-line no-param-reassign
+        runtime.$this.attributeResults = finalResults;
 
         return finalResults;
     }

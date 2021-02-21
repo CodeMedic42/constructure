@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import Promise from 'bluebird';
 import isNil from 'lodash/isNil';
 import map from 'lodash/map';
@@ -132,54 +131,53 @@ function runValidator(value, attributeValue, validator, requirements) {
     });
 }
 
-// eslint-disable-next-line no-param-reassign
-function processAttributes(runtime, attributes = {}, attributeResults = {}) {
-    attributeResults.$r = null;
-    attributeResults.$a = {};
-    runtime.$this.attributeResults = attributeResults;
+function processAttributes(runtime, attributes = {}) {
+    const attributePromises = {};
 
-    attributeResults.$r = Promise.all(map(attributes, (attribute, attributeId) => {
+    const attributeGroupResultPromise = Promise.all(map(attributes, (attribute, attributeId) => {
         const attributeResultPromise = Promise.map(
             attribute.getRequirements().get(),
             (requirement) => {
                 return getRequirement(runtime, requirement.path, requirement.attribute);
             },
-        ).then((requirements) => {
-            let blocked = false;
-            const requirementValues = [];
+        )
+            .then((requirements) => {
+                let blocked = false;
+                const requirementValues = [];
 
-            forEach(
-                requirements,
-                (requirement) => {
-                    blocked = requirement.result === 'fatal' || requirement.result === 'blocked';
+                forEach(
+                    requirements,
+                    (requirement) => {
+                        blocked = requirement.result === 'fatal' || requirement.result === 'blocked';
 
-                    requirementValues.push(requirement.value);
+                        requirementValues.push(requirement.value);
 
-                    return !blocked;
-                },
-            );
+                        return !blocked;
+                    },
+                );
 
-            if (blocked) {
-                return {
-                    value: null,
-                    result: 'blocked',
-                    message: null,
-                };
-            }
+                if (blocked) {
+                    return {
+                        value: null,
+                        result: 'blocked',
+                        message: null,
+                    };
+                }
 
-            return Promise.resolve(attribute.getValue()(runtime.$this.value, requirementValues))
-                .then((attributeValueResult) => {
-                    return runValidator(
-                        runtime.$this.value,
-                        attributeValueResult || null,
-                        attribute.getValidator(),
-                        requirementValues,
-                        attributeResults.$a,
-                    );
-                });
-        })
+                return Promise.resolve(attribute.getValue()(runtime.$this.value, requirementValues))
+                    .then((attributeValueResult) => {
+                        return runValidator(
+                            runtime.$this.value,
+                            attributeValueResult || null,
+                            attribute.getValidator(),
+                            requirementValues,
+                            runtime.$this.attributeResults.$a,
+                        );
+                    });
+            })
             .then((attributeResult) => {
-                attributeResults.$a[attributeId] = attributeResult;
+                // eslint-disable-next-line no-param-reassign
+                runtime.$this.attributeResults.$a[attributeId] = attributeResult;
 
                 return attributeResult;
             })
@@ -191,7 +189,7 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
                 };
             });
 
-        attributeResults.$a[attributeId] = attributeResultPromise;
+        attributePromises[attributeId] = attributeResultPromise;
 
         return attributeResultPromise.then((attributeResult) => {
             return attributeResult.result;
@@ -201,12 +199,16 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
             return reduce(results, (acc, result) => getWorstResultLevel(acc, result), 'pass');
         })
         .then((finalResult) => {
-            attributeResults.$r = finalResult;
+            // eslint-disable-next-line no-param-reassign
+            runtime.$this.attributeResults.$r = finalResult;
 
             return finalResult;
         });
 
-    return attributeResults;
+    return {
+        $a: attributePromises,
+        $r: attributeGroupResultPromise,
+    };
 }
 
 export default processAttributes;
