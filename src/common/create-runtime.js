@@ -1,7 +1,7 @@
-import { isNil } from "lodash";
+import { isNil } from 'lodash';
 
 export default function createRuntime(parentRuntime, segment) {
-    let { value } = parentRuntime.$this;
+    const { value } = parentRuntime.$this;
 
     return {
         $root: parentRuntime.$root,
@@ -9,6 +9,6 @@ export default function createRuntime(parentRuntime, segment) {
             value: !isNil(value) ? value[segment] : undefined,
             attributeResults: null,
         },
-        absolutePath: parentRuntime.absolutePath.concat(segment)
-    }
+        absolutePath: parentRuntime.absolutePath.concat(segment),
+    };
 }

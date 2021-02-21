@@ -19,5 +19,5 @@ const maxLogic = (message, value, attributeValue) => {
 };
 
 export default (Attribute) => (attributeValue, message = 'Max', fatal) => {
-    return (new Attribute(attributeValue)).setValidator(maxLogic.bind(null, message), fatal)
+    return (new Attribute(attributeValue)).setValidator(maxLogic.bind(null, message), fatal);
 };

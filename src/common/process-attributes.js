@@ -1,10 +1,11 @@
+/* eslint-disable no-param-reassign */
 import Promise from 'bluebird';
 import isNil from 'lodash/isNil';
 import map from 'lodash/map';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
-import clone from 'lodash/clone';
 import slice from 'lodash/slice';
+import findIndex from 'lodash/findIndex';
 import getWorstResultLevel from './get-worst-level';
 import getter from './getter';
 
@@ -69,7 +70,7 @@ function getFromRoot(runtime, path, attribute) {
 
         finalPath[pathIndex] = runtimeIndex;
         fromIndex = pathIndex + 1;
-    }); 
+    });
 
     if (!isNil(attribute)) {
         // Get attribute
@@ -89,7 +90,7 @@ function getRequirement(runtime, path, attribute) {
     if (path[0] === '$this') {
         return getFromThis(runtime, path, attribute);
     }
-    
+
     if (path[0] === '$parent') {
         return getFromParent(runtime, path, attribute);
     }
@@ -131,15 +132,19 @@ function runValidator(value, attributeValue, validator, requirements) {
     });
 }
 
+// eslint-disable-next-line no-param-reassign
 function processAttributes(runtime, attributes = {}, attributeResults = {}) {
     attributeResults.$r = null;
     attributeResults.$a = {};
     runtime.$this.attributeResults = attributeResults;
 
     attributeResults.$r = Promise.all(map(attributes, (attribute, attributeId) => {
-        const attributeResultPromise = Promise.map(attribute.getRequirements().get(), (requirement) => {
-            return getRequirement(runtime, requirement.path, requirement.attribute);
-        }).then((requirements) => {
+        const attributeResultPromise = Promise.map(
+            attribute.getRequirements().get(),
+            (requirement) => {
+                return getRequirement(runtime, requirement.path, requirement.attribute);
+            },
+        ).then((requirements) => {
             let blocked = false;
             const requirementValues = [];
 
@@ -163,27 +168,28 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
             }
 
             return Promise.resolve(attribute.getValue()(runtime.$this.value, requirementValues))
-            .then((attributeValueResult) => {
-                return runValidator(
-                    runtime.$this.value,
-                    attributeValueResult || null,
-                    attribute.getValidator(),
-                    requirementValues,
-                    attributeResults.$a);
-            });
+                .then((attributeValueResult) => {
+                    return runValidator(
+                        runtime.$this.value,
+                        attributeValueResult || null,
+                        attribute.getValidator(),
+                        requirementValues,
+                        attributeResults.$a,
+                    );
+                });
         })
-        .then((attributeResult) => {
-            attributeResults.$a[attributeId] = attributeResult;
+            .then((attributeResult) => {
+                attributeResults.$a[attributeId] = attributeResult;
 
-            return attributeResult;
-        })
-        .catch((error) => {
-            return {
-                value: null,
-                result: 'fatal',
-                message: error.message,
-            };
-        });
+                return attributeResult;
+            })
+            .catch((error) => {
+                return {
+                    value: null,
+                    result: 'fatal',
+                    message: error.message,
+                };
+            });
 
         attributeResults.$a[attributeId] = attributeResultPromise;
 
@@ -191,14 +197,14 @@ function processAttributes(runtime, attributes = {}, attributeResults = {}) {
             return attributeResult.result;
         });
     }))
-    .then((results) => {
-        return reduce(results, (acc, result) => getWorstResultLevel(acc, result), 'pass');
-    })
-    .then((finalResult) => {
-        attributeResults.$r = finalResult;
+        .then((results) => {
+            return reduce(results, (acc, result) => getWorstResultLevel(acc, result), 'pass');
+        })
+        .then((finalResult) => {
+            attributeResults.$r = finalResult;
 
-        return finalResult;
-    });
+            return finalResult;
+        });
 
     return attributeResults;
 }

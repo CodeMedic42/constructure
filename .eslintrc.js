@@ -13,7 +13,7 @@ module.exports = {
     },
     rules: {
         indent: ['error', 4],
-        'arrow-body-style': false,
+        'arrow-body-style': 0,
     },
     overrides: [
         {

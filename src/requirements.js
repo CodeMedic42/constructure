@@ -14,18 +14,18 @@ const FIELDS = {
 ':att' === '$this:att'
 'abc' === '$this.abc'
 'abc:att' === '$this.abc:att'
-'$this' // Get the current value
-'$this:att' // Get the attribute at the current value
-'$this.abc' // Get the value of the child at the current value
-'$this.abc:att' // Get the attribute at the value of the child at the current value
-'$root' // Get the root value
-'$root:att' // Get the attribute at the root value
-'$root.abc' // Get the value of the child at the root value
-'$root.abc:att' // Get the attribute at the value of the child at the root value
-'$parent' // Get the value of the parent from the current value
-'$parent:att' // Get the attribute of the value of the parent from the current value
-'$parent.abc' // Get the value of the child of the parent from the current value
-'$parent.abc:att' // Get the attribute of the value of the child of the parent from the current value
+'$this' Get the current value
+'$this:att' Get the attribute at the current value
+'$this.abc' Get the value of the child at the current value
+'$this.abc:att' Get the attribute at the value of the child at the current value
+'$root' Get the root value
+'$root:att' Get the attribute at the root value
+'$root.abc' Get the value of the child at the root value
+'$root.abc:att' Get the attribute at the value of the child at the root value
+'$parent' Get the value of the parent from the current value
+'$parent:att' Get the attribute of the value of the parent from the current value
+'$parent.abc' Get the value of the child of the parent from the current value
+'$parent.abc:att' Get the attribute of the value of the child of the parent from the current value
 */
 class Requirements {
     constructor(requirements) {
@@ -36,8 +36,7 @@ class Requirements {
             if (isString(requirement)) {
                 const parts = split(requirement, ':');
 
-                path = parts[0];
-                attribute = parts.length > 1 ? parts[1] : null;
+                [path, attribute] = parts;
             } else {
                 path = requirement.path;
                 attribute = requirement.attribute;

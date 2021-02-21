@@ -11,8 +11,8 @@ function requiredLogic(message, value, attributeValue) {
     }
 
     return message;
-};
+}
 
 export default (Attribute) => (attributeValue = true, message = 'Required', fatal = true) => {
-    return (new Attribute(attributeValue)).setValidator(requiredLogic.bind(null, message), fatal)
+    return (new Attribute(attributeValue)).setValidator(requiredLogic.bind(null, message), fatal);
 };

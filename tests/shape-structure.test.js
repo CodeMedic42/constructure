@@ -1,8 +1,6 @@
 import chai from 'chai';
 import Promise from 'bluebird';
 import Structure from '../src';
-import Validator from '../src/validators/validator';
-import Requirements from '../src/requirements';
 
 const { expect } = chai;
 
@@ -14,15 +12,14 @@ function buildFlaggedResult(value, result, message) {
     return { value, result, message };
 }
 
-function buildValidatorMessage(value, attributeValue) {
-    return `value:${value} attributeValue:${attributeValue}`;
+function buildValidatorMessage(value, attributeResultValue) {
+    return `value:${value} attributeValue:${attributeResultValue}`;
 }
 
-const validator = (value, attributeValue) => buildValidatorMessage(value, attributeValue);
-
-// function buildValidator(isFatal) {
-//     return new Validator(({ value, attributeValue }) => buildValidatorMessage(value, attributeValue), isFatal);
-// }
+const validator = (value, attributeResultValue) => buildValidatorMessage(
+    value,
+    attributeResultValue,
+);
 
 describe('Shape Structure', () => {
     describe('Simple Structure', () => {
@@ -284,7 +281,7 @@ describe('Shape Structure', () => {
         describe('Validation', () => {
             const runValidationTests = (isFatal) => {
                 const fatalType = isFatal ? 'fatal' : 'non-fatal';
-    
+
                 describe(`Result is ${fatalType}`, () => {
                     it('Null Static Property Attribute', () => {
                         const structure = Structure.shape({
@@ -295,11 +292,11 @@ describe('Shape Structure', () => {
                                         .setValidator(validator, isFatal),
                                 }),
                         });
-    
+
                         const value = {
                             testString: 'test',
                         };
-    
+
                         return structure.run(value).then((result) => {
                             expect(result).to.eql({
                                 $r: 'pass',
@@ -313,7 +310,7 @@ describe('Shape Structure', () => {
                             });
                         });
                     });
-    
+
                     it('Undefined Static Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
@@ -323,11 +320,11 @@ describe('Shape Structure', () => {
                                         .setValidator(validator, isFatal),
                                 }),
                         });
-    
+
                         const value = {
                             testString: 'test',
                         };
-    
+
                         return structure.run(value).then((result) => {
                             expect(result).to.eql({
                                 $r: 'pass',
@@ -341,7 +338,7 @@ describe('Shape Structure', () => {
                             });
                         });
                     });
-    
+
                     it('Static Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
@@ -351,11 +348,11 @@ describe('Shape Structure', () => {
                                         .setValidator(validator, isFatal),
                                 }),
                         });
-    
+
                         const value = {
                             testString: 'test',
                         };
-    
+
                         return structure.run(value).then((result) => {
                             expect(result).to.eql({
                                 $r: fatalType,
@@ -363,13 +360,20 @@ describe('Shape Structure', () => {
                                 testString: {
                                     $r: fatalType,
                                     $a: {
-                                        flagged: buildFlaggedResult(attributeValue, fatalType, buildValidatorMessage(value.testString, attributeValue)),
+                                        flagged: buildFlaggedResult(
+                                            attributeValue,
+                                            fatalType,
+                                            buildValidatorMessage(
+                                                value.testString,
+                                                attributeValue,
+                                            ),
+                                        ),
                                     },
                                 },
                             });
                         });
                     });
-    
+
                     it('Null Dynamic Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
@@ -379,11 +383,11 @@ describe('Shape Structure', () => {
                                         .setValidator(validator, isFatal),
                                 }),
                         });
-    
+
                         const value = {
                             testString: 'test',
                         };
-    
+
                         return structure.run(value).then((result) => {
                             expect(result).to.eql({
                                 $r: 'pass',
@@ -397,7 +401,7 @@ describe('Shape Structure', () => {
                             });
                         });
                     });
-    
+
                     it('Undefined Dynamic Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
@@ -407,11 +411,11 @@ describe('Shape Structure', () => {
                                         .setValidator(validator, isFatal),
                                 }),
                         });
-    
+
                         const value = {
                             testString: 'test',
                         };
-    
+
                         return structure.run(value).then((result) => {
                             expect(result).to.eql({
                                 $r: 'pass',
@@ -425,7 +429,7 @@ describe('Shape Structure', () => {
                             });
                         });
                     });
-    
+
                     it('Dynamic Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
@@ -435,11 +439,11 @@ describe('Shape Structure', () => {
                                         .setValidator(validator, isFatal),
                                 }),
                         });
-    
+
                         const value = {
                             testString: 'test',
                         };
-    
+
                         return structure.run(value).then((result) => {
                             expect(result).to.eql({
                                 $r: fatalType,
@@ -447,19 +451,26 @@ describe('Shape Structure', () => {
                                 testString: {
                                     $r: fatalType,
                                     $a: {
-                                        flagged: buildFlaggedResult(attributeValue, fatalType, buildValidatorMessage(value.testString, attributeValue)),
+                                        flagged: buildFlaggedResult(
+                                            attributeValue,
+                                            fatalType,
+                                            buildValidatorMessage(
+                                                value.testString,
+                                                attributeValue,
+                                            ),
+                                        ),
                                     },
                                 },
                             });
                         });
                     });
                 });
-            }
-    
+            };
+
             runValidationTests(true);
             runValidationTests(false);
         });
-    
+
         describe('With Requirements', () => {
             describe('Internal Requirements', () => {
                 it('Static Property Attribute flagged => requiredAttA', () => {
@@ -469,18 +480,18 @@ describe('Shape Structure', () => {
                                 flagged: Structure.attribute((value, requirements) => {
                                     expect(value).to.equal('test');
                                     expect(requirements).to.eql([42]);
-    
+
                                     return attributeValue;
                                 })
                                     .setRequirements([':requiredAttA']),
                                 requiredAttA: Structure.attribute(42),
-                            })
+                            }),
                     });
-    
+
                     const value = {
                         testString: 'test',
                     };
-    
+
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
                             $r: 'pass',
@@ -495,7 +506,7 @@ describe('Shape Structure', () => {
                         });
                     });
                 });
-    
+
                 it('Static Property Attribute flagged => requiredAttA => requiredAttB', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
@@ -504,19 +515,19 @@ describe('Shape Structure', () => {
                                 flagged: Structure.attribute((value, requirements) => {
                                     expect(value).to.equal('test');
                                     expect(requirements).to.eql([42, 'foo']);
-    
+
                                     return attributeValue;
                                 })
                                     .setRequirements([':requiredAttA', ':requiredAttB']),
                                 requiredAttA: Structure.attribute(42)
                                     .setRequirements([':requiredAttB']),
-                            })
+                            }),
                     });
-    
+
                     const value = {
                         testString: 'test',
                     };
-    
+
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
                             $r: 'pass',
@@ -533,31 +544,31 @@ describe('Shape Structure', () => {
                     });
                 });
             });
-    
+
             describe('Child Requirements', () => {
                 it('Static Property Attribute flagged => requiredAttA', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
                             .attributes({
                                 requiredAttA: Structure.attribute(42),
-                            })
+                            }),
                     })
-                    .attributes({
-                        flagged: Structure.attribute((value, requirements) => {
-                            expect(value).to.eql({
-                                testString: 'test'
-                            });
-                            expect(requirements).to.eql([42]);
-    
-                            return attributeValue;
-                        })
-                            .setRequirements(['testString:requiredAttA']),
-                    });
-    
+                        .attributes({
+                            flagged: Structure.attribute((value, requirements) => {
+                                expect(value).to.eql({
+                                    testString: 'test',
+                                });
+                                expect(requirements).to.eql([42]);
+
+                                return attributeValue;
+                            })
+                                .setRequirements(['testString:requiredAttA']),
+                        });
+
                     const value = {
                         testString: 'test',
                     };
-    
+
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
                             $r: 'pass',
@@ -573,7 +584,7 @@ describe('Shape Structure', () => {
                         });
                     });
                 });
-    
+
                 it('Static Property Attribute flagged => requiredAttA => requiredAttB', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
@@ -586,24 +597,24 @@ describe('Shape Structure', () => {
                                 requiredAttB: Structure.attribute('foo'),
                             }),
                     })
-                    .attributes({
-                        flagged: Structure.attribute((value, requirements) => {
-                            expect(value).to.eql({
-                                testString: 'test',
-                                testNumber: 237
-                            });
-                            expect(requirements).to.eql([42, 'foo']);
-    
-                            return attributeValue;
-                        })
-                            .setRequirements(['testString:requiredAttA', 'testNumber:requiredAttB']),
-                    });
-    
+                        .attributes({
+                            flagged: Structure.attribute((value, requirements) => {
+                                expect(value).to.eql({
+                                    testString: 'test',
+                                    testNumber: 237,
+                                });
+                                expect(requirements).to.eql([42, 'foo']);
+
+                                return attributeValue;
+                            })
+                                .setRequirements(['testString:requiredAttA', 'testNumber:requiredAttB']),
+                        });
+
                     const value = {
                         testString: 'test',
-                        testNumber: 237
+                        testNumber: 237,
                     };
-    
+
                     return structure.run(value).then((result) => {
                         expect(result).to.eql({
                             $r: 'pass',
@@ -683,8 +694,8 @@ describe('Shape Structure', () => {
                                 $r: 'pass',
                                 $a: {},
                             },
-                        }
-                    }
+                        },
+                    },
                 });
             });
         });
@@ -711,9 +722,9 @@ describe('Shape Structure', () => {
                     testNumber: 42,
                     testShape: {
                         testString: 'test',
-                        testNumber: 42,   
-                    }   
-                }
+                        testNumber: 42,
+                    },
+                },
             };
 
             return structure.run(value).then((result) => {
@@ -750,8 +761,8 @@ describe('Shape Structure', () => {
                                 $r: 'pass',
                                 $a: {},
                             },
-                        }
-                    }
+                        },
+                    },
                 });
             });
         });
@@ -762,7 +773,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        requiredAttA: Structure.attribute('foo')
+                        requiredAttA: Structure.attribute('foo'),
                     }),
                 testNumber: Structure.number(),
                 testShape: Structure.shape({
@@ -774,17 +785,17 @@ describe('Shape Structure', () => {
                                 flagged: Structure.attribute((value, requirements) => {
                                     expect(value).to.eql('test');
                                     expect(requirements).to.eql(['foo']);
-            
+
                                     return attributeValue;
                                 })
                                     .setValidator((value, attributeValueResult, requirements) => {
                                         expect(value).to.eql('test');
                                         expect(attributeValueResult).to.eql(attributeValue);
                                         expect(requirements).to.eql(['foo']);
-                
+
                                         return 'Failing Message';
                                     }, isFatal)
-                                    .setRequirements(['$root.testString:requiredAttA'])
+                                    .setRequirements(['$root.testString:requiredAttA']),
                             }),
                         testNumber: Structure.number(),
                     }),
@@ -799,9 +810,9 @@ describe('Shape Structure', () => {
                     testNumber: 42,
                     testShape: {
                         testString: 'test',
-                        testNumber: 42,   
-                    }   
-                }
+                        testNumber: 42,
+                    },
+                },
             };
 
             return structure.run(value).then((result) => {
@@ -814,8 +825,8 @@ describe('Shape Structure', () => {
                             requiredAttA: {
                                 value: 'foo',
                                 result: 'pass',
-                                message: null 
-                            }
+                                message: null,
+                            },
                         },
                     },
                     testNumber: {
@@ -842,16 +853,16 @@ describe('Shape Structure', () => {
                                     flagged: {
                                         value: 42,
                                         result: 'fatal',
-                                        message: 'Failing Message' 
-                                    }
+                                        message: 'Failing Message',
+                                    },
                                 },
                             },
                             testNumber: {
                                 $r: 'pass',
                                 $a: {},
                             },
-                        }
-                    }
+                        },
+                    },
                 });
             });
         });

@@ -1,7 +1,6 @@
 import Symbol from 'es6-symbol';
-import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import Attribute from '../attributes/attribute.js';
+import Attribute from '../attributes/attribute';
 import anyStructure from './any-structure';
 import stringStructure from './string-structure';
 import numberStructure from './number-structure';
@@ -60,7 +59,7 @@ class Structure {
                 value,
                 attributeResults: null,
             },
-            absolutePath: []
+            absolutePath: [],
         };
 
         const attributeResults = this.validate(runtime);

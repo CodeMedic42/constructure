@@ -1,9 +1,9 @@
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
-import reduce from 'lodash/reduce';
+// import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
-import processAttributes from '../common/process-attributes';
-import getWorstResultLevel from '../common/get-worst-level';
+// import processAttributes from '../common/process-attributes';
+// import getWorstResultLevel from '../common/get-worst-level';
 
 function verifier(structure, value) {
     if (isNil(value)) {
@@ -19,19 +19,21 @@ function verifier(structure, value) {
     });
 }
 
-function validator(structure, context, value, attributes) {
+function validator(
+    // structure, context, value, attributes
+) {
     throw new Error('Not ready yet');
-    const results = processAttributes(runtime, attributes, []);
+    // const results = processAttributes(runtime, attributes, []);
 
-    return reduce(value, (acc, propertyValue, propertyId) => {
-        const propertyResults = structure.validate(context, propertyValue);
+    // return reduce(value, (acc, propertyValue, propertyId) => {
+    //     const propertyResults = structure.validate(context, propertyValue);
 
-        acc.$r = getWorstResultLevel(acc.$r, propertyResults.$r);
+    //     acc.$r = getWorstResultLevel(acc.$r, propertyResults.$r);
 
-        acc[propertyId] = propertyResults;
+    //     acc[propertyId] = propertyResults;
 
-        return acc;
-    }, results);
+    //     return acc;
+    // }, results);
 }
 
 export default (Structure) => (structure) => new Structure(

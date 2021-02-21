@@ -19,5 +19,5 @@ const maxLengthLogic = (message, value, attributeValue) => {
 };
 
 export default (Attribute) => (attributeValue, message = 'Max Length', fatal) => {
-    return (new Attribute(attributeValue)).setValidator(maxLengthLogic.bind(null, message), fatal)
+    return (new Attribute(attributeValue)).setValidator(maxLengthLogic.bind(null, message), fatal);
 };

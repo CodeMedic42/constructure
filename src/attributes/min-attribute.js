@@ -16,8 +16,8 @@ function minLogic(message, value, attributeValue) {
     }
 
     return message;
-};
+}
 
 export default (Attribute) => (attributeValue, message = 'Min', fatal) => {
-    return (new Attribute(attributeValue)).setValidator(minLogic.bind(null, message), fatal)
+    return (new Attribute(attributeValue)).setValidator(minLogic.bind(null, message), fatal);
 };
