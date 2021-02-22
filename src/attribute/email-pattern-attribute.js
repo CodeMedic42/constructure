@@ -1,5 +1,6 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
+import Attribute from './attribute';
 
 const emailPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
@@ -15,7 +16,7 @@ function emailPatternLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue = true, message = 'Email Pattern', fatal = true, requirements) => {
+export default (attributeValue = true, message = 'Email Pattern', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValue))
         .setValidator(emailPatternLogic.bind(null, message), fatal);
 

@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isNaN from 'lodash/isNaN';
+import Attribute from './attribute';
 
 function convertToDate(value, attributeValue) {
     if (attributeValue === false) {
@@ -41,7 +42,7 @@ function validDateLogic(message, _, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue, message = 'Invalid Date', fatal = true, requirements) => {
+export default (attributeValue, message = 'Invalid Date', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValueLogic.bind(null, attributeValue)))
         .setValidator(validDateLogic.bind(null, message), fatal);
 

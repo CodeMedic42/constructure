@@ -1,5 +1,6 @@
 import isNil from 'lodash/isNil';
-import isArray from 'lodash/isArray';
+import isPlainObject from 'lodash/isPlainObject';
+import Structure from './structure';
 import processAttributes from '../common/process-attributes';
 
 function verifier(value) {
@@ -7,8 +8,8 @@ function verifier(value) {
         return;
     }
 
-    if (!isArray(value)) {
-        throw new Error('Must be an array');
+    if (!isPlainObject(value)) {
+        throw new Error('Must be an object');
     }
 }
 
@@ -16,7 +17,7 @@ function validator(runtime, attributes) {
     return processAttributes(runtime, attributes);
 }
 
-export default (Structure) => () => new Structure(
+export default () => new Structure(
     verifier,
     validator,
 );

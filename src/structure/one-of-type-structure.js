@@ -1,5 +1,6 @@
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
+import Structure from './structure';
 import processAttributes from '../common/process-attributes';
 
 function verifier(structures, value) {
@@ -34,7 +35,7 @@ function validator(runtime, attributes) {
     return processAttributes(runtime, attributes);
 }
 
-export default (Structure) => (structures) => new Structure(
+export default (structures) => new Structure(
     verifier.bind(null, structures),
     validator.bind(null),
 );

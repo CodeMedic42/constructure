@@ -1,13 +1,14 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isFinite from 'lodash/isFinite';
+import Attribute from './attribute';
 
-const maxLogic = (message, value, attributeValue) => {
+const maxLengthLogic = (message, value, attributeValue) => {
     if (!isFinite(attributeValue)) {
-        throw new Error('Attribute Value must be a number or a function which returns a number');
+        throw new Error('Attribute Value must be a number');
     }
 
-    if (isNil(value) || value <= attributeValue) {
+    if (isNil(value) || value.length <= attributeValue) {
         return null;
     }
 
@@ -18,9 +19,9 @@ const maxLogic = (message, value, attributeValue) => {
     return message;
 };
 
-export default (Attribute) => (attributeValue, message = 'Max', fatal = true, requirements) => {
+export default (attributeValue, message = 'Max Length', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValue))
-        .setValidator(maxLogic.bind(null, message), fatal);
+        .setValidator(maxLengthLogic.bind(null, message), fatal);
 
     if (!isNil(requirements)) {
         return attribute.setRequirements(requirements);

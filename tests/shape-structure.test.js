@@ -1,6 +1,6 @@
 import chai from 'chai';
 import Promise from 'bluebird';
-import Structure from '../src';
+import Structure, { Attribute } from '../src';
 
 const { expect } = chai;
 
@@ -48,7 +48,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(attributeValue),
+                        flagged: Attribute(attributeValue),
                     }),
             });
 
@@ -74,7 +74,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(null),
+                        flagged: Attribute(null),
                     }),
             });
 
@@ -100,7 +100,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(),
+                        flagged: Attribute(),
                     }),
             });
 
@@ -126,7 +126,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(() => attributeValue),
+                        flagged: Attribute(() => attributeValue),
                     }),
             });
 
@@ -152,7 +152,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(() => null),
+                        flagged: Attribute(() => null),
                     }),
             });
 
@@ -178,7 +178,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(() => undefined),
+                        flagged: Attribute(() => undefined),
                     }),
             });
 
@@ -204,7 +204,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(Promise.delay(500).then(() => attributeValue)),
+                        flagged: Attribute(Promise.delay(500).then(() => attributeValue)),
                     }),
             });
 
@@ -230,7 +230,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(Promise.delay(500).then(() => null)),
+                        flagged: Attribute(Promise.delay(500).then(() => null)),
                     }),
             });
 
@@ -256,7 +256,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        flagged: Structure.attribute(Promise.delay(500).then(() => undefined)),
+                        flagged: Attribute(Promise.delay(500).then(() => undefined)),
                     }),
             });
 
@@ -287,8 +287,7 @@ describe('Shape Structure', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure
-                                        .attribute(null)
+                                    flagged: Attribute(null)
                                         .setValidator(validator, isFatal),
                                 }),
                         });
@@ -315,8 +314,7 @@ describe('Shape Structure', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure
-                                        .attribute(undefined)
+                                    flagged: Attribute(undefined)
                                         .setValidator(validator, isFatal),
                                 }),
                         });
@@ -343,8 +341,7 @@ describe('Shape Structure', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure
-                                        .attribute(attributeValue)
+                                    flagged: Attribute(attributeValue)
                                         .setValidator(validator, isFatal),
                                 }),
                         });
@@ -378,8 +375,7 @@ describe('Shape Structure', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure
-                                        .attribute(() => null)
+                                    flagged: Attribute(() => null)
                                         .setValidator(validator, isFatal),
                                 }),
                         });
@@ -406,8 +402,7 @@ describe('Shape Structure', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure
-                                        .attribute(() => undefined)
+                                    flagged: Attribute(() => undefined)
                                         .setValidator(validator, isFatal),
                                 }),
                         });
@@ -434,8 +429,7 @@ describe('Shape Structure', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure
-                                        .attribute(() => attributeValue)
+                                    flagged: Attribute(() => attributeValue)
                                         .setValidator(validator, isFatal),
                                 }),
                         });
@@ -477,14 +471,14 @@ describe('Shape Structure', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
                             .attributes({
-                                flagged: Structure.attribute((value, requirements) => {
+                                flagged: Attribute((value, requirements) => {
                                     expect(value).to.equal('test');
                                     expect(requirements).to.eql([42]);
 
                                     return attributeValue;
                                 })
                                     .setRequirements([':requiredAttA']),
-                                requiredAttA: Structure.attribute(42),
+                                requiredAttA: Attribute(42),
                             }),
                     });
 
@@ -511,15 +505,15 @@ describe('Shape Structure', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
                             .attributes({
-                                requiredAttB: Structure.attribute('foo'),
-                                flagged: Structure.attribute((value, requirements) => {
+                                requiredAttB: Attribute('foo'),
+                                flagged: Attribute((value, requirements) => {
                                     expect(value).to.equal('test');
                                     expect(requirements).to.eql([42, 'foo']);
 
                                     return attributeValue;
                                 })
                                     .setRequirements([':requiredAttA', ':requiredAttB']),
-                                requiredAttA: Structure.attribute(42)
+                                requiredAttA: Attribute(42)
                                     .setRequirements([':requiredAttB']),
                             }),
                     });
@@ -550,11 +544,11 @@ describe('Shape Structure', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
                             .attributes({
-                                requiredAttA: Structure.attribute(42),
+                                requiredAttA: Attribute(42),
                             }),
                     })
                         .attributes({
-                            flagged: Structure.attribute((value, requirements) => {
+                            flagged: Attribute((value, requirements) => {
                                 expect(value).to.eql({
                                     testString: 'test',
                                 });
@@ -589,16 +583,16 @@ describe('Shape Structure', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
                             .attributes({
-                                requiredAttA: Structure.attribute(42)
+                                requiredAttA: Attribute(42)
                                     .setRequirements(['$parent.testNumber:requiredAttB']),
                             }),
                         testNumber: Structure.number()
                             .attributes({
-                                requiredAttB: Structure.attribute('foo'),
+                                requiredAttB: Attribute('foo'),
                             }),
                     })
                         .attributes({
-                            flagged: Structure.attribute((value, requirements) => {
+                            flagged: Attribute((value, requirements) => {
                                 expect(value).to.eql({
                                     testString: 'test',
                                     testNumber: 237,
@@ -773,7 +767,7 @@ describe('Shape Structure', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
                     .attributes({
-                        requiredAttA: Structure.attribute('foo'),
+                        requiredAttA: Attribute('foo'),
                     }),
                 testNumber: Structure.number(),
                 testShape: Structure.shape({
@@ -782,7 +776,7 @@ describe('Shape Structure', () => {
                     testShape: Structure.shape({
                         testString: Structure.string()
                             .attributes({
-                                flagged: Structure.attribute((value, requirements) => {
+                                flagged: Attribute((value, requirements) => {
                                     expect(value).to.eql('test');
                                     expect(requirements).to.eql(['foo']);
 

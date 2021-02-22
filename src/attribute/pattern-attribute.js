@@ -1,5 +1,6 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
+import Attribute from './attribute';
 
 function patternLogic(message, value, attributeValue) {
     if (isNil(value) || attributeValue.test(value)) {
@@ -13,7 +14,7 @@ function patternLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue, message = 'Pattern', fatal = true, requirements) => {
+export default (attributeValue, message = 'Pattern', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValue))
         .setValidator(patternLogic.bind(null, message), fatal);
 

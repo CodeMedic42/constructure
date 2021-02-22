@@ -2,6 +2,7 @@ import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
+import Structure from './structure';
 import createRuntime from '../common/create-runtime';
 import processAttributes from '../common/process-attributes';
 import getWorstResultLevel from '../common/get-worst-level';
@@ -54,7 +55,7 @@ function validator(structure, runtime, attributes) {
     return childResults;
 }
 
-export default (Structure) => (structure) => new Structure(
+export default (structure) => new Structure(
     verifier.bind(null, structure),
     validator.bind(null, structure),
 );

@@ -1,6 +1,5 @@
 import chai from 'chai';
-import Structure from '../src';
-import Attribute from '../src/attributes/attribute';
+import Structure, { Attribute } from '../src';
 
 const { expect } = chai;
 

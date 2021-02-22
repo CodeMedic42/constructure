@@ -1,5 +1,6 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
+import Attribute from './attribute';
 
 function requiredLogic(message, value, attributeValue) {
     if (attributeValue !== true || !isNil(value)) {
@@ -13,7 +14,7 @@ function requiredLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue = true, message = 'Required', fatal = true, requirements) => {
+export default (attributeValue = true, message = 'Required', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValue))
         .setValidator(requiredLogic.bind(null, message), fatal);
 

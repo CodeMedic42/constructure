@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isFinite from 'lodash/isFinite';
+import Attribute from './attribute';
 
 function minLogic(message, value, attributeValue) {
     if (!isFinite(attributeValue)) {
@@ -18,7 +19,7 @@ function minLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue, message = 'Min', fatal = true, requirements) => {
+export default (attributeValue, message = 'Min', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValue))
         .setValidator(minLogic.bind(null, message), fatal);
 

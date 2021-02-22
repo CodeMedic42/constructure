@@ -1,11 +1,15 @@
 import isNil from 'lodash/isNil';
+import Structure from './structure';
 import processAttributes from '../common/process-attributes';
 
 function verifier(callback, value) {
     if (isNil(value)) {
+        // Notice that we are not calling the callback to get the structure here.
+        // If we used the structure here we could end up in an infinite loop.
         return null;
     }
 
+    // We have a value of which we can check. Let's ge the structure and evaluate it.
     const structure = callback();
 
     if (isNil(structure)) {
@@ -21,7 +25,7 @@ function validator(runtime, attributes) {
     return processAttributes(runtime, attributes);
 }
 
-export default (Structure) => (callback) => new Structure(
+export default (callback) => new Structure(
     verifier.bind(null, callback),
     validator.bind(null, callback),
 );

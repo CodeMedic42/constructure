@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Structure from '../src';
+import Structure, { Attribute } from '../src';
 
 const { expect } = chai;
 
@@ -160,7 +160,7 @@ describe('Shape Structure', () => {
                     testOneOfType: Structure.oneOfType([
                         Structure.string()
                             .attributes({
-                                flagged: Structure.attribute((value, requirements) => {
+                                flagged: Attribute((value, requirements) => {
                                     expect(value).to.eql(stringValue);
                                     expect(requirements).to.eql([testReqAttAValue]);
 
@@ -177,7 +177,7 @@ describe('Shape Structure', () => {
                             }),
                         Structure.number()
                             .attributes({
-                                flagged: Structure.attribute((value, requirements) => {
+                                flagged: Attribute((value, requirements) => {
                                     expect(value).to.eql(numberValue);
                                     expect(requirements).to.eql([testReqAttBValue]);
 
@@ -195,7 +195,7 @@ describe('Shape Structure', () => {
                         Structure.shape({
                             testString: Structure.string()
                                 .attributes({
-                                    flagged: Structure.attribute((value, requirements) => {
+                                    flagged: Attribute((value, requirements) => {
                                         expect(value).to.eql(shapeValue);
                                         expect(requirements).to.eql([testReqAttCValue]);
 
@@ -218,7 +218,7 @@ describe('Shape Structure', () => {
                         }),
                     ])
                         .attributes({
-                            common: Structure.attribute((value, requirements) => {
+                            common: Attribute((value, requirements) => {
                                 expect(value).to.eql(commonValue);
                                 expect(requirements).to.eql([testReqAttDValue]);
 

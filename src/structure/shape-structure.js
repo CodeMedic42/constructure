@@ -2,11 +2,12 @@ import isNil from 'lodash/isNil';
 import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import isPlainObject from 'lodash/isPlainObject';
+import Structure from './structure';
 import processAttributes from '../common/process-attributes';
 import getWorstResultLevel from '../common/get-worst-level';
 import createRuntime from '../common/create-runtime';
 
-function verifier(properties, value) {
+function verifier(properties, exact, value) {
     if (isNil(value)) {
         return;
     }
@@ -18,6 +19,14 @@ function verifier(properties, value) {
     forEach(properties, (property, propertyId) => {
         property.verify(value[propertyId]);
     });
+
+    if (exact) {
+        forEach(value, (_, valueId) => {
+            if (isNil(properties[valueId])) {
+                throw new Error(`The property ${valueId} is invalid`);
+            }
+        });
+    }
 }
 
 function validator(properties, runtime, attributes) {
@@ -54,7 +63,7 @@ function validator(properties, runtime, attributes) {
     return childResults;
 }
 
-export default (Structure) => (properties) => new Structure(
-    verifier.bind(null, properties),
+export default (properties, exact) => new Structure(
+    verifier.bind(null, properties, exact),
     validator.bind(null, properties),
 );

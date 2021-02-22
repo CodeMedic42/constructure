@@ -1,20 +1,23 @@
 import isNil from 'lodash/isNil';
-import isBoolean from 'lodash/isBoolean';
+import isDate from 'lodash/isDate';
+import Structure from './structure';
 import processAttributes from '../common/process-attributes';
 
 function verifier(value) {
-    if (isNil(value) || isBoolean(value)) {
+    if (isNil(value)) {
         return;
     }
 
-    throw new Error('Must be a boolean');
+    if (!isDate(value)) {
+        throw new Error('Must be a Date object');
+    }
 }
 
 function validator(runtime, attributes) {
     return processAttributes(runtime, attributes);
 }
 
-export default (Structure) => () => new Structure(
+export default () => new Structure(
     verifier,
     validator,
 );
