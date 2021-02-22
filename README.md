@@ -1,6 +1,6 @@
 # Constructure
 
-Constructure is a schema validation library where you are in control. Its main focus is to provide an interface where a developer can define a schema for a set of data and the logic needed to validate it. But more importantly to link and choreograph all the validation logic. If you have a validator which uses the value from somewhere else in the data you can do this. But if that value is valid you can block the validator from running until its required value is passing its validation.
+Constructure is a schema validation library where you are in control. Its main focus is to provide an interface where a developer can define a schema for a set of data and the logic needed to validate it. But more importantly to link and choreograph all the validation logic. If you have a validator which uses the value from somewhere else in the data you can do this. But if that value is not valid you can block the validator from running until its required value is passing its validation.
 
 
 
