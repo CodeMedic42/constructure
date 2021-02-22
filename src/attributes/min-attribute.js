@@ -18,6 +18,13 @@ function minLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue, message = 'Min', fatal) => {
-    return (new Attribute(attributeValue)).setValidator(minLogic.bind(null, message), fatal);
+export default (Attribute) => (attributeValue, message = 'Min', fatal = true, requirements) => {
+    const attribute = (new Attribute(attributeValue))
+        .setValidator(minLogic.bind(null, message), fatal);
+
+    if (!isNil(requirements)) {
+        return attribute.setRequirements(requirements);
+    }
+
+    return attribute;
 };

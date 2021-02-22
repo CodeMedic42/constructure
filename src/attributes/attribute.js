@@ -7,6 +7,11 @@ import maxLengthAttribute from './max-length-attribute';
 import maxAttribute from './max-attribute';
 import minLengthAttribute from './min-length-attribute';
 import minAttribute from './min-attribute';
+import validDateAttribute from './valid-date-attribute';
+import minDateAttribute from './min-date-attribute';
+import maxDateAttribute from './max-date-attribute';
+import patternAttribute from './pattern-attribute';
+import emailPatternAttribute from './email-pattern-attribute';
 
 const FIELDS = {
     value: Symbol('value'),
@@ -51,5 +56,10 @@ Attribute.maxLength = maxLengthAttribute(Attribute);
 Attribute.max = maxAttribute(Attribute);
 Attribute.minLength = minLengthAttribute(Attribute);
 Attribute.min = minAttribute(Attribute);
+Attribute.validDate = validDateAttribute(Attribute);
+Attribute.minDate = minDateAttribute(Attribute);
+Attribute.maxDate = maxDateAttribute(Attribute);
+Attribute.patternDate = patternAttribute(Attribute);
+Attribute.emailPattern = emailPatternAttribute(Attribute);
 
 export default Attribute;

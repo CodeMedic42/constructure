@@ -1,8 +1,8 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 
-function requiredLogic(message, value, attributeValue) {
-    if (attributeValue !== true || !isNil(value)) {
+function patternLogic(message, value, attributeValue) {
+    if (isNil(value) || attributeValue.test(value)) {
         return null;
     }
 
@@ -13,9 +13,9 @@ function requiredLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (Attribute) => (attributeValue = true, message = 'Required', fatal = true, requirements) => {
+export default (Attribute) => (attributeValue, message = 'Pattern', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValue))
-        .setValidator(requiredLogic.bind(null, message), fatal);
+        .setValidator(patternLogic.bind(null, message), fatal);
 
     if (!isNil(requirements)) {
         return attribute.setRequirements(requirements);

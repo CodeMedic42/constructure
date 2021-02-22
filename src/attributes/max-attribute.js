@@ -18,6 +18,13 @@ const maxLogic = (message, value, attributeValue) => {
     return message;
 };
 
-export default (Attribute) => (attributeValue, message = 'Max', fatal) => {
-    return (new Attribute(attributeValue)).setValidator(maxLogic.bind(null, message), fatal);
+export default (Attribute) => (attributeValue, message = 'Max', fatal = true, requirements) => {
+    const attribute = (new Attribute(attributeValue))
+        .setValidator(maxLogic.bind(null, message), fatal);
+
+    if (!isNil(requirements)) {
+        return attribute.setRequirements(requirements);
+    }
+
+    return attribute;
 };
