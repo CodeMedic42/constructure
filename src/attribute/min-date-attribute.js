@@ -3,12 +3,18 @@ import isFunction from 'lodash/isFunction';
 import isDate from 'lodash/isDate';
 import Attribute from './attribute';
 
-const minDateLogic = (message, value, attributeValue) => {
+const minDateLogic = (message, value, attributeValue, requirements) => {
     if (!isDate(attributeValue)) {
         throw new Error('Attribute Value must be a date');
     }
 
-    if (!isDate(value) || attributeValue <= value) {
+    let testValue = value;
+
+    if (requirements.length > 0) {
+        [testValue] = requirements;
+    }
+
+    if (!isDate(testValue) || attributeValue <= testValue) {
         return null;
     }
 

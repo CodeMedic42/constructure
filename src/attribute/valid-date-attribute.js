@@ -16,12 +16,12 @@ function attributeValueLogic(attributeValue, value, requirements) {
         return null;
     }
 
-    if (!isNil(attributeValue) && isFunction(attributeValue)) {
+    if (isFunction(attributeValue)) {
         return Promise.resolve(attributeValue(value, requirements))
             .then(convertToDate.bind(null, value));
     }
 
-    return convertToDate(attributeValue, value);
+    return convertToDate(value, attributeValue);
 }
 
 function validDateLogic(message, _, attributeValue) {
@@ -42,7 +42,7 @@ function validDateLogic(message, _, attributeValue) {
     return message;
 }
 
-export default (attributeValue, message = 'Invalid Date', fatal = true, requirements) => {
+export default (attributeValue = true, message = 'Invalid Date', fatal = true, requirements) => {
     const attribute = (new Attribute(attributeValueLogic.bind(null, attributeValue)))
         .setValidator(validDateLogic.bind(null, message), fatal);
 
