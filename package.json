@@ -1,13 +1,14 @@
 {
   "name": "constructure",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.js",
-  "author": "",
+  "main": "lib/index.js",
+  "author": "Christian Micle",
   "license": "ISC",
   "scripts": {
     "lint": "npx eslint ./ --fix",
-    "test": "npx mocha tests/**/*.test.js --reporter spec --colors"
+    "test": "npx mocha tests/**/*.test.js --reporter spec --colors",
+    "build": "./node_modules/.bin/babel ./src --out-dir lib"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -20,6 +21,12 @@
       "pre-commit": "lint-staged"
     }
   },
+  "files": [
+    "/lib",
+    "/LICENSE",
+    "/package.json",
+    "README.md"
+  ],
   "dependencies": {
     "bluebird": "^3.7.2",
     "chai": "^4.3.0",
@@ -29,6 +36,7 @@
     "mocha": "^8.3.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.13.0",
     "@babel/core": "^7.12.16",
     "@babel/preset-env": "^7.12.16",
     "@babel/register": "^7.12.13",
