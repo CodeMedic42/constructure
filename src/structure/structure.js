@@ -2,7 +2,6 @@ import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
-// import { isFunction, isPlainObject } from 'lodash';
 import getWorstResultLevel from '../common/get-worst-level';
 import Aspect from '../aspect/aspect';
 
@@ -29,7 +28,6 @@ class Structure {
         let additionalResults = null;
 
         if (!isNil(this[FIELDS.additionalStructure])) {
-            // TODO should really run the other validator as well
             additionalResults = this[FIELDS.additionalStructure].validate(runtime);
         }
 

@@ -1,12 +1,6 @@
 import Symbol from 'es6-symbol';
 import isString from 'lodash/isString';
 import Result from '../result';
-// import requiredValidator from './required-aspect';
-// import maxLengthValidator from '../aspects/max-length-aspect';
-// import maxValidator from './max-validator';
-// import minLengthValidator from './min-length-validator';
-// import minValidator from './min-validator';
-// import Requirements from '../requirements';
 
 const FIELDS = {
     logic: Symbol('logic'),
