@@ -1,5 +1,5 @@
 import Symbol from 'es6-symbol';
-import isNil from 'lodash/isNil';
+import isString from 'lodash/isString';
 import Result from '../result';
 // import requiredValidator from './required-aspect';
 // import maxLengthValidator from '../aspects/max-length-aspect';
@@ -27,7 +27,7 @@ class Validator {
             requiredAspects,
         );
 
-        return !isNil(message) ? new Result(message, this[FIELDS.fatal]) : null;
+        return isString(message) ? new Result(message, this[FIELDS.fatal]) : null;
     }
 }
 
