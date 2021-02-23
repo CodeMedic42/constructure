@@ -1,7 +1,7 @@
 import isNil from 'lodash/isNil';
 import isString from 'lodash/isString';
 import Structure from './structure';
-import processAttributes from '../common/process-attributes';
+import processAspects from '../common/process-aspects';
 
 function verifier(value) {
     if (isNil(value) || isString(value)) {
@@ -11,8 +11,8 @@ function verifier(value) {
     throw new Error('Must be a string');
 }
 
-function validator(runtime, attributes) {
-    return processAttributes(runtime, attributes);
+function validator(runtime, aspects) {
+    return processAspects(runtime, aspects);
 }
 
 export default () => new Structure(

@@ -8,12 +8,12 @@ import findIndex from 'lodash/findIndex';
 import getWorstResultLevel from './get-worst-level';
 import getter from './getter';
 
-function getFromThis(runtime, path, attribute) {
-    if (!isNil(attribute)) {
-        // Get attribute
-        const attributeResults = getter(runtime.$this.attributeResults, slice(path, 1));
+function getFromThis(runtime, path, aspect) {
+    if (!isNil(aspect)) {
+        // Get aspect
+        const aspectResults = getter(runtime.$this.aspectResults, slice(path, 1));
 
-        return attributeResults.$a[attribute];
+        return aspectResults.$a[aspect];
     }
 
     // Get Value
@@ -23,7 +23,7 @@ function getFromThis(runtime, path, attribute) {
     };
 }
 
-function getFromParent(runtime, path, attribute) {
+function getFromParent(runtime, path, aspect) {
     let lastIndex = 0;
 
     forEach(path, (segment, segmentIndex) => {
@@ -45,11 +45,11 @@ function getFromParent(runtime, path, attribute) {
 
     targetPath = targetPath.concat(extension);
 
-    if (!isNil(attribute)) {
-        // Get attribute
-        const attributeResults = getter(runtime.$root.attributeResults, targetPath);
+    if (!isNil(aspect)) {
+        // Get aspect
+        const aspectResults = getter(runtime.$root.aspectResults, targetPath);
 
-        return attributeResults.$a[attribute];
+        return aspectResults.$a[aspect];
     }
 
     // Get Value
@@ -59,7 +59,7 @@ function getFromParent(runtime, path, attribute) {
     };
 }
 
-function getFromRoot(runtime, path, attribute) {
+function getFromRoot(runtime, path, aspect) {
     const finalPath = slice(path, 1);
 
     let fromIndex = 0;
@@ -71,11 +71,11 @@ function getFromRoot(runtime, path, attribute) {
         fromIndex = pathIndex + 1;
     });
 
-    if (!isNil(attribute)) {
-        // Get attribute
-        const attributeResults = getter(runtime.$root.attributeResults, finalPath);
+    if (!isNil(aspect)) {
+        // Get aspect
+        const aspectResults = getter(runtime.$root.aspectResults, finalPath);
 
-        return attributeResults.$a[attribute];
+        return aspectResults.$a[aspect];
     }
 
     // Get Value
@@ -85,26 +85,26 @@ function getFromRoot(runtime, path, attribute) {
     };
 }
 
-function getRequirement(runtime, path, attribute) {
+function getRequirement(runtime, path, aspect) {
     if (path[0] === '$this') {
-        return getFromThis(runtime, path, attribute);
+        return getFromThis(runtime, path, aspect);
     }
 
     if (path[0] === '$parent') {
-        return getFromParent(runtime, path, attribute);
+        return getFromParent(runtime, path, aspect);
     }
 
     if (path[0] === '$root') {
-        return getFromRoot(runtime, path, attribute);
+        return getFromRoot(runtime, path, aspect);
     }
 
     throw new Error('Invalid requirement path');
 }
 
-function runValidator(value, attributeValue, validator, requirements) {
-    if (isNil(attributeValue) || isNil(validator)) {
+function runValidator(value, aspectValue, validator, requirements) {
+    if (isNil(aspectValue) || isNil(validator)) {
         return {
-            value: attributeValue,
+            value: aspectValue,
             result: 'pass',
             message: null,
         };
@@ -112,7 +112,7 @@ function runValidator(value, attributeValue, validator, requirements) {
 
     return Promise.resolve(validator.run(
         value,
-        attributeValue,
+        aspectValue,
         requirements,
     )).then((validationResult) => {
         let result = 'pass';
@@ -124,21 +124,21 @@ function runValidator(value, attributeValue, validator, requirements) {
         }
 
         return {
-            value: attributeValue,
+            value: aspectValue,
             result,
             message,
         };
     });
 }
 
-function processAttributes(runtime, attributes = {}) {
-    const attributePromises = {};
+function processAspects(runtime, aspects = {}) {
+    const aspectPromises = {};
 
-    const attributeGroupResultPromise = Promise.all(map(attributes, (attribute, attributeId) => {
-        const attributeResultPromise = Promise.map(
-            attribute.getRequirements().get(),
+    const aspectGroupResultPromise = Promise.all(map(aspects, (aspect, aspectId) => {
+        const aspectResultPromise = Promise.map(
+            aspect.getRequirements().get(),
             (requirement) => {
-                return getRequirement(runtime, requirement.path, requirement.attribute);
+                return getRequirement(runtime, requirement.path, requirement.aspect);
             },
         )
             .then((requirements) => {
@@ -164,22 +164,22 @@ function processAttributes(runtime, attributes = {}) {
                     };
                 }
 
-                return Promise.resolve(attribute.getValue()(runtime.$this.value, requirementValues))
-                    .then((attributeValueResult) => {
+                return Promise.resolve(aspect.getValue()(runtime.$this.value, requirementValues))
+                    .then((aspectValueResult) => {
                         return runValidator(
                             runtime.$this.value,
-                            attributeValueResult || null,
-                            attribute.getValidator(),
+                            aspectValueResult || null,
+                            aspect.getValidator(),
                             requirementValues,
-                            runtime.$this.attributeResults.$a,
+                            runtime.$this.aspectResults.$a,
                         );
                     });
             })
-            .then((attributeResult) => {
+            .then((aspectResult) => {
                 // eslint-disable-next-line no-param-reassign
-                runtime.$this.attributeResults.$a[attributeId] = attributeResult;
+                runtime.$this.aspectResults.$a[aspectId] = aspectResult;
 
-                return attributeResult;
+                return aspectResult;
             })
             .catch((error) => {
                 return {
@@ -189,10 +189,10 @@ function processAttributes(runtime, attributes = {}) {
                 };
             });
 
-        attributePromises[attributeId] = attributeResultPromise;
+        aspectPromises[aspectId] = aspectResultPromise;
 
-        return attributeResultPromise.then((attributeResult) => {
-            return attributeResult.result;
+        return aspectResultPromise.then((aspectResult) => {
+            return aspectResult.result;
         });
     }))
         .then((results) => {
@@ -200,15 +200,15 @@ function processAttributes(runtime, attributes = {}) {
         })
         .then((finalResult) => {
             // eslint-disable-next-line no-param-reassign
-            runtime.$this.attributeResults.$r = finalResult;
+            runtime.$this.aspectResults.$r = finalResult;
 
             return finalResult;
         });
 
     return {
-        $a: attributePromises,
-        $r: attributeGroupResultPromise,
+        $a: aspectPromises,
+        $r: aspectGroupResultPromise,
     };
 }
 
-export default processAttributes;
+export default processAspects;

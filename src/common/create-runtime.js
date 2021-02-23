@@ -14,7 +14,7 @@ export default function createRuntime(parentRuntime, segment) {
         $root: parentRuntime.$root,
         $this: {
             value: !isNil(value) ? value[segment] : undefined,
-            attributeResults: null,
+            aspectResults: null,
         },
         absolutePath: parentRuntime.absolutePath.concat(segment),
         indexes,

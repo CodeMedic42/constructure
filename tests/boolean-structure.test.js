@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Structure, { Attribute } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
@@ -7,8 +7,8 @@ describe('Boolean Structure', () => {
     it('Null Value', () => {
         const structure = Structure.boolean();
 
-        return structure.run(null).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run(null).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -18,8 +18,8 @@ describe('Boolean Structure', () => {
     it('Undefined String', () => {
         const structure = Structure.boolean();
 
-        return structure.run().then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run().then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -29,8 +29,8 @@ describe('Boolean Structure', () => {
     it('False Value', () => {
         const structure = Structure.boolean();
 
-        return structure.run(false).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run(false).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -40,8 +40,8 @@ describe('Boolean Structure', () => {
     it('True Value', () => {
         const structure = Structure.boolean();
 
-        return structure.run(true).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run(true).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -82,10 +82,10 @@ describe('Boolean Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.boolean()
-            .aspect('required', Attribute.required());
+            .aspect('required', Aspect.required());
 
-        return structure.run(true).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run(true).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {
                     required: {
@@ -100,10 +100,10 @@ describe('Boolean Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.boolean()
-            .aspect('required', Attribute.required());
+            .aspect('required', Aspect.required());
 
-        return structure.run().then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run().then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'fatal',
                 $a: {
                     required: {

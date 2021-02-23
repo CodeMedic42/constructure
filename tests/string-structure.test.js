@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Structure, { Attribute } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
@@ -7,8 +7,8 @@ describe('String Structure', () => {
     it('Null Value', () => {
         const structure = Structure.string();
 
-        return structure.run(null).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run(null).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -18,8 +18,8 @@ describe('String Structure', () => {
     it('Empty String', () => {
         const structure = Structure.string();
 
-        return structure.run('').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -29,8 +29,8 @@ describe('String Structure', () => {
     it('Basic String', () => {
         const structure = Structure.string();
 
-        return structure.run('test').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -71,10 +71,10 @@ describe('String Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.string()
-            .aspect('required', Attribute.required());
+            .aspect('required', Aspect.required());
 
-        return structure.run('test').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {
                     required: {
@@ -89,10 +89,10 @@ describe('String Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.string()
-            .aspect('required', Attribute.required());
+            .aspect('required', Aspect.required());
 
-        return structure.run().then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run().then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'fatal',
                 $a: {
                     required: {
@@ -107,10 +107,10 @@ describe('String Structure', () => {
 
     it('Basic MinLength Passed', () => {
         const structure = Structure.string()
-            .aspect('minLength', Attribute.minLength(3));
+            .aspect('minLength', Aspect.minLength(3));
 
-        return structure.run('test').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {
                     minLength: {
@@ -125,10 +125,10 @@ describe('String Structure', () => {
 
     it('Basic MinLength Fails', () => {
         const structure = Structure.string()
-            .aspect('minLength', Attribute.minLength(8));
+            .aspect('minLength', Aspect.minLength(8));
 
-        return structure.run('test').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'fatal',
                 $a: {
                     minLength: {
@@ -143,10 +143,10 @@ describe('String Structure', () => {
 
     it('Basic MaxLength Passed', () => {
         const structure = Structure.string()
-            .aspect('maxLength', Attribute.maxLength(8));
+            .aspect('maxLength', Aspect.maxLength(8));
 
-        return structure.run('test').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {
                     maxLength: {
@@ -161,10 +161,10 @@ describe('String Structure', () => {
 
     it('Basic MaxLength Fails', () => {
         const structure = Structure.string()
-            .aspect('maxLength', Attribute.maxLength(3));
+            .aspect('maxLength', Aspect.maxLength(3));
 
-        return structure.run('test').then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'fatal',
                 $a: {
                     maxLength: {

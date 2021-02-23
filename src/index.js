@@ -1,8 +1,8 @@
 import Structure from './structure';
-import Attribute from './attribute';
+import Aspect from './aspect';
 
 export default Structure;
 
 export {
-    Attribute,
+    Aspect,
 };

@@ -142,10 +142,10 @@ describe('Shape Structure', () => {
             const testReqAttCValue = 'C';
             const testReqAttDValue = 'D';
 
-            const stringAttributeValue = 42;
-            const numberAttributeValue = 43;
-            const shapeAttributeValue = 44;
-            const commonAttributeValue = 45;
+            const stringAspectValue = 42;
+            const numberAspectValue = 43;
+            const shapeAspectValue = 44;
+            const commonAspectValue = 45;
 
             const stringValue = '1';
             const numberValue = 2;
@@ -165,11 +165,11 @@ describe('Shape Structure', () => {
                                     expect(value).to.eql(stringValue);
                                     expect(requirements).to.eql([testReqAttAValue]);
 
-                                    return stringAttributeValue;
+                                    return stringAspectValue;
                                 }, {
-                                    validator: (value, attributeValueResult, requirements) => {
+                                    validator: (value, aspectValueResult, requirements) => {
                                         expect(value).to.eql(stringValue);
-                                        expect(attributeValueResult).to.eql(stringAttributeValue);
+                                        expect(aspectValueResult).to.eql(stringAspectValue);
                                         expect(requirements).to.eql([testReqAttAValue]);
 
                                         return 'Failing Message';
@@ -182,11 +182,11 @@ describe('Shape Structure', () => {
                                 expect(value).to.eql(numberValue);
                                 expect(requirements).to.eql([testReqAttBValue]);
 
-                                return numberAttributeValue;
+                                return numberAspectValue;
                             }, {
-                                validator: (value, attributeValueResult, requirements) => {
+                                validator: (value, aspectValueResult, requirements) => {
                                     expect(value).to.eql(numberValue);
-                                    expect(attributeValueResult).to.eql(numberAttributeValue);
+                                    expect(aspectValueResult).to.eql(numberAspectValue);
                                     expect(requirements).to.eql([testReqAttBValue]);
 
                                     return 'Failing Message';
@@ -199,16 +199,16 @@ describe('Shape Structure', () => {
                                     expect(value).to.eql(shapeValue);
                                     expect(requirements).to.eql([testReqAttCValue]);
 
-                                    return shapeAttributeValue;
+                                    return shapeAspectValue;
                                 }, {
                                     validator: (
                                         value,
-                                        attributeValueResult,
+                                        aspectValueResult,
                                         requirements,
                                     ) => {
                                         expect(value).to.eql(shapeValue);
-                                        expect(attributeValueResult)
-                                            .to.eql(shapeAttributeValue);
+                                        expect(aspectValueResult)
+                                            .to.eql(shapeAspectValue);
                                         expect(requirements).to.eql([testReqAttCValue]);
 
                                         return 'Failing Message';
@@ -221,11 +221,11 @@ describe('Shape Structure', () => {
                             expect(value).to.eql(commonValue);
                             expect(requirements).to.eql([testReqAttDValue]);
 
-                            return commonAttributeValue;
+                            return commonAspectValue;
                         }, {
-                            validator: (value, attributeValueResult, requirements) => {
+                            validator: (value, aspectValueResult, requirements) => {
                                 expect(value).to.eql(commonValue);
-                                expect(attributeValueResult).to.eql(commonAttributeValue);
+                                expect(aspectValueResult).to.eql(commonAspectValue);
                                 expect(requirements).to.eql([testReqAttDValue]);
 
                                 return 'Failing Message';
@@ -270,12 +270,12 @@ describe('Shape Structure', () => {
                             $r: 'fatal',
                             $a: {
                                 flagged: {
-                                    value: stringAttributeValue,
+                                    value: stringAspectValue,
                                     result: 'fatal',
                                     message: 'Failing Message',
                                 },
                                 common: {
-                                    value: commonAttributeValue,
+                                    value: commonAspectValue,
                                     result: 'fatal',
                                     message: 'Failing Message',
                                 },
@@ -320,12 +320,12 @@ describe('Shape Structure', () => {
                             $r: 'fatal',
                             $a: {
                                 flagged: {
-                                    value: numberAttributeValue,
+                                    value: numberAspectValue,
                                     result: 'fatal',
                                     message: 'Failing Message',
                                 },
                                 common: {
-                                    value: commonAttributeValue,
+                                    value: commonAspectValue,
                                     result: 'fatal',
                                     message: 'Failing Message',
                                 },
@@ -372,7 +372,7 @@ describe('Shape Structure', () => {
                             $r: 'fatal',
                             $a: {
                                 common: {
-                                    value: commonAttributeValue,
+                                    value: commonAspectValue,
                                     result: 'fatal',
                                     message: 'Failing Message',
                                 },
@@ -381,7 +381,7 @@ describe('Shape Structure', () => {
                                 $r: 'fatal',
                                 $a: {
                                     flagged: {
-                                        value: shapeAttributeValue,
+                                        value: shapeAspectValue,
                                         result: 'fatal',
                                         message: 'Failing Message',
                                     },

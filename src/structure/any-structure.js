@@ -1,10 +1,10 @@
-import processAttributes from '../common/process-attributes';
+import processAspects from '../common/process-aspects';
 import Structure from './structure';
 
 function verifier() {}
 
-function validator(runtime, attributes) {
-    return processAttributes(runtime, attributes);
+function validator(runtime, aspects) {
+    return processAspects(runtime, aspects);
 }
 
 export default () => new Structure(

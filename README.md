@@ -137,8 +137,8 @@ __Note:__ Be aware that the validations for structures returned from the lazy ca
 // Here is an example of a looping person object with person contacts.
 const structure = Structure.shape({
     firstName: Structure.string()
-        .attributes({
-            required: Attribute.require()
+        .aspects({
+            required: Aspect.require()
         }),
     lastName: Structure.string(),
     phoneNumber: Structure.string(),
@@ -152,33 +152,33 @@ const structure = Structure.shape({
 
 
 
-## Attributes
-The main draw of this library is its attribute system.
+## Aspects
+The main draw of this library is its aspect system.
 
 ```js
-import { Attribute } from 'constructure';
+import { Aspect } from 'constructure';
 ```
 
-Attributes are keyed pieces of data which can be associated to each structure.
+Aspects are keyed pieces of data which can be associated to each structure.
 
-Defining attributes for a structure is as simple as ...
+Defining aspects for a structure is as simple as ...
 
 ```js
-structure.attributes({
-    attA: Attribute('test'),
-    attB: Attribute(42),
-    attC: Attribute(true),
+structure.aspects({
+    attA: Aspect('test'),
+    attB: Aspect(42),
+    attC: Aspect(true),
 })
 ```
 
-Attributes can be applied to any structure and can be any value type.
+Aspects can be applied to any structure and can be any value type.
 
-A callback function can be provided by which the attribute value can be dynamically determined. The first argument to the callback function is the value which is being verified by the structure. The return value for this callback function will become the value for the attribute. This return value can also be a promise.
+A callback function can be provided by which the aspect value can be dynamically determined. The first argument to the callback function is the value which is being verified by the structure. The return value for this callback function will become the value for the aspect. This return value can also be a promise.
 
 ```js
-structure.attributes({
-    dynamicAtt: Attribute((value) => {
-        return value == null; // the value of the the dynamicAtt attribute will be a boolean value.
+structure.aspects({
+    dynamicAtt: Aspect((value) => {
+        return value == null; // the value of the the dynamicAtt aspect will be a boolean value.
     }),
 })
 ```
@@ -189,23 +189,23 @@ structure.attributes({
 
 ### Validation
 
-Each attribute can also have validation logic associated with it. To do this each attribute has a method to set the validator logic.
+Each aspect can also have validation logic associated with it. To do this each aspect has a method to set the validator logic.
 
 #### __Validator Logic__
-The first argument to this method must be a function, a callback. This is called to validate the attribute. There are three arguments passed to this callback, the value of the property, the value of the attribute, and any requirements(Reviewed later). If the attribute was promise then the validator will not be called until that promise is resolved. The return value from this callback should be either null or a string. If null is returned then this means the validation is passing. Otherwise the string means it failed and the string provides a message indicating as to the reason for the failure.
+The first argument to this method must be a function, a callback. This is called to validate the aspect. There are three arguments passed to this callback, the value of the property, the value of the aspect, and any requirements(Reviewed later). If the aspect was promise then the validator will not be called until that promise is resolved. The return value from this callback should be either null or a string. If null is returned then this means the validation is passing. Otherwise the string means it failed and the string provides a message indicating as to the reason for the failure.
 
 #### __Validator Result__
 The second and last argument for the validator is the result type. There are two types, 'fatal' and 'non-fatal'. A true value(default) means that if the validator logic returns a message then the result will be fatal. A false value means that it is not fatal.
 
 ```js
-const validatorCallback = (value, attributeValue, requirements) => {
+const validatorCallback = (value, aspectValue, requirements) => {
     return 'Message';
 }
 
 const isFatal = true;
 
-structure.attributes({
-    att: Attribute('test').setValidator(validatorCallback, isFatal),
+structure.aspects({
+    att: Aspect('test').setValidator(validatorCallback, isFatal),
 })
 ```
 
@@ -217,20 +217,20 @@ Getting the results from a validation will be discussed later in the Execution s
 
 ### Requirements
 
-Sometimes an attribute requires the value, or attribute value, of another property in the data. This is called a requirement. This enters into the more advanced part of this library but is also the most useful as well.
+Sometimes an aspect requires the value, or aspect value, of another property in the data. This is called a requirement. This enters into the more advanced part of this library but is also the most useful as well.
 
-There are a few simple real world examples which we will get into later, but first let's just resolve the functionality. It all starts with a call to a method off the attribute called setRequirements.
+There are a few simple real world examples which we will get into later, but first let's just resolve the functionality. It all starts with a call to a method off the aspect called setRequirements.
 
 #### __Internal__
 
-In this example we can see that one attribute of a structure can require the value of another attribute.
+In this example we can see that one aspect of a structure can require the value of another aspect.
 
 ```js
 const structure = Structure.shape({
     propertyA: Structure.string()
-        .attributes({
-            attA: Attribute(42),
-            attB: Attribute((
+        .aspects({
+            attA: Aspect(42),
+            attB: Aspect((
                 // The value of propertyA.
                 value, 
                 // An array of all requirements in the order they were specified.
@@ -242,15 +242,15 @@ const structure = Structure.shape({
 });
 ```
 
-Multiple attributes can be chained like this. Here attC requires attB which in turn requires attA.
+Multiple aspects can be chained like this. Here attC requires attB which in turn requires attA.
 
 ```js
 const structure = Structure.shape({
     propertyA: Structure.string()
-        .attributes({
-            attA: Attribute(42),
-            attB: Attribute((value, requirements) => {}).setRequirements([':attA']),
-            attC: Attribute((value, requirements) => {}).setRequirements([':attB']),
+        .aspects({
+            attA: Aspect(42),
+            attB: Aspect((value, requirements) => {}).setRequirements([':attA']),
+            attC: Aspect((value, requirements) => {}).setRequirements([':attB']),
         }),
 });
 ```
@@ -259,29 +259,29 @@ const structure = Structure.shape({
 
 But what if you need something from somewhere else in the data? Well, we got ya covered!
 
-Let's start with getting a child value. Here we will add the attribute to the shape. We will also make the overall structure a little deeper.
+Let's start with getting a child value. Here we will add the aspect to the shape. We will also make the overall structure a little deeper.
 
-Then we will add an attribute to the root and then access the attribute value from a child property
+Then we will add an aspect to the root and then access the aspect value from a child property
 
 ```js
 const structure = Structure.shape({
     levelA: Structure.shape({
         levelB: Structure.shape({  
             propertyA: Structure.string()
-                .attributes({
-                    attA: Attribute(42),
+                .aspects({
+                    attA: Aspect(42),
                 }),
         })    
     })
 })
-// Here we will add an attribute to the root structure.
-.attributes({
-    rootAttA: Attribute((value, requirements) => {})
+// Here we will add an aspect to the root structure.
+.aspects({
+    rootAttA: Aspect((value, requirements) => {})
         .setRequirements([
             // This will get the value from specified child.
             // Note that there is a long hand version of this, "$this.levelA.levelB.propertyA"
             'levelA.levelB.propertyA', 
-            // This will get the attribute value from specified child.
+            // This will get the aspect value from specified child.
             // Note that there is a long hand version of this, "$this.levelA.levelB.propertyA:attA"
             'levelA.levelB.propertyA:attA', 
         ]),
@@ -295,12 +295,12 @@ Okay but what if you want to get a sibling value? Just use "$parent"! BAM!
 ```js
 const structure = Structure.shape({
     propertyA: Structure.string()
-        .attributes({
-            attA: Attribute(42),
+        .aspects({
+            attA: Aspect(42),
         }),
     propertyB: Structure.string()
-        .attributes({
-            attA: Attribute((value, requirements) => {}).setRequirements(['$parent.propertyA:attA']),
+        .aspects({
+            attA: Aspect((value, requirements) => {}).setRequirements(['$parent.propertyA:attA']),
         }),
 });
 ```
@@ -313,13 +313,13 @@ Okay big shot how do I go up? Uh I just told you, $parent. Go as high as you wan
 const structure = Structure.shape({
     levelA: Structure.shape({
         propertyA: Structure.string()
-            .attributes({
-                attA: Attribute(42),
+            .aspects({
+                attA: Aspect(42),
             }),
         levelB: Structure.shape({  
             propertyA: Structure.string()
-                .attributes({
-                    attA: Attribute((value, requirements) => {}).setRequirements(['$parent.$parent.propertyA:attA']),
+                .aspects({
+                    attA: Aspect((value, requirements) => {}).setRequirements(['$parent.$parent.propertyA:attA']),
                 }),
         })    
     })
@@ -334,13 +334,13 @@ Ok what's the keyword for starting from root? Exactly!
 const structure = Structure.shape({
     levelA: Structure.shape({
         propertyA: Structure.string()
-            .attributes({
-                attA: Attribute(42),
+            .aspects({
+                attA: Aspect(42),
             }),
         levelB: Structure.shape({  
             propertyA: Structure.string()
-                .attributes({
-                    attA: Attribute((value, requirements) => {}).setRequirements(['$root.levelA.propertyA:attA']),
+                .aspects({
+                    attA: Aspect((value, requirements) => {}).setRequirements(['$root.levelA.propertyA:attA']),
                 }),
         })    
     })
@@ -358,8 +358,8 @@ const structure = Structure.shape({
             propertyA: Structure.string(),
             levelB: Structure.shape({  
                 propertyA: Structure.string()
-                    .attributes({
-                        attA: Attribute((value, requirements) => {}).setRequirements(['$root.levelA.$index.propertyA:attA']),
+                    .aspects({
+                        attA: Aspect((value, requirements) => {}).setRequirements(['$root.levelA.$index.propertyA:attA']),
                     }),
             })
         })    
@@ -372,30 +372,30 @@ const structure = Structure.shape({
 This does not look particularly useful at the moment I am sure. But there are two parts I have not told you about yet.
 
 1. The validator logic ALSO gets these requirements. The validation callback gets these as a third argument.
-2. If a required attribute is failing its validation then the attribute requiring it will NOT be evaluated. This is useful if you have a value which can be invalid in such a way that it cannot be used until it is valid. This means you can block the logic of one attribute until the other becomes valid! But it will only block if the validation is failing AND is marked fatal.
+2. If a required aspect is failing its validation then the aspect requiring it will NOT be evaluated. This is useful if you have a value which can be invalid in such a way that it cannot be used until it is valid. This means you can block the logic of one aspect until the other becomes valid! But it will only block if the validation is failing AND is marked fatal.
     
 Let's do an example, which will be a date range where two properties are dates in the form of strings. The first date must be less than the second. But it is also possible that one or both are invalid dates.
 
 To solve this we are going to use everything that we have discussed so far.
 
 ```js
-import Structure, { Attribute } from 'constructure';
+import Structure, { Aspect } from 'constructure';
 import { isNil, isNan } from 'lodash';
 
-const isValidDateAttribute = 
-    Attribute(
-        // This will create an attribute with a value of a Date object if the string value is not nil.
+const isValidDateAspect = 
+    Aspect(
+        // This will create an aspect with a value of a Date object if the string value is not nil.
         (value) => !isNil(value) ? new Date(value) : null
     )
-    .setValidator((_, attributeValue) =>
-        // Then if the attribute value is not nil it will try to get the Time
+    .setValidator((_, aspectValue) =>
+        // Then if the aspect value is not nil it will try to get the Time
         // If the time is a Nan value then that means that string value is not a valid date
-        // which will result in a fatally failing attribute for the given string value
-        isNil(attributeValue) || !isNan(attributeValue.getTime()) ? null : 'Not a valid Date'
+        // which will result in a fatally failing aspect for the given string value
+        isNil(aspectValue) || !isNan(aspectValue.getTime()) ? null : 'Not a valid Date'
     );
 
 const isGreaterDate = 
-    Attribute(true) // We Really don't need an attribute value but true is a good one to set here.
+    Aspect(true) // We Really don't need an aspect value but true is a good one to set here.
     .setValidator((value, _, requirements) =>
         const toDate = requirements[0];
         const fromDate = requirements[1];
@@ -409,54 +409,54 @@ const isGreaterDate =
 
 const structure  = Structure.shape({
     fromDate: Structure.string()
-        .attributes({
-            isValidDate: isValidDateAttribute
+        .aspects({
+            isValidDate: isValidDateAspect
         }),
     toDate: Structure.string()
-        .attributes({
-            isValidDate: isValidDateAttribute
-            // The validation for this attribute will ONLY run once the the other two required attributes pass their validation.
+        .aspects({
+            isValidDate: isValidDateAspect
+            // The validation for this aspect will ONLY run once the the other two required aspects pass their validation.
             isGreater: isGreaterDate.setRequirements(['$this:isValidDate', '$parent.fromDate:isValidDate'])
         }),
 });
 ```
 
-### Standard Attributes
+### Standard Aspects
 
-There are also a number of pre-defined attributes. These can be found on the Attribute class. The actual name of the attribute that these can be placed on can be anything you want. Though for the sake of your own sanity we really recommend that you use the same name.
+There are also a number of pre-defined aspects. These can be found on the Aspect class. The actual name of the aspect that these can be placed on can be anything you want. Though for the sake of your own sanity we really recommend that you use the same name.
 
 ```js
-import { Attribute } from 'constructure';
+import { Aspect } from 'constructure';
 ```
 
 #### __Required__
-This will define an attribute which has validation logic which will result in a fatal message indicating that the value is nil and should not be. This attribute can be used with any structure. The
+This will define an aspect which has validation logic which will result in a fatal message indicating that the value is nil and should not be. This aspect can be used with any structure. The
 
 ```js
-const structure = Structure.string().attributes({
-    required: Attribute.required()
-    requiredA: Attribute.required(false) // This will disable the validator, you would not do this
-    requiredA: Attribute.required(() => false)) // AHH tou can dynamically control it now! You might do this. Just wait till you see
+const structure = Structure.string().aspects({
+    required: Aspect.required()
+    requiredA: Aspect.required(false) // This will disable the validator, you would not do this
+    requiredA: Aspect.required(() => false)) // AHH tou can dynamically control it now! You might do this. Just wait till you see
 });
 ```
 
 ### Back to the date example
 
-Using these standard attributes let's try to simplify the previous date range example...
+Using these standard aspects let's try to simplify the previous date range example...
 
 ```js
-import Structure, { Attribute } from 'constructure';
+import Structure, { Aspect } from 'constructure';
 
 const structure  = Structure.shape({
     fromDate: Structure.string()
-        .attributes({
-            isValidDate: Attribute.validDate(),
+        .aspects({
+            isValidDate: Aspect.validDate(),
         }),
     toDate: Structure.string()
-        .attributes({
-            isValidDate: Attribute.validDate(),
-            // This is one of the more complex standard attributes
-            isGreater: Attribute.minDate((_, req) => req[1]).setRequirements(['$this:isValidDate', '$parent.fromDate:isValidDate'])
+        .aspects({
+            isValidDate: Aspect.validDate(),
+            // This is one of the more complex standard aspects
+            isGreater: Aspect.minDate((_, req) => req[1]).setRequirements(['$this:isValidDate', '$parent.fromDate:isValidDate'])
         }),
 });
 ```
@@ -484,23 +484,23 @@ And the result is,... the most important part. But what does it look like?
 
 For simple values(string, number, boolean, date, object, array, any) it looks like the follow example.
 
-But each attribute has a result value AND at the property level? Yep. That is because we combine the result of all of the attributes to reach a single result value for the property. Which means there is a priority level for each result type.
+But each aspect has a result value AND at the property level? Yep. That is because we combine the result of all of the aspects to reach a single result value for the property. Which means there is a priority level for each result type.
 
 fatal > blocked > non-fatal > pass.
 
-If even one attribute is marked as fatal then the result for the property will be fatal.
+If even one aspect is marked as fatal then the result for the property will be fatal.
 
 ```js
 const result = {
     $r: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
     $a: {
         attA: {
-            value: 'attributeValue',
+            value: 'aspectValue',
             result: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
             message: 'Failed validation message here'
         },
         attB: {
-            value: 'attributeValue',
+            value: 'aspectValue',
             result: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
             message: 'Failed validation message here'
         }
@@ -514,17 +514,17 @@ Complex values(shape, objectOf, arrayOf, lazy, oneOfType) are, well, complex. Le
 
 #### Shape
 
-Ok this really is simple. But the same logic for the hierarchy of results we saw before is the same here. Once we have the final results value for the attributes for the shape structure we then combine it with the results from all the properties for the shape into one final result.
+Ok this really is simple. But the same logic for the hierarchy of results we saw before is the same here. Once we have the final results value for the aspects for the shape structure we then combine it with the results from all the properties for the shape into one final result.
 
-So even if all of the attributes for the shape are passing if any child property of the same is marked fatal, then the shape will be fatal as well.
+So even if all of the aspects for the shape are passing if any child property of the same is marked fatal, then the shape will be fatal as well.
 
 ```js {
 const result = {
     $r: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
     $a: {
-        /// Any attributes for the shape structure
+        /// Any aspects for the shape structure
         attA: {
-            value: 'attributeValue',
+            value: 'aspectValue',
             result: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
             message: 'Failed validation message here'
         }
@@ -533,9 +533,9 @@ const result = {
     propertyA: {
         $r: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
         $a: {
-            /// Any attributes for the propertyA structure
+            /// Any aspects for the propertyA structure
             attA: {
-                value: 'attributeValue',
+                value: 'aspectValue',
                 result: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
                 message: 'Failed validation message here'
             }
@@ -554,12 +554,12 @@ This is basically the same as shape just with indexes instead of property keys.
 
 #### Lazy
 
-Okay this is a little different here. Everything works the same but because you can have attributes on the lazy structure itself as well as the structure it returns we have two sets of results for one property value!
+Okay this is a little different here. Everything works the same but because you can have aspects on the lazy structure itself as well as the structure it returns we have two sets of results for one property value!
 
-We need to combine them! Really the only thing to realize here is the two results cannot share similar attribute names. Otherwise it is just simple merge of attributes and properties(if the callback returns another complex structure). Also the results of the two are compared for the worst result type.
+We need to combine them! Really the only thing to realize here is the two results cannot share similar aspect names. Otherwise it is just simple merge of aspects and properties(if the callback returns another complex structure). Also the results of the two are compared for the worst result type.
 
 But in the end it is no different of a result than what would be returned for the structure which is was used.
 
 #### OneOf Type
 
-This is the most complex but in the end it is the same train of thought as Lazy. The only difference here is we need to determine which structure works. Once we have a working structure then the results from that one are used to get the results from the attributes.
+This is the most complex but in the end it is the same train of thought as Lazy. The only difference here is we need to determine which structure works. Once we have a working structure then the results from that one are used to get the results from the aspects.

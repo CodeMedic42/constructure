@@ -4,7 +4,7 @@ import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
 import Structure from './structure';
 import createRuntime from '../common/create-runtime';
-import processAttributes from '../common/process-attributes';
+import processAspects from '../common/process-aspects';
 import getWorstResultLevel from '../common/get-worst-level';
 
 function verifier(structure, value) {
@@ -21,7 +21,7 @@ function verifier(structure, value) {
     });
 }
 
-function validator(structure, runtime, attributes) {
+function validator(structure, runtime, aspects) {
     const groupResults = [];
 
     const childResults = reduce(runtime.value, (acc, childValue, childIndex) => {
@@ -36,7 +36,7 @@ function validator(structure, runtime, attributes) {
         return acc;
     }, []);
 
-    const { $r, $a } = processAttributes(runtime, attributes);
+    const { $r, $a } = processAspects(runtime, aspects);
 
     groupResults.push($r);
 

@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Structure, { Attribute } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
@@ -7,8 +7,8 @@ describe('Array Structure', () => {
     it('Null Value', () => {
         const structure = Structure.array();
 
-        return structure.run(null).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run(null).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -18,8 +18,8 @@ describe('Array Structure', () => {
     it('Undefined Value', () => {
         const structure = Structure.array();
 
-        return structure.run().then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run().then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -29,8 +29,8 @@ describe('Array Structure', () => {
     it('Array Value', () => {
         const structure = Structure.array();
 
-        return structure.run([]).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run([]).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -71,10 +71,10 @@ describe('Array Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.array()
-            .aspect('required', Attribute.required());
+            .aspect('required', Aspect.required());
 
-        return structure.run([]).then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run([]).then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'pass',
                 $a: {
                     required: {
@@ -89,10 +89,10 @@ describe('Array Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.array()
-            .aspect('required', Attribute.required());
+            .aspect('required', Aspect.required());
 
-        return structure.run().then((attributeValues) => {
-            expect(attributeValues).to.eql({
+        return structure.run().then((aspectValues) => {
+            expect(aspectValues).to.eql({
                 $r: 'fatal',
                 $a: {
                     required: {

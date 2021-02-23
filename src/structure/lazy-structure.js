@@ -1,6 +1,6 @@
 import isNil from 'lodash/isNil';
 import Structure from './structure';
-import processAttributes from '../common/process-attributes';
+import processAspects from '../common/process-aspects';
 
 function verifier(callback, value) {
     if (isNil(value)) {
@@ -21,8 +21,8 @@ function verifier(callback, value) {
     return structure;
 }
 
-function validator(runtime, attributes) {
-    return processAttributes(runtime, attributes);
+function validator(runtime, aspects) {
+    return processAspects(runtime, aspects);
 }
 
 export default (callback) => new Structure(

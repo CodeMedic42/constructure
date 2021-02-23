@@ -15,31 +15,31 @@ const FIELDS = {
 'abc' === '$this.abc'
 'abc:att' === '$this.abc:att'
 '$this' Get the current value
-'$this:att' Get the attribute at the current value
+'$this:att' Get the aspect at the current value
 '$this.abc' Get the value of the child at the current value
-'$this.abc:att' Get the attribute at the value of the child at the current value
+'$this.abc:att' Get the aspect at the value of the child at the current value
 '$root' Get the root value
-'$root:att' Get the attribute at the root value
+'$root:att' Get the aspect at the root value
 '$root.abc' Get the value of the child at the root value
-'$root.abc:att' Get the attribute at the value of the child at the root value
+'$root.abc:att' Get the aspect at the value of the child at the root value
 '$parent' Get the value of the parent from the current value
-'$parent:att' Get the attribute of the value of the parent from the current value
+'$parent:att' Get the aspect of the value of the parent from the current value
 '$parent.abc' Get the value of the child of the parent from the current value
-'$parent.abc:att' Get the attribute of the value of the child of the parent from the current value
+'$parent.abc:att' Get the aspect of the value of the child of the parent from the current value
 */
 class Requirements {
     constructor(requirements) {
         this[FIELDS.requirements] = reduce(requirements, (acc, requirement) => {
             let path = null;
-            let attribute = null;
+            let aspect = null;
 
             if (isString(requirement)) {
                 const parts = split(requirement, ':');
 
-                [path, attribute] = parts;
+                [path, aspect] = parts;
             } else {
                 path = requirement.path;
-                attribute = requirement.attribute;
+                aspect = requirement.aspect;
             }
 
             path = toPath(path);
@@ -50,7 +50,7 @@ class Requirements {
 
             acc.push({
                 path,
-                attribute,
+                aspect,
             });
 
             return acc;

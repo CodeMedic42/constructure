@@ -2,15 +2,15 @@ import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
-import { isFunction, isPlainObject } from 'lodash';
+// import { isFunction, isPlainObject } from 'lodash';
 import getWorstResultLevel from '../common/get-worst-level';
-import Attribute from '../attribute/attribute';
+import Aspect from '../aspect/aspect';
 
 const FIELDS = {
     verifier: Symbol('verifier'),
     validator: Symbol('validator'),
     additionalStructure: Symbol('additionalStructure'),
-    attributes: Symbol('attributes'),
+    aspects: Symbol('aspects'),
 };
 
 class Structure {
@@ -18,8 +18,7 @@ class Structure {
         this[FIELDS.verifier] = verifier;
         this[FIELDS.validator] = validator;
         this[FIELDS.additionalStructure] = null;
-        this[FIELDS.attributes] = {};
-        // this[FIELDS.aspects] = {};
+        this[FIELDS.aspects] = {};
     }
 
     verify(value) {
@@ -34,7 +33,7 @@ class Structure {
             additionalResults = this[FIELDS.additionalStructure].validate(runtime);
         }
 
-        const finalResults = this[FIELDS.validator](runtime, this[FIELDS.attributes]);
+        const finalResults = this[FIELDS.validator](runtime, this[FIELDS.aspects]);
 
         if (!isNil(additionalResults)) {
             const {
@@ -43,12 +42,12 @@ class Structure {
                 ...rest
             } = additionalResults;
 
-            forEach($a, (attributeResult, attributeId) => {
-                if (!isNil(finalResults[attributeId])) {
-                    throw new Error(`Attribute ${attributeId} already exists`);
+            forEach($a, (aspectResult, aspectId) => {
+                if (!isNil(finalResults[aspectId])) {
+                    throw new Error(`Aspect ${aspectId} already exists`);
                 }
 
-                finalResults.$a[attributeId] = attributeResult;
+                finalResults.$a[aspectId] = aspectResult;
             });
 
             forEach(rest, (property, propertyId) => {
@@ -72,40 +71,15 @@ class Structure {
         }
 
         // eslint-disable-next-line no-param-reassign
-        runtime.$this.attributeResults = finalResults;
+        runtime.$this.aspectResults = finalResults;
 
         return finalResults;
     }
 
     aspect(id, aspectValue, options) {
-        let attribute = null;
-
-        if (aspectValue instanceof Attribute) {
-            attribute = aspectValue;
-        } else {
-            attribute = new Attribute(aspectValue);
-
-            if (!isNil(options)) {
-                let onValidate = null;
-                let isFatal = true;
-
-                if (isPlainObject(options.validator)) {
-                    ({ onValidate, isFatal } = options.validator);
-                } else {
-                    onValidate = options.validator;
-                }
-
-                if (isFunction(onValidate)) {
-                    attribute = attribute.setValidator(onValidate, isFatal === true);
-                }
-
-                if (!isNil(options.requirements)) {
-                    attribute = attribute.setRequirements(options.requirements);
-                }
-            }
-        }
-
-        this[FIELDS.attributes][id] = attribute;
+        this[FIELDS.aspects][id] = aspectValue instanceof Aspect
+            ? aspectValue
+            : new Aspect(aspectValue, options);
 
         return this;
     }
@@ -116,21 +90,21 @@ class Structure {
         const runtime = {
             $root: {
                 value,
-                attributeResults: null,
+                aspectResults: null,
             },
             $this: {
                 value,
-                attributeResults: null,
+                aspectResults: null,
             },
             absolutePath: [],
         };
 
-        const attributeResults = this.validate(runtime);
+        const aspectResults = this.validate(runtime);
 
-        runtime.$root.attributeResults = attributeResults;
-        runtime.$this.attributeResults = attributeResults;
+        runtime.$root.aspectResults = aspectResults;
+        runtime.$this.aspectResults = aspectResults;
 
-        return attributeResults.$r.then(() => attributeResults);
+        return aspectResults.$r.then(() => aspectResults);
     }
 }
 

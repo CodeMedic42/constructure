@@ -3,7 +3,7 @@ import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
-import processAttributes from '../common/process-attributes';
+import processAspects from '../common/process-aspects';
 import getWorstResultLevel from '../common/get-worst-level';
 import createRuntime from '../common/create-runtime';
 
@@ -29,7 +29,7 @@ function verifier(properties, exact, value) {
     }
 }
 
-function validator(properties, runtime, attributes) {
+function validator(properties, runtime, aspects) {
     const groupResults = [];
 
     const childResults = reduce(properties, (acc, property, propertyId) => {
@@ -44,7 +44,7 @@ function validator(properties, runtime, attributes) {
         return acc;
     }, {});
 
-    const { $r, $a } = processAttributes(runtime, attributes);
+    const { $r, $a } = processAspects(runtime, aspects);
 
     groupResults.push($r);
 

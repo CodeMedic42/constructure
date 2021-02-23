@@ -1,8 +1,8 @@
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import Result from '../result';
-// import requiredValidator from './required-attribute';
-// import maxLengthValidator from '../attributes/max-length-attribute';
+// import requiredValidator from './required-aspect';
+// import maxLengthValidator from '../aspects/max-length-aspect';
 // import maxValidator from './max-validator';
 // import minLengthValidator from './min-length-validator';
 // import minValidator from './min-validator';
@@ -20,11 +20,11 @@ class Validator {
         this[FIELDS.fatal] = fatal;
     }
 
-    run(value, attributeValue, requiredAttributes) {
+    run(value, aspectValue, requiredAspects) {
         const message = this[FIELDS.logic](
             value,
-            attributeValue,
-            requiredAttributes,
+            aspectValue,
+            requiredAspects,
         );
 
         return !isNil(message) ? new Result(message, this[FIELDS.fatal]) : null;
