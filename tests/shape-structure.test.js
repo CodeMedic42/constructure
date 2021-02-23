@@ -1,11 +1,9 @@
 import chai from 'chai';
 import Promise from 'bluebird';
-import Structure, { Attribute } from '../src';
+import Structure, {} from '../src';
 
 const { expect } = chai;
 
-// const fatal = true;
-// const nonFatal = false;
 const attributeValue = 42;
 
 function buildFlaggedResult(value, result, message) {
@@ -16,7 +14,7 @@ function buildValidatorMessage(value, attributeResultValue) {
     return `value:${value} attributeValue:${attributeResultValue}`;
 }
 
-const validator = (value, attributeResultValue) => buildValidatorMessage(
+const onValidate = (value, attributeResultValue) => buildValidatorMessage(
     value,
     attributeResultValue,
 );
@@ -47,9 +45,7 @@ describe('Shape Structure', () => {
         it('Static Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(attributeValue),
-                    }),
+                    .aspect('flagged', attributeValue),
             });
 
             const value = {
@@ -73,9 +69,7 @@ describe('Shape Structure', () => {
         it('Null Static Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(null),
-                    }),
+                    .aspect('flagged', null),
             });
 
             const value = {
@@ -99,9 +93,7 @@ describe('Shape Structure', () => {
         it('Undefined Static Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(),
-                    }),
+                    .aspect('flagged', undefined),
             });
 
             const value = {
@@ -125,9 +117,7 @@ describe('Shape Structure', () => {
         it('Dynamic Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(() => attributeValue),
-                    }),
+                    .aspect('flagged', () => attributeValue),
             });
 
             const value = {
@@ -151,9 +141,7 @@ describe('Shape Structure', () => {
         it('Null Dynamic Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(() => null),
-                    }),
+                    .aspect('flagged', () => null),
             });
 
             const value = {
@@ -177,9 +165,7 @@ describe('Shape Structure', () => {
         it('Undefined Dynamic Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(() => undefined),
-                    }),
+                    .aspect('flagged', () => undefined),
             });
 
             const value = {
@@ -203,9 +189,7 @@ describe('Shape Structure', () => {
         it('Async Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(Promise.delay(500).then(() => attributeValue)),
-                    }),
+                    .aspect('flagged', () => Promise.delay(500).then(() => attributeValue)),
             });
 
             const value = {
@@ -229,9 +213,7 @@ describe('Shape Structure', () => {
         it('Null Async Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(Promise.delay(500).then(() => null)),
-                    }),
+                    .aspect('flagged', () => Promise.delay(500).then(() => null)),
             });
 
             const value = {
@@ -255,9 +237,7 @@ describe('Shape Structure', () => {
         it('Undefined Async Property Attribute', () => {
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        flagged: Attribute(Promise.delay(500).then(() => undefined)),
-                    }),
+                    .aspect('flagged', () => Promise.delay(500).then(() => undefined)),
             });
 
             const value = {
@@ -286,9 +266,8 @@ describe('Shape Structure', () => {
                     it('Null Static Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute(null)
-                                        .setValidator(validator, isFatal),
+                                .aspect('flagged', null, {
+                                    validator: { onValidate, isFatal },
                                 }),
                         });
 
@@ -313,9 +292,8 @@ describe('Shape Structure', () => {
                     it('Undefined Static Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute(undefined)
-                                        .setValidator(validator, isFatal),
+                                .aspect('flagged', undefined, {
+                                    validator: { onValidate, isFatal },
                                 }),
                         });
 
@@ -340,9 +318,8 @@ describe('Shape Structure', () => {
                     it('Static Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute(attributeValue)
-                                        .setValidator(validator, isFatal),
+                                .aspect('flagged', attributeValue, {
+                                    validator: { onValidate, isFatal },
                                 }),
                         });
 
@@ -374,9 +351,8 @@ describe('Shape Structure', () => {
                     it('Null Dynamic Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute(() => null)
-                                        .setValidator(validator, isFatal),
+                                .aspect('flagged', () => null, {
+                                    validator: { onValidate, isFatal },
                                 }),
                         });
 
@@ -401,9 +377,8 @@ describe('Shape Structure', () => {
                     it('Undefined Dynamic Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute(() => undefined)
-                                        .setValidator(validator, isFatal),
+                                .aspect('flagged', () => undefined, {
+                                    validator: { onValidate, isFatal },
                                 }),
                         });
 
@@ -428,9 +403,8 @@ describe('Shape Structure', () => {
                     it('Dynamic Property Attribute', () => {
                         const structure = Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute(() => attributeValue)
-                                        .setValidator(validator, isFatal),
+                                .aspect('flagged', () => attributeValue, {
+                                    validator: { onValidate, isFatal },
                                 }),
                         });
 
@@ -470,16 +444,18 @@ describe('Shape Structure', () => {
                 it('Static Property Attribute flagged => requiredAttA', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
-                            .attributes({
-                                flagged: Attribute((value, requirements) => {
+                            .aspect(
+                                'flagged',
+                                (value, requirements) => {
                                     expect(value).to.equal('test');
                                     expect(requirements).to.eql([42]);
 
                                     return attributeValue;
-                                })
-                                    .setRequirements([':requiredAttA']),
-                                requiredAttA: Attribute(42),
-                            }),
+                                }, {
+                                    requirements: [':requiredAttA'],
+                                },
+                            )
+                            .aspect('requiredAttA', 42),
                     });
 
                     const value = {
@@ -504,18 +480,21 @@ describe('Shape Structure', () => {
                 it('Static Property Attribute flagged => requiredAttA => requiredAttB', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
-                            .attributes({
-                                requiredAttB: Attribute('foo'),
-                                flagged: Attribute((value, requirements) => {
+                            .aspect(
+                                'flagged',
+                                (value, requirements) => {
                                     expect(value).to.equal('test');
                                     expect(requirements).to.eql([42, 'foo']);
 
                                     return attributeValue;
-                                })
-                                    .setRequirements([':requiredAttA', ':requiredAttB']),
-                                requiredAttA: Attribute(42)
-                                    .setRequirements([':requiredAttB']),
-                            }),
+                                }, {
+                                    requirements: [':requiredAttA', ':requiredAttB'],
+                                },
+                            )
+                            .aspect('requiredAttA', 42, {
+                                requirements: [':requiredAttB'],
+                            })
+                            .aspect('requiredAttB', 'foo'),
                     });
 
                     const value = {
@@ -543,20 +522,17 @@ describe('Shape Structure', () => {
                 it('Static Property Attribute flagged => requiredAttA', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
-                            .attributes({
-                                requiredAttA: Attribute(42),
-                            }),
+                            .aspect('requiredAttA', 42),
                     })
-                        .attributes({
-                            flagged: Attribute((value, requirements) => {
-                                expect(value).to.eql({
-                                    testString: 'test',
-                                });
-                                expect(requirements).to.eql([42]);
+                        .aspect('flagged', (value, requirements) => {
+                            expect(value).to.eql({
+                                testString: 'test',
+                            });
+                            expect(requirements).to.eql([42]);
 
-                                return attributeValue;
-                            })
-                                .setRequirements(['testString:requiredAttA']),
+                            return attributeValue;
+                        }, {
+                            requirements: ['testString:requiredAttA'],
                         });
 
                     const value = {
@@ -582,26 +558,22 @@ describe('Shape Structure', () => {
                 it('Static Property Attribute flagged => requiredAttA => requiredAttB', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
-                            .attributes({
-                                requiredAttA: Attribute(42)
-                                    .setRequirements(['$parent.testNumber:requiredAttB']),
+                            .aspect('requiredAttA', 42, {
+                                requirements: ['$parent.testNumber:requiredAttB'],
                             }),
                         testNumber: Structure.number()
-                            .attributes({
-                                requiredAttB: Attribute('foo'),
-                            }),
+                            .aspect('requiredAttB', 'foo'),
                     })
-                        .attributes({
-                            flagged: Attribute((value, requirements) => {
-                                expect(value).to.eql({
-                                    testString: 'test',
-                                    testNumber: 237,
-                                });
-                                expect(requirements).to.eql([42, 'foo']);
+                        .aspect('flagged', (value, requirements) => {
+                            expect(value).to.eql({
+                                testString: 'test',
+                                testNumber: 237,
+                            });
+                            expect(requirements).to.eql([42, 'foo']);
 
-                                return attributeValue;
-                            })
-                                .setRequirements(['testString:requiredAttA', 'testNumber:requiredAttB']),
+                            return attributeValue;
+                        }, {
+                            requirements: ['testString:requiredAttA', 'testNumber:requiredAttB'],
                         });
 
                     const value = {
@@ -762,34 +734,29 @@ describe('Shape Structure', () => {
         });
 
         it('Deep Failing Validation with Requirements', () => {
-            const isFatal = true;
-
             const structure = Structure.shape({
                 testString: Structure.string()
-                    .attributes({
-                        requiredAttA: Attribute('foo'),
-                    }),
+                    .aspect('requiredAttA', 'foo'),
                 testNumber: Structure.number(),
                 testShape: Structure.shape({
                     testString: Structure.string(),
                     testNumber: Structure.number(),
                     testShape: Structure.shape({
                         testString: Structure.string()
-                            .attributes({
-                                flagged: Attribute((value, requirements) => {
+                            .aspect('flagged', (value, requirements) => {
+                                expect(value).to.eql('test');
+                                expect(requirements).to.eql(['foo']);
+
+                                return attributeValue;
+                            }, {
+                                validator: (value, attributeValueResult, requirements) => {
                                     expect(value).to.eql('test');
+                                    expect(attributeValueResult).to.eql(attributeValue);
                                     expect(requirements).to.eql(['foo']);
 
-                                    return attributeValue;
-                                })
-                                    .setValidator((value, attributeValueResult, requirements) => {
-                                        expect(value).to.eql('test');
-                                        expect(attributeValueResult).to.eql(attributeValue);
-                                        expect(requirements).to.eql(['foo']);
-
-                                        return 'Failing Message';
-                                    }, isFatal)
-                                    .setRequirements(['$root.testString:requiredAttA']),
+                                    return 'Failing Message';
+                                },
+                                requirements: ['$root.testString:requiredAttA'],
                             }),
                         testNumber: Structure.number(),
                     }),

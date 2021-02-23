@@ -2,7 +2,9 @@ import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
+import { isFunction, isPlainObject } from 'lodash';
 import getWorstResultLevel from '../common/get-worst-level';
+import Attribute from '../attribute/attribute';
 
 const FIELDS = {
     verifier: Symbol('verifier'),
@@ -17,6 +19,7 @@ class Structure {
         this[FIELDS.validator] = validator;
         this[FIELDS.additionalStructure] = null;
         this[FIELDS.attributes] = {};
+        // this[FIELDS.aspects] = {};
     }
 
     verify(value) {
@@ -74,8 +77,35 @@ class Structure {
         return finalResults;
     }
 
-    attributes(attributes) {
-        this[FIELDS.attributes] = attributes || {};
+    aspect(id, aspectValue, options) {
+        let attribute = null;
+
+        if (aspectValue instanceof Attribute) {
+            attribute = aspectValue;
+        } else {
+            attribute = new Attribute(aspectValue);
+
+            if (!isNil(options)) {
+                let onValidate = null;
+                let isFatal = true;
+
+                if (isPlainObject(options.validator)) {
+                    ({ onValidate, isFatal } = options.validator);
+                } else {
+                    onValidate = options.validator;
+                }
+
+                if (isFunction(onValidate)) {
+                    attribute = attribute.setValidator(onValidate, isFatal === true);
+                }
+
+                if (!isNil(options.requirements)) {
+                    attribute = attribute.setRequirements(options.requirements);
+                }
+            }
+        }
+
+        this[FIELDS.attributes][id] = attribute;
 
         return this;
     }

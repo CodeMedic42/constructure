@@ -14,12 +14,18 @@ function requiredLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (attributeValue = true, message = 'Required', fatal = true, requirements) => {
-    const attribute = (new Attribute(attributeValue))
+export default (attributeValue = true, options = {}) => {
+    const {
+        message = 'Required',
+        fatal = true,
+        requirements,
+    } = options;
+
+    let attribute = (new Attribute(attributeValue))
         .setValidator(requiredLogic.bind(null, message), fatal);
 
     if (!isNil(requirements)) {
-        return attribute.setRequirements(requirements);
+        attribute = attribute.setRequirements(requirements);
     }
 
     return attribute;

@@ -136,7 +136,10 @@ __Note:__ Be aware that the validations for structures returned from the lazy ca
 ```js
 // Here is an example of a looping person object with person contacts.
 const structure = Structure.shape({
-    firstName: Structure.string(),
+    firstName: Structure.string()
+        .attributes({
+            required: Attribute.require()
+        }),
     lastName: Structure.string(),
     phoneNumber: Structure.string(),
     contacts: Structure.arrayOf(
@@ -496,7 +499,7 @@ const result = {
             result: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
             message: 'Failed validation message here'
         },
-        attA: {
+        attB: {
             value: 'attributeValue',
             result: 'pass' || 'fatal' || 'non-fatal' || 'blocked',
             message: 'Failed validation message here'

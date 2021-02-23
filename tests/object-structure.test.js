@@ -71,9 +71,7 @@ describe('Object Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.object()
-            .attributes({
-                required: Attribute.required(),
-            });
+            .aspect('required', Attribute.required());
 
         return structure.run({}).then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -91,9 +89,7 @@ describe('Object Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.object()
-            .attributes({
-                required: Attribute.required(),
-            });
+            .aspect('required', Attribute.required());
 
         return structure.run().then((attributeValues) => {
             expect(attributeValues).to.eql({

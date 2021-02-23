@@ -19,7 +19,13 @@ function minLengthLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (attributeValue, message = 'Min Length', fatal = true, requirements) => {
+export default (attributeValue, options = {}) => {
+    const {
+        message = 'Min Length',
+        fatal = true,
+        requirements,
+    } = options;
+
     const attribute = (new Attribute(attributeValue))
         .setValidator(minLengthLogic.bind(null, message), fatal);
 

@@ -19,7 +19,13 @@ function minLogic(message, value, attributeValue) {
     return message;
 }
 
-export default (attributeValue, message = 'Min', fatal = true, requirements) => {
+export default (attributeValue, options = {}) => {
+    const {
+        message = 'Min',
+        fatal = true,
+        requirements,
+    } = options;
+
     const attribute = (new Attribute(attributeValue))
         .setValidator(minLogic.bind(null, message), fatal);
 

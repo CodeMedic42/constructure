@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Structure, { Attribute } from '../src';
+import Structure from '../src';
 
 const { expect } = chai;
 
@@ -159,79 +159,78 @@ describe('Shape Structure', () => {
                     testReqValueD: Structure.string(),
                     testOneOfType: Structure.oneOfType([
                         Structure.string()
-                            .attributes({
-                                flagged: Attribute((value, requirements) => {
+                            .aspect(
+                                'flagged',
+                                (value, requirements) => {
                                     expect(value).to.eql(stringValue);
                                     expect(requirements).to.eql([testReqAttAValue]);
 
                                     return stringAttributeValue;
-                                })
-                                    .setValidator((value, attributeValueResult, requirements) => {
+                                }, {
+                                    validator: (value, attributeValueResult, requirements) => {
                                         expect(value).to.eql(stringValue);
                                         expect(attributeValueResult).to.eql(stringAttributeValue);
                                         expect(requirements).to.eql([testReqAttAValue]);
 
                                         return 'Failing Message';
-                                    }, true)
-                                    .setRequirements(['$parent.testReqValueA']),
-                            }),
+                                    },
+                                    requirements: ['$parent.testReqValueA'],
+                                },
+                            ),
                         Structure.number()
-                            .attributes({
-                                flagged: Attribute((value, requirements) => {
+                            .aspect('flagged', (value, requirements) => {
+                                expect(value).to.eql(numberValue);
+                                expect(requirements).to.eql([testReqAttBValue]);
+
+                                return numberAttributeValue;
+                            }, {
+                                validator: (value, attributeValueResult, requirements) => {
                                     expect(value).to.eql(numberValue);
+                                    expect(attributeValueResult).to.eql(numberAttributeValue);
                                     expect(requirements).to.eql([testReqAttBValue]);
 
-                                    return numberAttributeValue;
-                                })
-                                    .setValidator((value, attributeValueResult, requirements) => {
-                                        expect(value).to.eql(numberValue);
-                                        expect(attributeValueResult).to.eql(numberAttributeValue);
-                                        expect(requirements).to.eql([testReqAttBValue]);
-
-                                        return 'Failing Message';
-                                    }, true)
-                                    .setRequirements(['$parent.testReqValueB']),
+                                    return 'Failing Message';
+                                },
+                                requirements: ['$parent.testReqValueB'],
                             }),
                         Structure.shape({
                             testString: Structure.string()
-                                .attributes({
-                                    flagged: Attribute((value, requirements) => {
+                                .aspect('flagged', (value, requirements) => {
+                                    expect(value).to.eql(shapeValue);
+                                    expect(requirements).to.eql([testReqAttCValue]);
+
+                                    return shapeAttributeValue;
+                                }, {
+                                    validator: (
+                                        value,
+                                        attributeValueResult,
+                                        requirements,
+                                    ) => {
                                         expect(value).to.eql(shapeValue);
+                                        expect(attributeValueResult)
+                                            .to.eql(shapeAttributeValue);
                                         expect(requirements).to.eql([testReqAttCValue]);
 
-                                        return shapeAttributeValue;
-                                    })
-                                        .setValidator((
-                                            value,
-                                            attributeValueResult,
-                                            requirements,
-                                        ) => {
-                                            expect(value).to.eql(shapeValue);
-                                            expect(attributeValueResult)
-                                                .to.eql(shapeAttributeValue);
-                                            expect(requirements).to.eql([testReqAttCValue]);
-
-                                            return 'Failing Message';
-                                        }, true)
-                                        .setRequirements(['$parent.$parent.testReqValueC']),
+                                        return 'Failing Message';
+                                    },
+                                    requirements: ['$parent.$parent.testReqValueC'],
                                 }),
                         }),
                     ])
-                        .attributes({
-                            common: Attribute((value, requirements) => {
+                        .aspect('common', (value, requirements) => {
+                            expect(value).to.eql(commonValue);
+                            expect(requirements).to.eql([testReqAttDValue]);
+
+                            return commonAttributeValue;
+                        }, {
+                            validator: (value, attributeValueResult, requirements) => {
                                 expect(value).to.eql(commonValue);
+                                expect(attributeValueResult).to.eql(commonAttributeValue);
                                 expect(requirements).to.eql([testReqAttDValue]);
 
-                                return commonAttributeValue;
-                            })
-                                .setValidator((value, attributeValueResult, requirements) => {
-                                    expect(value).to.eql(commonValue);
-                                    expect(attributeValueResult).to.eql(commonAttributeValue);
-                                    expect(requirements).to.eql([testReqAttDValue]);
-
-                                    return 'Failing Message';
-                                }, true)
-                                .setRequirements(['$parent.testReqValueD']),
+                                return 'Failing Message';
+                            },
+                            requirements: ['$parent.testReqValueD'],
                         }),
                 });
             };

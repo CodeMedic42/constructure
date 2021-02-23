@@ -17,19 +17,15 @@ class Attribute {
     }
 
     setValidator(callback, isFatal) {
-        const newAttribute = this.clone();
+        this[FIELDS.validator] = new Validator(callback, isFatal);
 
-        newAttribute[FIELDS.validator] = new Validator(callback, isFatal);
-
-        return newAttribute;
+        return this;
     }
 
     setRequirements(requirements) {
-        const newAttribute = this.clone();
+        this[FIELDS.requirements] = new Requirements(requirements);
 
-        newAttribute[FIELDS.requirements] = new Requirements(requirements);
-
-        return newAttribute;
+        return this;
     }
 
     getValue() {

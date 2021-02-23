@@ -83,9 +83,7 @@ describe('Any Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.any()
-            .attributes({
-                required: Attribute.required(),
-            });
+            .aspect('required', Attribute.required());
 
         return structure.run('test').then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -103,9 +101,7 @@ describe('Any Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.any()
-            .attributes({
-                required: Attribute.required(),
-            });
+            .aspect('required', Attribute.required());
 
         return structure.run().then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -123,9 +119,7 @@ describe('Any Structure', () => {
 
     it('Basic MinLength Passed', () => {
         const structure = Structure.any()
-            .attributes({
-                minLength: Attribute.minLength(3),
-            });
+            .aspect('minLength', Attribute.minLength(3));
 
         return structure.run('test').then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -143,9 +137,7 @@ describe('Any Structure', () => {
 
     it('Basic MinLength Fails', () => {
         const structure = Structure.any()
-            .attributes({
-                minLength: Attribute.minLength(8),
-            });
+            .aspect('minLength', Attribute.minLength(8));
 
         return structure.run('test').then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -163,9 +155,7 @@ describe('Any Structure', () => {
 
     it('Basic MaxLength Passed', () => {
         const structure = Structure.any()
-            .attributes({
-                maxLength: Attribute.maxLength(8),
-            });
+            .aspect('maxLength', Attribute.maxLength(8));
 
         return structure.run('test').then((attributeValues) => {
             expect(attributeValues).to.eql({
@@ -183,9 +173,7 @@ describe('Any Structure', () => {
 
     it('Basic MaxLength Fails', () => {
         const structure = Structure.any()
-            .attributes({
-                maxLength: Attribute.maxLength(3),
-            });
+            .aspect('maxLength', Attribute.maxLength(3));
 
         return structure.run('test').then((attributeValues) => {
             expect(attributeValues).to.eql({

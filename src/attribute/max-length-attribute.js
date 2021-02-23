@@ -19,7 +19,13 @@ const maxLengthLogic = (message, value, attributeValue) => {
     return message;
 };
 
-export default (attributeValue, message = 'Max Length', fatal = true, requirements) => {
+export default (attributeValue, options = {}) => {
+    const {
+        message = 'Max Length',
+        fatal = true,
+        requirements,
+    } = options;
+
     const attribute = (new Attribute(attributeValue))
         .setValidator(maxLengthLogic.bind(null, message), fatal);
 
