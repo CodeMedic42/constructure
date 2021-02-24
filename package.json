@@ -10,11 +10,11 @@
     "url": "https://github.com/CodeMedic42/constructure.git"
   },
   "scripts": {
-    "lint": "npx eslint ./ --fix",
+    "lint": "npx eslint ./src ./tests --fix",
     "test": "npx mocha tests/**/*.test.js --reporter spec --colors",
     "build": "./node_modules/.bin/babel ./src --out-dir lib",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint"
+    "prepublishOnly": "npm run lint && npm test"
   },
   "lint-staged": {
     "*.{js,jsx}": [
