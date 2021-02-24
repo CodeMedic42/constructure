@@ -1,26 +1,65 @@
 # Constructure
 
-Constructure is a schema validation library where you are in control. Its main focus is to provide an interface where a developer can define a schema for a set of data and the logic needed to validate it. But more importantly to link and choreograph all the validation logic. If you have a validator which uses the value from somewhere else in the data you can do this. But if that value is not valid you can block the validator from running until its required value is passing its validation.
+Constructure is a schema validation library. 
 
-### Install
+## The Pitch
+
+This library has some target goals.
+
+1. Handle complex interconnected conditional logic throughout the entire data set.
+2. Provide a way where logic can be blocked from running is a required value is not passing validation, thus reduce rerunning the same logic.
+3. Output the results in such a manner as to have a break down of what is failing at each level of the data tree.
+4. Output the results in such a manner where I can bind to individual HTML elements using appropriate attribute (i.e. the required attribute on ann input)
+
+## Contents
+
+- [Install](#Install)
+- [Glossary](#Glossary)
+- [Structure](#Structure)
+- [Aspect](#Aspect)
+- [Execution](#Execution)
+
+## Install
 
 ```bash
 npm install constucture --save
 ```
 
+## Glossary
+
+Yeah this is usually at the end but I need to be able to communicate with you. Here is my terminology.
+
+- Verify(Verification): There are two main actions in this library. This is the first. When the library is verifying it is checking the general structure(i.e. is a thing a string).
+- Validate(Validation): This is the second action. This is the logic which determines the over status of a value(i.e. If a string is an email address).
+- Structure: This is the main element of this library. It defines what a value is and is mainly responsible for defining the necessary logic for handling verify and validate actions.
+- Aspect: An aspect is a keyed value associated with an instance of a structure. The purpose of an aspect is to not only define metadata about a value but to associate validation to that metadata. 
+
 ## Structure
 
-Structure is the base and primary element in this library. Although creating your own structure is not difficult, we have some predefined ones for you.
-
-It all starts from here
+Structure is the base and primary element in this library. Creating your own structure is pretty easy, but we have some predefined ones for you. Let's start with those. But first you need the Structure method.
 
 ```js
-import Constructure from 'constructure';
+import Structure from 'constructure';
 ```
+### Contents
+
+- [String](#String)
+- [Number](#Number)
+- [Boolean](#Boolean)
+- [Array](#Array)
+- [Object](#Object)
+- [Date](#Date)
+- [Shape](#Shape)
+- [ObjectOf](#ObjectOf)
+- [ArrayOf](#ArrayOf)
+- [Any](#Any)
+- [OneOfType](#OneOfType)
+- [Lazy](#Lazy)
+- [Custom](#Custom)
 
 ### String
 
-This will validate that your value is a string.
+This will verify that your value is a string.
 
 ```js
 const structure = Structure.string();
@@ -28,7 +67,7 @@ const structure = Structure.string();
 
 ### Number
 
-This will validate that your value is a number.
+This will verify that your value is a number.
 
 ```js
 const structure = Structure.number();
@@ -36,7 +75,7 @@ const structure = Structure.number();
 
 ### Boolean
 
-This will validate that your value is a boolean.
+This will verify that your value is a boolean.
 
 ```js
 const structure = Structure.boolean();
@@ -44,7 +83,7 @@ const structure = Structure.boolean();
 
 ### Array
 
-This will validate that your value is a array.
+This will verify that your value is a array. This however will not verify the contents of the array. If you need to verify the contents then [ArrayOf](#ArrayOf) should be used.
 
 ```js
 const structure = Structure.array();
@@ -52,7 +91,7 @@ const structure = Structure.array();
 
 ### Object
 
-This will validate that your value is a object.
+This will verify that your value is a object. This however will not verify the contents of the object. If you need to verify the contents then [ObjectOf](#ObjectOf) should be used.
 
 ```js
 const structure = Structure.object();
@@ -60,7 +99,7 @@ const structure = Structure.object();
 
 ### Date
 
-This will validate that your value is a Date object.
+This will verify that your value is a Date object.
 
 ```js
 const structure = Structure.boolean();
@@ -68,20 +107,20 @@ const structure = Structure.boolean();
 
 ### Shape
 
-This will validate that your value is an object with the given properties. If your value as properties which do not match then they will be ignored, unless you set exact to true.
+This will verify that your value is an object with the given properties. If your value has properties which do not match then they will be ignored, unless exact is set to true which is false by default.
 
 ```js
-const exact = false;
-
 const structure = Structure.shape({
     yourPropertyName: Structure.string() // Any other structure can go here
     defineAnyPropertyNameYouWant: Structure.shape({}),  // Yep even another shape!
-}, exact);
+}, {
+  exact: false // Default;
+});
 ```
 
 ### Object Of
 
-This will validate that your value is an object. Then for each property of the value it will run the given structure against them.
+This will verify that your value is an object. Then for each property of the value it will run the given structure against them.
 
 ```js
 const structure = Structure.objectOf(Structure.string()); // Here each property value of the the object must be a string.
@@ -91,7 +130,7 @@ const structure = Structure.objectOf(Structure.objectOf(Structure.string())); //
 
 ### Array Of
 
-This will validate that your value is an array. Then for each item of the value it will run the given structure against them.
+This will verify that your value is an array. Then for each item of the value it will run the given structure against them.
 
 ```js
 const structure = Structure.arrayOf(Structure.string()); // Here each item value of the the array must be a string.
@@ -101,7 +140,7 @@ const structure = Structure.arrayOf(Structure.arrayOf(Structure.string())); // H
 
 ### Any
 
-This won't validate that your value is anything in particular it. Anything will just pass.
+This won't verify that your value is anything in particular. Anything will just pass.
 
 ```js
 const structure = Structure.any();
@@ -109,21 +148,24 @@ const structure = Structure.any();
 
 ### One Of Type
 
-This will validate that your value is one of the provided structures.
+This will verify that your value is one of the provided structures. The first to pass is the first which is used.
 
 ```js
 const structure = Structure.oneOfType([
   Structure.string(), // Value can be either a string, ...
   Structure.number(), // or a number, ...
   Structure.shape({}), // or a shape.
+  Structure.any(), // You can use any in this case but it should be the last in the list because it will ALWAYS pass verification. Think of it as a default in the switch statement.
 ]);
 ```
 
 ### Lazy
 
-This will validate that your value is the returned structure. This should be used if you have a cyclical structure.
+This will validate that your value is the returned structure. This should be used if you need to define a cyclical structure.
 
 **Note:** Be aware that the validations for structures returned from the lazy callback will not be ran until a non-nil value is provided for the lazy structure.
+
+**Note:** Be aware that if you provide a value which itself has circular reference then you can end up in an infinite loop.
 
 ```js
 // Here is an example of a looping person object with person contacts.
@@ -140,7 +182,9 @@ const structure = Structure.shape({
 });
 ```
 
-## Aspects
+### Custom
+
+## Aspect
 
 The main draw of this library is its aspect system.
 

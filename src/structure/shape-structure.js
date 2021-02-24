@@ -7,7 +7,7 @@ import processAspects from '../common/process-aspects';
 import getWorstResultLevel from '../common/get-worst-level';
 import createRuntime from '../common/create-runtime';
 
-function verifier(properties, exact, value) {
+function verifier(properties = {}, options = {}, value) {
     if (isNil(value)) {
         return;
     }
@@ -20,7 +20,7 @@ function verifier(properties, exact, value) {
         property.verify(value[propertyId]);
     });
 
-    if (exact) {
+    if (options.exact) {
         forEach(value, (_, valueId) => {
             if (isNil(properties[valueId])) {
                 throw new Error(`The property ${valueId} is invalid`);
@@ -63,7 +63,7 @@ function validator(properties, runtime, aspects) {
     return childResults;
 }
 
-export default (properties, exact) => new Structure(
-    verifier.bind(null, properties, exact),
+export default (properties, options) => new Structure(
+    verifier.bind(null, properties, options),
     validator.bind(null, properties),
 );

@@ -1,6 +1,7 @@
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
+import merge from 'lodash/merge';
 import reduce from 'lodash/reduce';
 import getWorstResultLevel from '../common/get-worst-level';
 import Aspect from '../aspect/aspect';
@@ -10,6 +11,10 @@ const FIELDS = {
     validator: Symbol('validator'),
     additionalStructure: Symbol('additionalStructure'),
     aspects: Symbol('aspects'),
+};
+
+const DEFAULT_OPTIONS = {
+    maxPathDepth: 1000,
 };
 
 class Structure {
@@ -82,7 +87,7 @@ class Structure {
         return this;
     }
 
-    run(value) {
+    run(value, options = {}) {
         this.verify(value);
 
         const runtime = {
@@ -95,6 +100,7 @@ class Structure {
                 aspectResults: null,
             },
             absolutePath: [],
+            options: merge({}, DEFAULT_OPTIONS, options),
         };
 
         const aspectResults = this.validate(runtime);

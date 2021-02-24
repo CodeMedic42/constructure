@@ -10,6 +10,10 @@ export default function createRuntime(parentRuntime, segment) {
         indexes = indexes.concat(segment);
     }
 
+    if (parentRuntime.absolutePath.length >= parentRuntime.options.maxPathDepth) {
+        throw new Error('Possible infinite loop detected');
+    }
+
     return {
         $root: parentRuntime.$root,
         $this: {
@@ -18,5 +22,6 @@ export default function createRuntime(parentRuntime, segment) {
         },
         absolutePath: parentRuntime.absolutePath.concat(segment),
         indexes,
+        options: parentRuntime.options,
     };
 }
