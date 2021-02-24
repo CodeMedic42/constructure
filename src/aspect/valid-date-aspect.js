@@ -46,7 +46,7 @@ export default (aspectValue = true, options) => {
     const {
         message = 'Invalid Date',
         isFatal = true,
-        requirements,
+        require,
     } = options;
 
     return new Aspect(aspectValueLogic.bind(null, aspectValue), {
@@ -54,6 +54,6 @@ export default (aspectValue = true, options) => {
             onValidate: validDateLogic.bind(null, message),
             isFatal,
         },
-        requirements,
+        require,
     });
 };

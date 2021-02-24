@@ -20,7 +20,7 @@ export default (aspectValue = true, options = {}) => {
     const {
         message = 'Email Pattern',
         isFatal = true,
-        requirements,
+        require,
     } = options;
 
     return new Aspect(aspectValue, {
@@ -28,6 +28,6 @@ export default (aspectValue = true, options = {}) => {
             onValidate: emailPatternLogic.bind(null, message),
             isFatal,
         },
-        requirements,
+        require,
     });
 };

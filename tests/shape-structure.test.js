@@ -452,7 +452,7 @@ describe('Shape Structure', () => {
 
                                     return aspectValue;
                                 }, {
-                                    requirements: [':requiredAttA'],
+                                    require: [':requiredAttA'],
                                 },
                             )
                             .aspect('requiredAttA', 42),
@@ -488,11 +488,11 @@ describe('Shape Structure', () => {
 
                                     return aspectValue;
                                 }, {
-                                    requirements: [':requiredAttA', ':requiredAttB'],
+                                    require: [':requiredAttA', ':requiredAttB'],
                                 },
                             )
                             .aspect('requiredAttA', 42, {
-                                requirements: [':requiredAttB'],
+                                require: [':requiredAttB'],
                             })
                             .aspect('requiredAttB', 'foo'),
                     });
@@ -532,7 +532,7 @@ describe('Shape Structure', () => {
 
                             return aspectValue;
                         }, {
-                            requirements: ['testString:requiredAttA'],
+                            require: ['testString:requiredAttA'],
                         });
 
                     const value = {
@@ -559,7 +559,7 @@ describe('Shape Structure', () => {
                     const structure = Structure.shape({
                         testString: Structure.string()
                             .aspect('requiredAttA', 42, {
-                                requirements: ['$parent.testNumber:requiredAttB'],
+                                require: ['$parent.testNumber:requiredAttB'],
                             }),
                         testNumber: Structure.number()
                             .aspect('requiredAttB', 'foo'),
@@ -573,7 +573,7 @@ describe('Shape Structure', () => {
 
                             return aspectValue;
                         }, {
-                            requirements: ['testString:requiredAttA', 'testNumber:requiredAttB'],
+                            require: ['testString:requiredAttA', 'testNumber:requiredAttB'],
                         });
 
                     const value = {
@@ -756,7 +756,7 @@ describe('Shape Structure', () => {
 
                                     return 'Failing Message';
                                 },
-                                requirements: ['$root.testString:requiredAttA'],
+                                require: ['$root.testString:requiredAttA'],
                             }),
                         testNumber: Structure.number(),
                     }),

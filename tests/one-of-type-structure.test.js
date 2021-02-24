@@ -174,7 +174,7 @@ describe('Shape Structure', () => {
 
                                         return 'Failing Message';
                                     },
-                                    requirements: ['$parent.testReqValueA'],
+                                    require: ['$parent.testReqValueA'],
                                 },
                             ),
                         Structure.number()
@@ -191,7 +191,7 @@ describe('Shape Structure', () => {
 
                                     return 'Failing Message';
                                 },
-                                requirements: ['$parent.testReqValueB'],
+                                require: ['$parent.testReqValueB'],
                             }),
                         Structure.shape({
                             testString: Structure.string()
@@ -213,7 +213,7 @@ describe('Shape Structure', () => {
 
                                         return 'Failing Message';
                                     },
-                                    requirements: ['$parent.$parent.testReqValueC'],
+                                    require: ['$parent.$parent.testReqValueC'],
                                 }),
                         }),
                     ])
@@ -230,7 +230,7 @@ describe('Shape Structure', () => {
 
                                 return 'Failing Message';
                             },
-                            requirements: ['$parent.testReqValueD'],
+                            require: ['$parent.testReqValueD'],
                         }),
                 });
             };

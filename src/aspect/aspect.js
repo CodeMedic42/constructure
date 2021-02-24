@@ -14,7 +14,7 @@ class Aspect {
     constructor(value, options = {}) {
         const {
             validator,
-            requirements,
+            require,
         } = options;
 
         let onValidate = null;
@@ -30,7 +30,7 @@ class Aspect {
             this[FIELDS.validator] = new Validator(onValidate, isFatal === true);
         }
 
-        this[FIELDS.requirements] = new Requirements(requirements);
+        this[FIELDS.requirements] = new Requirements(require);
 
         this[FIELDS.value] = isFunction(value) ? value : () => value;
     }

@@ -1,4 +1,3 @@
-import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
 import isDate from 'lodash/isDate';
 import Aspect from './aspect';
@@ -25,13 +24,18 @@ const minDateLogic = (message, value, aspectValue, requirements) => {
     return message;
 };
 
-export default (aspectValue, message = 'Min Date', fatal = true, requirements) => {
-    const aspect = (new Aspect(aspectValue))
-        .setValidator(minDateLogic.bind(null, message), fatal);
+export default (aspectValue, options = {}) => {
+    const {
+        message = 'Min Date',
+        isFatal = true,
+        require,
+    } = options;
 
-    if (!isNil(requirements)) {
-        return aspect.setRequirements(requirements);
-    }
-
-    return aspect;
+    return new Aspect(aspectValue, {
+        validator: {
+            onValidate: minDateLogic.bind(null, message),
+            isFatal,
+        },
+        require,
+    });
 };

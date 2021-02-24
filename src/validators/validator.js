@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
 import isString from 'lodash/isString';
 import Result from '../result';
@@ -15,13 +16,12 @@ class Validator {
     }
 
     run(value, aspectValue, requiredAspects) {
-        const message = this[FIELDS.logic](
-            value,
-            aspectValue,
-            requiredAspects,
-        );
-
-        return isString(message) ? new Result(message, this[FIELDS.fatal]) : null;
+        return Promise.resolve(this[FIELDS.logic](value, aspectValue, requiredAspects))
+            .then((message) => {
+                return isString(message)
+                    ? new Result(message, this[FIELDS.fatal])
+                    : null;
+            });
     }
 }
 

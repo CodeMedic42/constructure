@@ -23,7 +23,7 @@ export default (aspectValue, options = {}) => {
     const {
         message = 'Max Length',
         isFatal = true,
-        requirements,
+        require,
     } = options;
 
     return new Aspect(aspectValue, {
@@ -31,6 +31,6 @@ export default (aspectValue, options = {}) => {
             onValidate: maxLengthLogic.bind(null, message),
             isFatal,
         },
-        requirements,
+        require,
     });
 };

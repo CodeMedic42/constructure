@@ -18,7 +18,7 @@ export default (aspectValue, options = {}) => {
     const {
         message = 'Pattern',
         isFatal = true,
-        requirements,
+        require,
     } = options;
 
     return new Aspect(aspectValue, {
@@ -26,6 +26,6 @@ export default (aspectValue, options = {}) => {
             onValidate: patternLogic.bind(null, message),
             isFatal,
         },
-        requirements,
+        require,
     });
 };

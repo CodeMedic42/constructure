@@ -18,7 +18,7 @@ export default (aspectValue = true, options = {}) => {
     const {
         message = 'Required',
         isFatal = true,
-        requirements,
+        require,
     } = options;
 
     return new Aspect(aspectValue, {
@@ -26,6 +26,6 @@ export default (aspectValue = true, options = {}) => {
             onValidate: requiredLogic.bind(null, message),
             isFatal,
         },
-        requirements,
+        require,
     });
 };
