@@ -11,14 +11,14 @@ import getter from './getter';
 function getFromThis(runtime, path, aspect) {
     if (!isNil(aspect)) {
     // Get aspect
-        const aspectResults = getter(runtime.$this.aspectResults, slice(path, 1));
+        const aspectResults = getter(runtime.getThis().getResults(), slice(path, 1));
 
         return aspectResults.$a[aspect];
     }
 
     // Get Value
     return {
-        value: getter(runtime.$this.value, slice(path, 1)),
+        value: getter(runtime.getThis().getValue(), slice(path, 1)),
         result: null,
     };
 }
@@ -40,10 +40,12 @@ function getFromParent(runtime, path, aspect) {
 
     lastIndex += 1;
 
+    const absolutePath = runtime.getAbsolutePath();
+
     let targetPath = slice(
-        runtime.absolutePath,
+        absolutePath,
         0,
-        runtime.absolutePath.length - lastIndex,
+        absolutePath.length - lastIndex,
     );
     const extension = slice(path, lastIndex);
 
@@ -51,14 +53,14 @@ function getFromParent(runtime, path, aspect) {
 
     if (!isNil(aspect)) {
     // Get aspect
-        const aspectResults = getter(runtime.$root.aspectResults, targetPath);
+        const aspectResults = getter(runtime.getRoot().getResults(), targetPath);
 
         return aspectResults.$a[aspect];
     }
 
     // Get Value
     return {
-        value: getter(runtime.$root.value, targetPath),
+        value: getter(runtime.getRoot().getValue(), targetPath),
         result: null,
     };
 }
@@ -81,14 +83,14 @@ function getFromRoot(runtime, path, aspect) {
 
     if (!isNil(aspect)) {
     // Get aspect
-        const aspectResults = getter(runtime.$root.aspectResults, finalPath);
+        const aspectResults = getter(runtime.getRoot().getResults(), finalPath);
 
         return aspectResults.$a[aspect];
     }
 
     // Get Value
     return {
-        value: getter(runtime.$root.value, finalPath),
+        value: getter(runtime.getRoot().getValue(), finalPath),
         result: null,
     };
 }
@@ -170,20 +172,20 @@ function processAspects(runtime, aspects = {}) {
                     }
 
                     return Promise.resolve(
-                        aspect.getValue()(runtime.$this.value, requirementValues),
+                        aspect.getValue()(runtime.getThis().getValue(), requirementValues),
                     ).then((aspectValueResult) => {
                         return runValidator(
-                            runtime.$this.value,
+                            runtime.getThis().getValue(),
                             aspectValueResult || null,
                             aspect.getValidator(),
                             requirementValues,
-                            runtime.$this.aspectResults.$a,
+                            runtime.getThis().getResults().$a,
                         );
                     });
                 })
                 .then((aspectResult) => {
                     // eslint-disable-next-line no-param-reassign
-                    runtime.$this.aspectResults.$a[aspectId] = aspectResult;
+                    runtime.getThis().getResults().$a[aspectId] = aspectResult;
 
                     return aspectResult;
                 })
@@ -211,7 +213,7 @@ function processAspects(runtime, aspects = {}) {
         })
         .then((finalResult) => {
             // eslint-disable-next-line no-param-reassign
-            runtime.$this.aspectResults.$r = finalResult;
+            runtime.getThis().getResults().$r = finalResult;
 
             return finalResult;
         });

@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
 import isString from 'lodash/isString';
-import Result from '../result';
+import Result from './result';
 
 const FIELDS = {
     logic: Symbol('logic'),

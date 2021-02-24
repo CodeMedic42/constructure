@@ -1,20 +1,18 @@
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
-import merge from 'lodash/merge';
 import reduce from 'lodash/reduce';
 import getWorstResultLevel from '../common/get-worst-level';
 import Aspect from '../aspect/aspect';
+import Runtime from '../runtime';
+
+const specialInternalAccessor = Symbol('structureSecret');
 
 const FIELDS = {
     verifier: Symbol('verifier'),
     validator: Symbol('validator'),
     additionalStructure: Symbol('additionalStructure'),
     aspects: Symbol('aspects'),
-};
-
-const DEFAULT_OPTIONS = {
-    maxPathDepth: 1000,
 };
 
 class Structure {
@@ -73,8 +71,9 @@ class Structure {
                 });
         }
 
-        // eslint-disable-next-line no-param-reassign
-        runtime.$this.aspectResults = finalResults;
+        const thisValueGroup = runtime.getThis();
+
+        thisValueGroup[specialInternalAccessor] = finalResults;
 
         return finalResults;
     }
@@ -90,23 +89,9 @@ class Structure {
     run(value, options = {}) {
         this.verify(value);
 
-        const runtime = {
-            $root: {
-                value,
-                aspectResults: null,
-            },
-            $this: {
-                value,
-                aspectResults: null,
-            },
-            absolutePath: [],
-            options: merge({}, DEFAULT_OPTIONS, options),
-        };
+        const runtime = new Runtime(specialInternalAccessor, value, options);
 
         const aspectResults = this.validate(runtime);
-
-        runtime.$root.aspectResults = aspectResults;
-        runtime.$this.aspectResults = aspectResults;
 
         return aspectResults.$r.then(() => aspectResults);
     }

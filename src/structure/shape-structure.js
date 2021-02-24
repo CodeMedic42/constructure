@@ -5,7 +5,6 @@ import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
 import processAspects from '../common/process-aspects';
 import getWorstResultLevel from '../common/get-worst-level';
-import createRuntime from '../common/create-runtime';
 
 function verifier(properties = {}, options = {}, value) {
     if (isNil(value)) {
@@ -33,7 +32,7 @@ function validator(properties, runtime, aspects) {
     const groupResults = [];
 
     const childResults = reduce(properties, (acc, property, propertyId) => {
-        const childRuntime = createRuntime(runtime, propertyId);
+        const childRuntime = runtime.branch(propertyId);
 
         const propertyResults = property.validate(childRuntime);
 

@@ -3,7 +3,6 @@ import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
 import Structure from './structure';
-import createRuntime from '../common/create-runtime';
 import processAspects from '../common/process-aspects';
 import getWorstResultLevel from '../common/get-worst-level';
 
@@ -25,7 +24,7 @@ function validator(structure, runtime, aspects) {
     const groupResults = [];
 
     const childResults = reduce(runtime.value, (acc, childValue, childIndex) => {
-        const childRuntime = createRuntime(runtime, childIndex);
+        const childRuntime = runtime.branch(childIndex);
 
         const propertyResults = structure.validate(childRuntime, childValue);
 

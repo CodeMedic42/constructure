@@ -1,7 +1,7 @@
 import Symbol from 'es6-symbol';
 import isFunction from 'lodash/isFunction';
 import isPlainObject from 'lodash/isPlainObject';
-import Validator from '../validators/validator';
+import Validator from '../validator';
 import Requirements from '../requirements';
 
 const FIELDS = {
