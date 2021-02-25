@@ -1,10 +1,10 @@
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
-import reduce from 'lodash/reduce';
-import getWorstResultLevel from '../common/get-worst-level';
 import Aspect from '../aspect/aspect';
 import Runtime from '../runtime';
+import processAspects from '../common/process-aspects';
+import combineResults from '../common/combine-results';
 
 const specialInternalAccessor = Symbol('structureSecret');
 
@@ -15,67 +15,69 @@ const FIELDS = {
     aspects: Symbol('aspects'),
 };
 
+function combineResultGroups(results, additionalResults) {
+    if (isNil(additionalResults)) {
+        return results;
+    }
+
+    const finalResults = results;
+
+    const {
+        $a,
+        $r,
+        ...rest
+    } = additionalResults;
+
+    forEach($a, (aspectResult, aspectId) => {
+        if (!isNil(finalResults[aspectId])) {
+            throw new Error(`Aspect ${aspectId} already exists`);
+        }
+
+        finalResults.$a[aspectId] = aspectResult;
+    });
+
+    forEach(rest, (property, propertyId) => {
+        if (!isNil(finalResults[propertyId])) {
+            throw new Error(`Property ${propertyId} already exists`);
+        }
+
+        finalResults[propertyId] = property;
+    });
+
+    finalResults.$r = combineResults([finalResults.$r, $r])
+        .then((finalResultStatus) => {
+            finalResults.$r = finalResultStatus;
+
+            return finalResultStatus;
+        });
+
+    return finalResults;
+}
+
 class Structure {
-    constructor(verifier, validator) {
+    constructor(verifier) {
         this[FIELDS.verifier] = verifier;
-        this[FIELDS.validator] = validator;
-        this[FIELDS.additionalStructure] = null;
         this[FIELDS.aspects] = {};
     }
 
     verify(value) {
-        this[FIELDS.additionalStructure] = this[FIELDS.verifier](value);
-    }
+        const additionalValidator = this[FIELDS.verifier](value);
 
-    validate(runtime) {
-        let additionalResults = null;
+        return (runtime) => {
+            const results = processAspects(runtime, this[FIELDS.aspects]);
 
-        if (!isNil(this[FIELDS.additionalStructure])) {
-            additionalResults = this[FIELDS.additionalStructure].validate(runtime);
-        }
+            const additionalResults = !isNil(additionalValidator)
+                ? additionalValidator(runtime)
+                : null;
 
-        const finalResults = this[FIELDS.validator](runtime, this[FIELDS.aspects]);
+            const finalResults = combineResultGroups(results, additionalResults);
 
-        if (!isNil(additionalResults)) {
-            const {
-                $a,
-                $r,
-                ...rest
-            } = additionalResults;
+            const thisValueGroup = runtime.getThis();
 
-            forEach($a, (aspectResult, aspectId) => {
-                if (!isNil(finalResults[aspectId])) {
-                    throw new Error(`Aspect ${aspectId} already exists`);
-                }
+            thisValueGroup[specialInternalAccessor] = finalResults;
 
-                finalResults.$a[aspectId] = aspectResult;
-            });
-
-            forEach(rest, (property, propertyId) => {
-                if (!isNil(finalResults[propertyId])) {
-                    throw new Error(`Property ${propertyId} already exists`);
-                }
-
-                finalResults[propertyId] = property;
-            });
-
-            finalResults.$r = Promise.all([finalResults.$r, $r])
-                .then((results) => reduce(
-                    results,
-                    (acc, result) => getWorstResultLevel(acc, result),
-                    null,
-                )).then((finalResult) => {
-                    finalResults.$r = finalResult;
-
-                    return finalResult;
-                });
-        }
-
-        const thisValueGroup = runtime.getThis();
-
-        thisValueGroup[specialInternalAccessor] = finalResults;
-
-        return finalResults;
+            return finalResults;
+        };
     }
 
     aspect(id, aspectValue, options) {
@@ -87,11 +89,11 @@ class Structure {
     }
 
     run(value, options = {}) {
-        this.verify(value);
+        const validators = this.verify(value);
 
         const runtime = new Runtime(specialInternalAccessor, value, options);
 
-        const aspectResults = this.validate(runtime);
+        const aspectResults = validators(runtime);
 
         return aspectResults.$r.then(() => aspectResults);
     }

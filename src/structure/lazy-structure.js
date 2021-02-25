@@ -1,6 +1,5 @@
 import isNil from 'lodash/isNil';
 import Structure from './structure';
-import processAspects from '../common/process-aspects';
 
 function verifier(callback, value) {
     if (isNil(value)) {
@@ -16,16 +15,7 @@ function verifier(callback, value) {
         throw new Error('Lazy structure callbacks must return a structure.');
     }
 
-    structure.verify(value);
-
-    return structure;
+    return structure.verify(value);
 }
 
-function validator(runtime, aspects) {
-    return processAspects(runtime, aspects);
-}
-
-export default (callback) => new Structure(
-    verifier.bind(null, callback),
-    validator.bind(null, callback),
-);
+export default (callback) => new Structure(verifier.bind(null, callback));
