@@ -12,9 +12,10 @@
   "scripts": {
     "lint": "npx eslint ./src ./tests --fix",
     "test": "npx mocha tests/**/*.test.js --reporter spec --colors",
+    "verify": "npm run lint && npm test",
     "build": "./node_modules/.bin/babel ./src --out-dir lib",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run lint && npm test"
+    "prepublishOnly": "npm run verify"
   },
   "lint-staged": {
     "*.{js,jsx}": [
