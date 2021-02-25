@@ -2,22 +2,24 @@
 
 Constructure is a schema validation library. 
 
+## Contents
+
+- [The Pitch](#The-Pitch)
+- [Install](#Install)
+- [Definitions](#Definitions)
+- [Structure](#Structure)
+- [Aspect](#Aspect)
+- [Execution](#Execution)
+- [The Home Run](#The-Home-Run)
+
 ## The Pitch
 
 This library has some target goals.
 
 1. Handle complex interconnected conditional logic throughout the entire data set.
-2. Provide a way where logic can be blocked from running is a required value is not passing validation, thus reduce rerunning the same logic.
+2. Provide a way where logic can be blocked from running if a required value is not passing validation, thus reduce rerunning the same logic.
 3. Output the results in such a manner as to have a break down of what is failing at each level of the data tree.
 4. Output the results in such a manner where I can bind to individual HTML elements using appropriate attribute (i.e. the required attribute on ann input)
-
-## Contents
-
-- [Install](#Install)
-- [Glossary](#Glossary)
-- [Structure](#Structure)
-- [Aspect](#Aspect)
-- [Execution](#Execution)
 
 ## Install
 
@@ -25,9 +27,9 @@ This library has some target goals.
 npm install constucture --save
 ```
 
-## Glossary
+## Definitions
 
-Yeah this is usually at the end but I need to be able to communicate with you. Here is my terminology.
+I need to be able to communicate with you. Here is my terminology.
 
 - Verify(Verification): There are two main actions in this library. This is the first. When the library is verifying it is checking the general structure(i.e. is a thing a string).
 - Validate(Validation): This is the second action. This is the logic which determines the over status of a value(i.e. If a string is an email address).
@@ -36,12 +38,13 @@ Yeah this is usually at the end but I need to be able to communicate with you. H
 
 ## Structure
 
-Structure is the base and primary element in this library. Creating your own structure is pretty easy, but we have some predefined ones for you. Let's start with those. But first you need the Structure method.
+Structure is the base and primary element in this library. Creating your own structure is possible, but we have some predefined ones for you. Let's start with those. But first you need the Structure method.
 
 ```js
 import Structure from 'constructure';
 ```
-### Contents
+
+### Prebuilt Structures
 
 - [String](#String)
 - [Number](#Number)
@@ -55,7 +58,8 @@ import Structure from 'constructure';
 - [Any](#Any)
 - [OneOfType](#OneOfType)
 - [Lazy](#Lazy)
-- [Custom](#Custom)
+
+But if you REALLY want to create your own you can create a [Custom](#custom) structure.
 
 ### String
 
@@ -163,9 +167,9 @@ const structure = Structure.oneOfType([
 
 This will validate that your value is the returned structure. This should be used if you need to define a cyclical structure.
 
-**Note:** Be aware that the validations for structures returned from the lazy callback will not be ran until a non-nil value is provided for the lazy structure.
+> **Note:** Be aware that the validations for structures returned from the lazy callback will not be ran until a non-nil value is provided for the lazy structure.
 
-**Note:** Be aware that if you provide a value which itself has circular reference then you can end up in an infinite loop.
+> **Note:** Be aware that if you provide a value which itself has circular reference then you can end up in an infinite loop.
 
 ```js
 // Here is an example of a looping person object with person contacts.
@@ -184,32 +188,67 @@ const structure = Structure.shape({
 
 ### Custom
 
+Okay so you have a structure in mind which does not fit in here. That is surprising. Do me a favor and drop me a note about it.
+
+To create your own custom structure all need to do is call Structure as a method. It takes one callback function.
+
+- Verify
+
+    When called the verify callback is given the value being verified. If the value fails verification then this method is expected to throw an exception. Otherwise the verification is considered successful. 
+    
+    Once this method is complete you can optionally return another callback. This callback is to run any additional validation when the validation step is ran. When this callback is executed it will be passed one parameter, an object called a runtime. Unless you are validating child properties you can just pass this along to any additional validator.
+
+    I recommend looking at how both Shape, OneOfType, and Lazy work. They are the three most complex example I have.
+
+```js
+
+const verify = (value) => {};
+
+const structure = Structure(verify);
+```
+
 ## Aspect
 
 The main draw of this library is its aspect system.
 
-Aspects are keyed pieces of data which can be associated to each structure.
+Aspects are keyed pieces of data which can be associated to each structure. After execute an aspect has there properties associated with it.
 
-Defining aspects for a structure is as simple as ...
+- Value
+
+    This is the value which is given to the aspect when the aspect is defined.
+
+- Result
+
+    This is the validation state of the aspect. An aspect can result in one of four states. The following order is in increasing severity
+    
+    - 'pass': The aspect is passing its validation. 
+    - 'non-fatal': The aspect did not pass it's validation, but it's considered a non fatal failure.
+    - 'blocked': The aspect could not be evaluated.
+    - 'fatal': The aspect  did not pass it's validation, and it's a fatal failure.
+
+- Message
+
+    If the validation is failing this is a string containing the reason for the failure.
+
+
+Defining aspects for a structure is as simple as calling the aspect method off of a structure. You can call this method as many times as you want. The first parameter is the id of the aspect. If you call the aspect method again with the same id then it will override the first. The second parameter is the aspect value. This value will be useful when validating and will be available when we get the final results which you will see in the [Execute](#Execute) section. Aspects can be applied to any structure and their values can be any value type.
 
 ```js
+import structure, { Aspect } from 'constructure';
+
 structure
     .aspect('apsA', 'test')
-    .aspect('apsB', 42)
-    .aspect('apsB', true)
+    .aspect('apsB', Aspect(42))
 });
 ```
 
-Aspects can be applied to any structure and can be any value type.
-
-A callback function can be provided by which the aspect value can be dynamically determined. The first argument to the callback function is the value which is being verified by the structure. The return value for this callback function will become the value for the aspect. This return value can also be a promise.
+A callback function can be provided by which the aspect value can be dynamically determined. The first argument to the callback function is the value which is being verified by the structure. The second argument is a list of required values, see [Requirements](#Requirements) section for more info on this. The return value for this callback function will become the value for the aspect. This return value can also be a promise. There are no restrictions for this value or what the result of the promise is.
 
 ```js
 structure
-    .aspect('dynamicAsp', (value) => {
-        // the value of the the dynamicAsp aspect will be a boolean value.
-        return value == null;
-    })
+    .aspect('dynamicAsp', (value, requirements) => 'test')
+    .aspect('dynamicAsp', Aspect((value, requirements) => 42))
+    .aspect('dynamicAsp', (value, requirements) => Promise.resolve('asyncResult'))
 });
 ```
 
@@ -217,19 +256,21 @@ structure
 
 Each aspect can also have validation logic associated with it. To do this each aspect takes a third parameter for options. To apply validation to an aspect just use the validator option.
 
-The validator option can take either a callback function or an object. The object allows you indicate if a failing validation results is fatal or not. The default for isFatal would be true.
+The validator option can take either a callback function or an object. The object allows you indicate if a failing validation is fatal or not. The default for isFatal is true.
+
+> __Note:__ If no validator is applied to an aspect then the default result state for the aspect is 'pass'.
 
 ```js
 structure
-    .aspect('aspA', true, {
+    .aspect('aspA', 'test', {
         validator: () => {}
     })
-    .aspect('aspB', true, {
+    .aspect('aspB', Aspect(42, {
         validator: {
             onValidate() => {},
             isFatal: false
         }
-    })
+    }))
 });
 ```
 
@@ -603,3 +644,23 @@ But in the end it is no different of a result than what would be returned for th
 #### OneOf Type
 
 This is the most complex but in the end it is the same train of thought as Lazy. The only difference here is we need to determine which structure works. Once we have a working structure then the results from that one are used to get the results from the aspects.
+
+## The Home Run
+
+So did we knock it out of the part? Let's review the goals...
+
+1. Handle complex interconnected conditional logic throughout the entire data set.
+
+    With the ability to set requirements on each aspect this appear to be a resounding success.
+
+2. Provide a way where logic can be blocked from running if a required value is not passing validation, thus reduce rerunning the same logic.
+
+    Since the result of a aspect is either 'pass', 'non-fatal', 'blocked', or 'fatal' we can block the processing of any other aspect which requires it thus preventing other logic from running when it cannot.
+
+3. Output the results in such a manner as to have a break down of what is failing at each level of the data tree.
+
+    As we have seen the result is VERY informative of what failed and where. Not only that, but we can see at each property it's overall result state.
+
+4. Output the results in such a manner where I can bind to individual HTML elements using appropriate attribute (i.e. the required attribute on ann input)
+
+    With the result of each aspect broken down in the result the name of the aspect can be used to bind to either well define HTML attributes or even custom data attribute can be create from each aspect.
