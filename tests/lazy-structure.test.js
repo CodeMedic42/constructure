@@ -20,7 +20,7 @@ describe('Lazy Structure', () => {
                 },
             });
 
-        xit('levelA null', () => {
+        it('levelA null', () => {
             const value = {
                 testString: 'test',
                 levelA: null,
@@ -64,7 +64,7 @@ describe('Lazy Structure', () => {
             });
         });
 
-        xit('levelB undefined', () => {
+        it('levelB undefined', () => {
             const value = {
                 testString: 'test',
                 levelA: {},
@@ -108,7 +108,7 @@ describe('Lazy Structure', () => {
             });
         });
 
-        xit('levelB null', () => {
+        it('levelB null', () => {
             const value = {
                 testString: 'test',
                 levelA: {
