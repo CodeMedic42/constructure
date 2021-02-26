@@ -31,8 +31,7 @@
   "files": [
     "/lib",
     "/LICENSE",
-    "/package.json",
-    "README.md"
+    "/package.json"
   ],
   "dependencies": {
     "bluebird": "^3.7.2",
