@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import isDate from 'lodash/isDate';
 import Structure from './structure';
+import VerificationError from '../verification-error';
 
 function verifier(value) {
     if (isNil(value)) {
@@ -8,7 +9,7 @@ function verifier(value) {
     }
 
     if (!isDate(value)) {
-        throw new Error('Must be a Date object');
+        throw new VerificationError('Must be a Date object');
     }
 }
 

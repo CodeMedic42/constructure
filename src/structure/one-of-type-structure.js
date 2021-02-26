@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import Structure from './structure';
+import VerificationError from '../verification-error';
 
 function verifier(structures, value) {
     let structureValidator = null;
@@ -18,7 +19,7 @@ function verifier(structures, value) {
     });
 
     if (isNil(structureValidator)) {
-        throw new Error('Must match one of the given structures');
+        throw new VerificationError('Must match one of the given structures');
     }
 
     return structureValidator;

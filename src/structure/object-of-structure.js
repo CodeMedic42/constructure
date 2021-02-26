@@ -4,6 +4,7 @@ import reduce from 'lodash/reduce';
 import isPlainObject from 'lodash/isPlainObject';
 import { keys } from 'lodash';
 import Structure from './structure';
+import VerificationError from '../verification-error';
 import combineResults from '../common/combine-results';
 
 function validator(runtime, structure) {
@@ -38,7 +39,7 @@ function verifier(structure, value) {
     }
 
     if (!isPlainObject(value)) {
-        throw new Error('Must be an object');
+        throw new VerificationError('Must be an object');
     }
 
     if (keys(value).length <= 0) {
@@ -54,4 +55,10 @@ function verifier(structure, value) {
     };
 }
 
-export default (structure) => new Structure(verifier.bind(null, structure));
+export default (structure) => {
+    if (!(structure instanceof Structure)) {
+        throw new Error('ObjectOf requires a structure.');
+    }
+
+    return new Structure(verifier.bind(null, structure));
+};

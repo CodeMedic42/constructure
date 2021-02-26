@@ -4,6 +4,7 @@ import forEach from 'lodash/forEach';
 import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
 import combineResults from '../common/combine-results';
+import VerificationError from '../verification-error';
 
 function validator(runtime, validators) {
     const groupResults = [];
@@ -37,7 +38,7 @@ function verifier(properties = {}, options = {}, value) {
     if (isNil(value)) {
         target = {};
     } else if (!isPlainObject(value)) {
-        throw new Error('Must be an object');
+        throw new VerificationError('Must be an object');
     }
 
     if (options.exact) {

@@ -1,5 +1,8 @@
 import chai from 'chai';
-import Structure, { Aspect } from '../src';
+import chaiAsPromised from 'chai-as-promised';
+import Structure, { Aspect, VerificationError } from '../src';
+
+chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
@@ -40,33 +43,29 @@ describe('String Structure', () => {
     it('Number', () => {
         const structure = Structure.string();
 
-        expect(() => {
-            structure.run(42);
-        }).to.throw('Must be a string');
+        return expect(structure.run(42))
+            .to.be.rejectedWith(VerificationError, 'Must be a string');
     });
 
     it('Boolean', () => {
         const structure = Structure.string();
 
-        expect(() => {
-            structure.run(true);
-        }).to.throw('Must be a string');
+        return expect(structure.run(true))
+            .to.be.rejectedWith(VerificationError, 'Must be a string');
     });
 
     it('Object', () => {
         const structure = Structure.string();
 
-        expect(() => {
-            structure.run({});
-        }).to.throw('Must be a string');
+        return expect(structure.run({}))
+            .to.be.rejectedWith(VerificationError, 'Must be a string');
     });
 
     it('Array', () => {
         const structure = Structure.string();
 
-        expect(() => {
-            structure.run([]);
-        }).to.throw('Must be a string');
+        return expect(structure.run([]))
+            .to.be.rejectedWith(VerificationError, 'Must be a string');
     });
 
     it('Basic Required Passed', () => {

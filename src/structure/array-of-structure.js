@@ -4,6 +4,7 @@ import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
 import Structure from './structure';
 import combineResults from '../common/combine-results';
+import VerificationError from '../verification-error';
 
 function validator(runtime, structure) {
     const groupResults = [];
@@ -37,7 +38,7 @@ function verifier(structure, value) {
     }
 
     if (!isArray(value)) {
-        throw new Error('Must be an object');
+        throw new VerificationError('Must be an array');
     }
 
     if (value.length <= 0) {
@@ -53,4 +54,10 @@ function verifier(structure, value) {
     };
 }
 
-export default (structure) => new Structure(verifier.bind(null, structure));
+export default (structure) => {
+    if (!(structure instanceof Structure)) {
+        throw new Error('ArrayOf requires a structure.');
+    }
+
+    return new Structure(verifier.bind(null, structure));
+};

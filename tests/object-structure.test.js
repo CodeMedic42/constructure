@@ -1,5 +1,5 @@
 import chai from 'chai';
-import Structure, { Aspect } from '../src';
+import Structure, { Aspect, VerificationError } from '../src';
 
 const { expect } = chai;
 
@@ -40,33 +40,29 @@ describe('Object Structure', () => {
     it('Number Value', () => {
         const structure = Structure.object();
 
-        expect(() => {
-            structure.run(42);
-        }).to.throw('Must be an object');
+        return expect(structure.run(42))
+            .to.be.rejectedWith(VerificationError, 'Must be an object');
     });
 
     it('String Value', () => {
         const structure = Structure.object();
 
-        expect(() => {
-            structure.run('test');
-        }).to.throw('Must be an object');
+        return expect(structure.run('test'))
+            .to.be.rejectedWith(VerificationError, 'Must be an object');
     });
 
     it('Boolean Value', () => {
         const structure = Structure.object();
 
-        expect(() => {
-            structure.run(true);
-        }).to.throw('Must be an object');
+        return expect(structure.run(true))
+            .to.be.rejectedWith(VerificationError, 'Must be an object');
     });
 
     it('Array Value', () => {
         const structure = Structure.object();
 
-        expect(() => {
-            structure.run([]);
-        }).to.throw('Must be an object');
+        return expect(structure.run([]))
+            .to.be.rejectedWith(VerificationError, 'Must be an object');
     });
 
     it('Basic Required Passed', () => {

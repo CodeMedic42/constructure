@@ -1,6 +1,8 @@
+import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
+import { isFunction } from 'lodash';
 import Aspect from '../aspect/aspect';
 import Runtime from '../runtime';
 import processAspects from '../common/process-aspects';
@@ -63,6 +65,10 @@ class Structure {
     verify(value) {
         const additionalValidator = this[FIELDS.verifier](value);
 
+        if (!isNil(additionalValidator) && !isFunction(additionalValidator)) {
+            throw new Error('Verify must return a nil value or a function');
+        }
+
         return (runtime) => {
             const results = processAspects(runtime, this[FIELDS.aspects]);
 
@@ -89,13 +95,15 @@ class Structure {
     }
 
     run(value, options = {}) {
-        const validators = this.verify(value);
+        return Promise.try(() => {
+            return this.verify(value);
+        }).then((validators) => {
+            const runtime = new Runtime(specialInternalAccessor, value, options);
 
-        const runtime = new Runtime(specialInternalAccessor, value, options);
+            const aspectResults = validators(runtime);
 
-        const aspectResults = validators(runtime);
-
-        return aspectResults.$r.then(() => aspectResults);
+            return aspectResults.$r.then(() => aspectResults);
+        });
     }
 }
 

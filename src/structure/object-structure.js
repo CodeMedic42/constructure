@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
+import VerificationError from '../verification-error';
 
 function verifier(value) {
     if (isNil(value)) {
@@ -8,7 +9,7 @@ function verifier(value) {
     }
 
     if (!isPlainObject(value)) {
-        throw new Error('Must be an object');
+        throw new VerificationError('Must be an object');
     }
 }
 
