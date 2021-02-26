@@ -1,6 +1,6 @@
 import chai from 'chai';
 import isNil from 'lodash/isNil';
-import Structure, { Aspect } from '../src';
+import Structure, { Aspect, VerificationError } from '../src';
 
 const { expect } = chai;
 
@@ -573,5 +573,25 @@ describe('Lazy Structure', () => {
                 },
             });
         });
+    });
+
+    it('levelB.levelA.levelB fail Verify', () => {
+        const value = {
+            testString: 'test',
+            levelA: {
+                levelB: {
+                    testString: 'test',
+                    levelA: {
+                        levelB: 42,
+                    },
+                },
+            },
+        };
+
+        return expect(structure.run(value))
+            .to.be.rejectedWith(VerificationError, 'Must be an object')
+            .then((error) => {
+                expect(error.path).to.eql(['levelA', 'levelB', 'levelA', 'levelB']);
+            });
     });
 });

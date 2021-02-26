@@ -52,7 +52,9 @@ function verifier(properties = {}, options = {}, value) {
     const childValidators = {};
 
     forEach(properties, (property, propertyId) => {
-        childValidators[propertyId] = property.verify(target[propertyId]);
+        VerificationError.try(propertyId, () => {
+            childValidators[propertyId] = property.verify(target[propertyId]);
+        });
     });
 
     return (runtime) => {

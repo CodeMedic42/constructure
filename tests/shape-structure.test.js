@@ -1,6 +1,6 @@
 import chai from 'chai';
 import Promise from 'bluebird';
-import Structure, {} from '../src';
+import Structure, { VerificationError } from '../src';
 
 const { expect } = chai;
 
@@ -21,6 +21,22 @@ const onValidate = (value, aspectResultValue) => buildValidatorMessage(
 
 describe('Shape Structure', () => {
     describe('Simple Structure', () => {
+        it('Basic Property Fail Verify', () => {
+            const structure = Structure.shape({
+                testString: Structure.string(),
+            });
+
+            const value = {
+                testString: 42,
+            };
+
+            return expect(structure.run(value))
+                .to.be.rejectedWith(VerificationError, 'Must be a string')
+                .then((error) => {
+                    expect(error.path).to.eql(['testString']);
+                });
+        });
+
         it('Basic Property Aspect', () => {
             const structure = Structure.shape({
                 testString: Structure.string(),

@@ -41,28 +41,40 @@ describe('Object Structure', () => {
         const structure = Structure.object();
 
         return expect(structure.run(42))
-            .to.be.rejectedWith(VerificationError, 'Must be an object');
+            .to.be.rejectedWith(VerificationError, 'Must be an object')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('String Value', () => {
         const structure = Structure.object();
 
         return expect(structure.run('test'))
-            .to.be.rejectedWith(VerificationError, 'Must be an object');
+            .to.be.rejectedWith(VerificationError, 'Must be an object')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('Boolean Value', () => {
         const structure = Structure.object();
 
         return expect(structure.run(true))
-            .to.be.rejectedWith(VerificationError, 'Must be an object');
+            .to.be.rejectedWith(VerificationError, 'Must be an object')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('Array Value', () => {
         const structure = Structure.object();
 
         return expect(structure.run([]))
-            .to.be.rejectedWith(VerificationError, 'Must be an object');
+            .to.be.rejectedWith(VerificationError, 'Must be an object')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('Basic Required Passed', () => {

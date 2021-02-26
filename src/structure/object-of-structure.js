@@ -46,8 +46,10 @@ function verifier(structure, value) {
         return null;
     }
 
-    forEach(value, (propertyValue) => {
-        structure.verify(propertyValue);
+    forEach(value, (propertyValue, propertyId) => {
+        VerificationError.try(propertyId, () => {
+            structure.verify(propertyValue);
+        });
     });
 
     return (runtime) => {

@@ -52,28 +52,40 @@ describe('Boolean Structure', () => {
         const structure = Structure.boolean();
 
         return expect(structure.run(42))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean');
+            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('String', () => {
         const structure = Structure.boolean();
 
         return expect(structure.run('test'))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean');
+            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('Object', () => {
         const structure = Structure.boolean();
 
         return expect(structure.run({}))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean');
+            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('Array', () => {
         const structure = Structure.boolean();
 
         return expect(structure.run([]))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean');
+            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
+            .then((error) => {
+                expect(error.path).to.eql([]);
+            });
     });
 
     it('Basic Required Passed', () => {
