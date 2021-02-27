@@ -1,10 +1,5 @@
 # Constructure
 
-<a href="https://codesandbox.io/s/github/CodeMedic42/constructure/tree/main/examples/person" target="_blank">Example Person</a>
-<a href="https://codesandbox.io/s/github/CodeMedic42/constructure/tree/main/examples/example-01" target="_blank">Example 1</a>
-https://codesandbox.io/s/github/CodeMedic42/constructure/tree/main/examples/person
-https://codesandbox.io/s/github/CodeMedic42/constructure/tree/main/examples/example-01
-
 Constructure is a schema validation library. 
 
 ## Contents
@@ -16,6 +11,7 @@ Constructure is a schema validation library.
 - [Aspect](#Aspect)
 - [Execution](#Execution)
 - [The Home Run](#The-Home-Run)
+- [Examples](https://github.com/CodeMedic42/constructure/tree/main/examples/examples.md)
 
 ## The Pitch
 
