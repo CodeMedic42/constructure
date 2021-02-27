@@ -28,7 +28,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Example 1</h1>
+      <h1>Example 1: Person</h1>
       <button onClick={verify}>Execute</button>
       <pre>{result != null ? JSON.stringify(result, null, 4) : ""}</pre>
     </div>
