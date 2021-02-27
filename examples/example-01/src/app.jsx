@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Structure from '../../example-02/src/node_modules/constructure';
+import Structure from 'constructure';
 
 const structure = Structure.shape({
     exampleString: Structure.string(),
