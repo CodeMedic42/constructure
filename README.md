@@ -1,6 +1,6 @@
 # Constructure
 
-https://codesandbox.io/s/example-1-person-zupmo
+https://codesandbox.io/s/github/CodeMedic42/constructure/tree/main/examples/person
 
 Constructure is a schema validation library. 
 
