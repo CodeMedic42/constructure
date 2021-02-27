@@ -5,9 +5,4 @@ import App from './app';
 
 const rootElement = document.getElementById('root');
 
-ReactDOM.render(
-    <StrictMode>
-        <App />
-    </StrictMode>,
-    rootElement,
-);
+ReactDOM.render(App, rootElement);
