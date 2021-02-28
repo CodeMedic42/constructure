@@ -53,8 +53,9 @@ const testValue = {
 
 function App() {
     const [result, setResult] = useState(null);
+    const [flatten, setFlatten] = useState(false);
 
-    const verify = () => {
+    const handleExecuteClick = () => {
         personStructure.run(testValue).then((verifyResult) => {
             setResult(verifyResult);
         }).catch((error) => {
@@ -62,11 +63,18 @@ function App() {
         });
     };
 
+    const handleFlattenChange = (event) => {
+        setFlatten(event.target.checked);
+    };
+
     return (
         <div className="App">
             <h1>Example 1: Person</h1>
-            <button onClick={verify}>Execute</button>
-            <pre>{result != null ? JSON.stringify(result.toJS(), null, 4) : ''}</pre>
+            <div>
+                <label><input type="checkbox" onChange={handleFlattenChange}/>Flatten</label>
+            </div>
+            <button onClick={handleExecuteClick}>Execute</button>
+            <pre>{result != null ? JSON.stringify(result.toJS(flatten), null, 4) : ''}</pre>
       </div>
     );
 }
