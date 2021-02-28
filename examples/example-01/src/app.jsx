@@ -71,19 +71,23 @@ function App() {
         <div className="App">
             <h1>Example 1: Person</h1>
             <div>
-                <label><input type="checkbox" onChange={handleFlattenChange}/>Flatten</label>
+                <label>
+                    <input type="checkbox" onChange={handleFlattenChange} />
+                    Flatten
+                </label>
             </div>
             <button onClick={handleExecuteClick}>Execute</button>
             <pre>{result != null ? JSON.stringify(result.toJS(flatten), null, 4) : ''}</pre>
-      </div>
+        </div>
     );
 }
 
 const rootElement = document.getElementById('root');
 
-ReactDOM.render(
+ReactDOM.render((
     <StrictMode>
         <App />
-  </StrictMode>,
+    </StrictMode>
+),
     rootElement,
 );

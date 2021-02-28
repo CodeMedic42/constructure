@@ -1,7 +1,6 @@
 module.exports = {
     env: {
         browser: true,
-        es2021: true,
         mocha: true,
     },
     parser: '@babel/eslint-parser',
@@ -25,6 +24,7 @@ module.exports = {
         indent: ['error', 4],
         'arrow-body-style': 0,
         'import/no-unresolved': ['error', { ignore: ['react', 'constructure'] }],
+        'react/jsx-indent': 4,
     },
     overrides: [
         {
