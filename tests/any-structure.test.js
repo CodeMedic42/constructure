@@ -8,7 +8,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run(null).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -19,7 +19,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run().then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -30,7 +30,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run('test').then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -41,7 +41,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run(42).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -52,7 +52,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run(true).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -63,7 +63,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run({}).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -74,7 +74,7 @@ describe('Any Structure', () => {
         const structure = Structure.any();
 
         return structure.run([]).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -86,7 +86,7 @@ describe('Any Structure', () => {
             .aspect('required', Aspect.required());
 
         return structure.run('test').then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     required: {
@@ -104,7 +104,7 @@ describe('Any Structure', () => {
             .aspect('required', Aspect.required());
 
         return structure.run().then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     required: {
@@ -122,7 +122,7 @@ describe('Any Structure', () => {
             .aspect('minLength', Aspect.minLength(3));
 
         return structure.run('test').then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     minLength: {
@@ -140,7 +140,7 @@ describe('Any Structure', () => {
             .aspect('minLength', Aspect.minLength(8));
 
         return structure.run('test').then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     minLength: {
@@ -158,7 +158,7 @@ describe('Any Structure', () => {
             .aspect('maxLength', Aspect.maxLength(8));
 
         return structure.run('test').then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     maxLength: {
@@ -176,7 +176,7 @@ describe('Any Structure', () => {
             .aspect('maxLength', Aspect.maxLength(3));
 
         return structure.run('test').then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     maxLength: {

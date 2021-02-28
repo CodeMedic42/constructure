@@ -8,7 +8,7 @@ describe('Array Structure', () => {
         const structure = Structure.array();
 
         return structure.run(null).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -19,7 +19,7 @@ describe('Array Structure', () => {
         const structure = Structure.array();
 
         return structure.run().then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -30,7 +30,7 @@ describe('Array Structure', () => {
         const structure = Structure.array();
 
         return structure.run([]).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -82,7 +82,7 @@ describe('Array Structure', () => {
             .aspect('required', Aspect.required());
 
         return structure.run([]).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     required: {
@@ -100,7 +100,7 @@ describe('Array Structure', () => {
             .aspect('required', Aspect.required());
 
         return structure.run().then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     required: {

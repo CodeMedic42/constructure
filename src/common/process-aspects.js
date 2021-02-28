@@ -8,17 +8,40 @@ import findIndex from 'lodash/findIndex';
 import getWorstResultLevel from './get-worst-level';
 import getter from './getter';
 
-function getFromThis(runtime, path, aspect) {
-    if (!isNil(aspect)) {
-    // Get aspect
-        const aspectResults = getter(runtime.getThis().getResults(), slice(path, 1));
+function getResultFromPath(result, path) {
+    let target = result;
 
-        return aspectResults.$a[aspect];
+    forEach(path, (segment) => {
+        const data = target.getData();
+
+        if (isNil(data)) {
+            target = undefined;
+
+            return false;
+        }
+
+        target = data[segment];
+
+        return true;
+    });
+
+    return target;
+}
+
+function getFromThis(runtime, path, aspect) {
+    // removes "$this" which is the first item.
+    const targetPath = slice(path, 1);
+
+    if (!isNil(aspect)) {
+        // Get aspect
+        const aspectResults = getResultFromPath(runtime.getThis().getResults(), targetPath);
+
+        return aspectResults.getAspect(aspect);
     }
 
     // Get Value
     return {
-        value: getter(runtime.getThis().getValue(), slice(path, 1)),
+        value: getter(runtime.getThis().getValue(), targetPath),
         result: null,
     };
 }
@@ -52,10 +75,12 @@ function getFromParent(runtime, path, aspect) {
     targetPath = targetPath.concat(extension);
 
     if (!isNil(aspect)) {
-    // Get aspect
-        const aspectResults = getter(runtime.getRoot().getResults(), targetPath);
+        const results = runtime.getRoot().getResults();
 
-        return aspectResults.$a[aspect];
+        // Get aspect
+        const aspectResults = getResultFromPath(results, targetPath);
+
+        return aspectResults.getAspect(aspect);
     }
 
     // Get Value
@@ -82,10 +107,10 @@ function getFromRoot(runtime, path, aspect) {
     });
 
     if (!isNil(aspect)) {
-    // Get aspect
-        const aspectResults = getter(runtime.getRoot().getResults(), finalPath);
+        // Get aspect
+        const aspectResults = getResultFromPath(runtime.getRoot().getResults(), finalPath);
 
-        return aspectResults.$a[aspect];
+        return aspectResults.getAspect(aspect);
     }
 
     // Get Value
@@ -156,7 +181,7 @@ function processAspects(runtime, aspects = {}) {
 
                     forEach(requirements, (requirement) => {
                         blocked = requirement.result === 'fatal'
-              || requirement.result === 'blocked';
+                || requirement.result === 'blocked';
 
                         requirementValues.push(requirement.value);
 
@@ -179,13 +204,11 @@ function processAspects(runtime, aspects = {}) {
                             aspectValueResult || null,
                             aspect.getValidator(),
                             requirementValues,
-                            runtime.getThis().getResults().$a,
                         );
                     });
                 })
                 .then((aspectResult) => {
-                    // eslint-disable-next-line no-param-reassign
-                    runtime.getThis().getResults().$a[aspectId] = aspectResult;
+                    runtime.getThis().getResults().setAspect(aspectId, aspectResult);
 
                     return aspectResult;
                 })
@@ -212,9 +235,6 @@ function processAspects(runtime, aspects = {}) {
             );
         })
         .then((finalResult) => {
-            // eslint-disable-next-line no-param-reassign
-            runtime.getThis().getResults().$r = finalResult;
-
             return finalResult;
         });
 

@@ -1,12 +1,11 @@
 import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
-import forEach from 'lodash/forEach';
-import { isFunction } from 'lodash';
+import isFunction from 'lodash/isFunction';
 import Aspect from '../aspect/aspect';
 import Runtime from '../runtime';
 import processAspects from '../common/process-aspects';
-import combineResults from '../common/combine-results';
+import ValidationResult from '../validation-result';
 
 const specialInternalAccessor = Symbol('structureSecret');
 
@@ -16,45 +15,6 @@ const FIELDS = {
     additionalStructure: Symbol('additionalStructure'),
     aspects: Symbol('aspects'),
 };
-
-function combineResultGroups(results, additionalResults) {
-    if (isNil(additionalResults)) {
-        return results;
-    }
-
-    const finalResults = results;
-
-    const {
-        $a,
-        $r,
-        ...rest
-    } = additionalResults;
-
-    forEach($a, (aspectResult, aspectId) => {
-        if (!isNil(finalResults[aspectId])) {
-            throw new Error(`Aspect ${aspectId} already exists`);
-        }
-
-        finalResults.$a[aspectId] = aspectResult;
-    });
-
-    forEach(rest, (property, propertyId) => {
-        if (!isNil(finalResults[propertyId])) {
-            throw new Error(`Property ${propertyId} already exists`);
-        }
-
-        finalResults[propertyId] = property;
-    });
-
-    finalResults.$r = combineResults([finalResults.$r, $r])
-        .then((finalResultStatus) => {
-            finalResults.$r = finalResultStatus;
-
-            return finalResultStatus;
-        });
-
-    return finalResults;
-}
 
 class Structure {
     constructor(verifier) {
@@ -72,17 +32,18 @@ class Structure {
         return (runtime) => {
             const results = processAspects(runtime, this[FIELDS.aspects]);
 
-            const additionalResults = !isNil(additionalValidator)
+            const validationResult = !isNil(additionalValidator)
                 ? additionalValidator(runtime)
-                : null;
+                : new ValidationResult();
 
-            const finalResults = combineResultGroups(results, additionalResults);
+            validationResult.applyResults([results.$r]);
+            validationResult.applyAspects(results.$a);
 
             const thisValueGroup = runtime.getThis();
 
-            thisValueGroup[specialInternalAccessor] = finalResults;
+            thisValueGroup[specialInternalAccessor] = validationResult;
 
-            return finalResults;
+            return validationResult;
         };
     }
 
@@ -97,12 +58,14 @@ class Structure {
     run(value, options = {}) {
         return Promise.try(() => {
             return this.verify(value);
-        }).then((validators) => {
+        }).then((validator) => {
             const runtime = new Runtime(specialInternalAccessor, value, options);
 
-            const aspectResults = validators(runtime);
+            const aspectResults = validator(runtime);
 
-            return aspectResults.$r.then(() => aspectResults);
+            return aspectResults.getResult().then(() => {
+                return aspectResults;
+            });
         });
     }
 }

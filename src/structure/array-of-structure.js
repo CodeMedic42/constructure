@@ -3,33 +3,30 @@ import forEach from 'lodash/forEach';
 import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
 import Structure from './structure';
-import combineResults from '../common/combine-results';
+import ValidationResult from '../validation-result';
 import VerificationError from '../verification-error';
 
-function validator(runtime, structure) {
+function validator(runtime, validators) {
     const groupResults = [];
 
-    const childResults = reduce(runtime.value, (acc, childValue, childIndex) => {
-        const childRuntime = runtime.branch(childIndex);
+    const childResults = reduce(validators, (acc, childValidator, propertyId) => {
+        const childRuntime = runtime.branch(propertyId);
 
-        const propertyResults = structure.validate(childRuntime, childValue);
+        const propertyResults = childValidator(childRuntime);
 
-        groupResults.push(propertyResults.$r);
+        groupResults.push(propertyResults.getResult());
 
-        acc[childIndex] = propertyResults;
+        acc[propertyId] = propertyResults;
 
         return acc;
     }, []);
 
-    childResults.$a = {};
-    childResults.$r = combineResults(groupResults)
-        .then((finalResult) => {
-            childResults.$r = finalResult;
+    const result = new ValidationResult();
 
-            return finalResult;
-        });
+    result.applyResults(groupResults);
+    result.setData(childResults);
 
-    return childResults;
+    return result;
 }
 
 function verifier(structure, value) {
@@ -45,14 +42,16 @@ function verifier(structure, value) {
         return null;
     }
 
+    const childValidators = [];
+
     forEach(value, (propertyValue, propertyIndex) => {
         VerificationError.try(propertyIndex, () => {
-            structure.verify(propertyValue);
+            childValidators[propertyIndex] = structure.verify(propertyValue);
         });
     });
 
     return (runtime) => {
-        return validator(runtime, structure);
+        return validator(runtime, childValidators);
     };
 }
 

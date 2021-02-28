@@ -23,16 +23,18 @@ describe('Shape Structure', () => {
             };
 
             return structure.run(value).then((result) => {
-                expect(result).to.eql({
+                expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
-                    testString: {
-                        $r: 'pass',
-                        $a: {},
-                    },
-                    testOneOfType: {
-                        $r: 'pass',
-                        $a: {},
+                    $d: {
+                        testString: {
+                            $r: 'pass',
+                            $a: {},
+                        },
+                        testOneOfType: {
+                            $r: 'pass',
+                            $a: {},
+                        },
                     },
                 });
             });
@@ -45,16 +47,18 @@ describe('Shape Structure', () => {
             };
 
             return structure.run(value).then((result) => {
-                expect(result).to.eql({
+                expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
-                    testString: {
-                        $r: 'pass',
-                        $a: {},
-                    },
-                    testOneOfType: {
-                        $r: 'pass',
-                        $a: {},
+                    $d: {
+                        testString: {
+                            $r: 'pass',
+                            $a: {},
+                        },
+                        testOneOfType: {
+                            $r: 'pass',
+                            $a: {},
+                        },
                     },
                 });
             });
@@ -67,16 +71,18 @@ describe('Shape Structure', () => {
             };
 
             return structure.run(value).then((result) => {
-                expect(result).to.eql({
+                expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
-                    testString: {
-                        $r: 'pass',
-                        $a: {},
-                    },
-                    testOneOfType: {
-                        $r: 'pass',
-                        $a: {},
+                    $d: {
+                        testString: {
+                            $r: 'pass',
+                            $a: {},
+                        },
+                        testOneOfType: {
+                            $r: 'pass',
+                            $a: {},
+                        },
                     },
                 });
             });
@@ -89,16 +95,18 @@ describe('Shape Structure', () => {
             };
 
             return structure.run(value).then((result) => {
-                expect(result).to.eql({
+                expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
-                    testString: {
-                        $r: 'pass',
-                        $a: {},
-                    },
-                    testOneOfType: {
-                        $r: 'pass',
-                        $a: {},
+                    $d: {
+                        testString: {
+                            $r: 'pass',
+                            $a: {},
+                        },
+                        testOneOfType: {
+                            $r: 'pass',
+                            $a: {},
+                        },
                     },
                 });
             });
@@ -111,23 +119,27 @@ describe('Shape Structure', () => {
             };
 
             return structure.run(value).then((result) => {
-                expect(result).to.eql({
+                expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
-                    testString: {
-                        $r: 'pass',
-                        $a: {},
-                    },
-                    testOneOfType: {
-                        $r: 'pass',
-                        $a: {},
+                    $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
                         },
-                        testNumber: {
+                        testOneOfType: {
                             $r: 'pass',
                             $a: {},
+                            $d: {
+                                testString: {
+                                    $r: 'pass',
+                                    $a: {},
+                                },
+                                testNumber: {
+                                    $r: 'pass',
+                                    $a: {},
+                                },
+                            },
                         },
                     },
                 });
@@ -247,37 +259,39 @@ describe('Shape Structure', () => {
                 const structure = buildStructure(value.testOneOfType);
 
                 return structure.run(value).then((result) => {
-                    expect(result).to.eql({
+                    expect(result.toJS()).to.eql({
                         $r: 'fatal',
                         $a: {},
-                        testReqValueA: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueB: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueC: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueD: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testOneOfType: {
-                            $r: 'fatal',
-                            $a: {
-                                flagged: {
-                                    value: stringAspectValue,
-                                    result: 'fatal',
-                                    message: 'Failing Message',
-                                },
-                                common: {
-                                    value: commonAspectValue,
-                                    result: 'fatal',
-                                    message: 'Failing Message',
+                        $d: {
+                            testReqValueA: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueB: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueC: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueD: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testOneOfType: {
+                                $r: 'fatal',
+                                $a: {
+                                    flagged: {
+                                        value: stringAspectValue,
+                                        result: 'fatal',
+                                        message: 'Failing Message',
+                                    },
+                                    common: {
+                                        value: commonAspectValue,
+                                        result: 'fatal',
+                                        message: 'Failing Message',
+                                    },
                                 },
                             },
                         },
@@ -297,37 +311,39 @@ describe('Shape Structure', () => {
                 const structure = buildStructure(value.testOneOfType);
 
                 return structure.run(value).then((result) => {
-                    expect(result).to.eql({
+                    expect(result.toJS()).to.eql({
                         $r: 'fatal',
                         $a: {},
-                        testReqValueA: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueB: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueC: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueD: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testOneOfType: {
-                            $r: 'fatal',
-                            $a: {
-                                flagged: {
-                                    value: numberAspectValue,
-                                    result: 'fatal',
-                                    message: 'Failing Message',
-                                },
-                                common: {
-                                    value: commonAspectValue,
-                                    result: 'fatal',
-                                    message: 'Failing Message',
+                        $d: {
+                            testReqValueA: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueB: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueC: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueD: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testOneOfType: {
+                                $r: 'fatal',
+                                $a: {
+                                    flagged: {
+                                        value: numberAspectValue,
+                                        result: 'fatal',
+                                        message: 'Failing Message',
+                                    },
+                                    common: {
+                                        value: commonAspectValue,
+                                        result: 'fatal',
+                                        message: 'Failing Message',
+                                    },
                                 },
                             },
                         },
@@ -349,41 +365,45 @@ describe('Shape Structure', () => {
                 const structure = buildStructure(value.testOneOfType);
 
                 return structure.run(value).then((result) => {
-                    expect(result).to.eql({
+                    expect(result.toJS()).to.eql({
                         $r: 'fatal',
                         $a: {},
-                        testReqValueA: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueB: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueC: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testReqValueD: {
-                            $r: 'pass',
-                            $a: {},
-                        },
-                        testOneOfType: {
-                            $r: 'fatal',
-                            $a: {
-                                common: {
-                                    value: commonAspectValue,
-                                    result: 'fatal',
-                                    message: 'Failing Message',
-                                },
+                        $d: {
+                            testReqValueA: {
+                                $r: 'pass',
+                                $a: {},
                             },
-                            testString: {
+                            testReqValueB: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueC: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testReqValueD: {
+                                $r: 'pass',
+                                $a: {},
+                            },
+                            testOneOfType: {
                                 $r: 'fatal',
                                 $a: {
-                                    flagged: {
-                                        value: shapeAspectValue,
+                                    common: {
+                                        value: commonAspectValue,
                                         result: 'fatal',
                                         message: 'Failing Message',
+                                    },
+                                },
+                                $d: {
+                                    testString: {
+                                        $r: 'fatal',
+                                        $a: {
+                                            flagged: {
+                                                value: shapeAspectValue,
+                                                result: 'fatal',
+                                                message: 'Failing Message',
+                                            },
+                                        },
                                     },
                                 },
                             },

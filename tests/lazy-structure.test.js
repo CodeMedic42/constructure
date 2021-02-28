@@ -26,7 +26,9 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            const ret = result.toJS();
+
+            expect(ret).to.eql({
                 $r: 'fatal',
                 $a: {
                     aspC: {
@@ -35,26 +37,30 @@ describe('Lazy Structure', () => {
                         message: 'level A Required',
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'pass',
-                    $a: {},
-                    levelB: {
+                $d: {
+                    testString: {
                         $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
+                            },
+                        },
+                    },
+                    levelA: {
+                        $r: 'pass',
+                        $a: {},
+                        $d: {
+                            levelB: {
+                                $r: 'pass',
+                                $a: {
+                                    aspB: {
+                                        value: 'test',
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                },
                             },
                         },
                     },
@@ -70,7 +76,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     aspC: {
@@ -79,26 +85,30 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'pass',
-                    $a: {},
-                    levelB: {
+                $d: {
+                    testString: {
                         $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
+                            },
+                        },
+                    },
+                    levelA: {
+                        $r: 'pass',
+                        $a: {},
+                        $d: {
+                            levelB: {
+                                $r: 'pass',
+                                $a: {
+                                    aspB: {
+                                        value: 'test',
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                },
                             },
                         },
                     },
@@ -116,7 +126,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     aspC: {
@@ -125,26 +135,30 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'pass',
-                    $a: {},
-                    levelB: {
+                $d: {
+                    testString: {
                         $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
+                            },
+                        },
+                    },
+                    levelA: {
+                        $r: 'pass',
+                        $a: {},
+                        $d: {
+                            levelB: {
+                                $r: 'pass',
+                                $a: {
+                                    aspB: {
+                                        value: 'test',
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                },
                             },
                         },
                     },
@@ -164,7 +178,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     aspC: {
@@ -173,53 +187,61 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'fatal',
-                    $a: {},
-                    levelB: {
-                        $r: 'fatal',
+                $d: {
+                    testString: {
+                        $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
                             },
-                            aspC: {
-                                value: 42,
-                                result: 'fatal',
-                                message: 'level A Required',
-                            },
                         },
-                        testString: {
-                            $r: 'pass',
-                            $a: {
-                                aspA: {
-                                    value: true,
-                                    result: 'pass',
-                                    message: null,
-                                },
-                            },
-                        },
-                        levelA: {
-                            $r: 'pass',
-                            $a: {},
+                    },
+                    levelA: {
+                        $r: 'fatal',
+                        $a: {},
+                        $d: {
                             levelB: {
-                                $r: 'pass',
+                                $r: 'fatal',
                                 $a: {
                                     aspB: {
                                         value: 'test',
                                         result: 'pass',
                                         message: null,
+                                    },
+                                    aspC: {
+                                        value: 42,
+                                        result: 'fatal',
+                                        message: 'level A Required',
+                                    },
+                                },
+                                $d: {
+                                    testString: {
+                                        $r: 'pass',
+                                        $a: {
+                                            aspA: {
+                                                value: true,
+                                                result: 'pass',
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                    levelA: {
+                                        $r: 'pass',
+                                        $a: {},
+                                        $d: {
+                                            levelB: {
+                                                $r: 'pass',
+                                                $a: {
+                                                    aspB: {
+                                                        value: 'test',
+                                                        result: 'pass',
+                                                        message: null,
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -242,7 +264,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     aspC: {
@@ -251,53 +273,61 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'fatal',
-                    $a: {},
-                    levelB: {
-                        $r: 'fatal',
+                $d: {
+                    testString: {
+                        $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
                             },
-                            aspC: {
-                                value: 42,
-                                result: 'fatal',
-                                message: 'level A Required',
-                            },
                         },
-                        testString: {
-                            $r: 'pass',
-                            $a: {
-                                aspA: {
-                                    value: true,
-                                    result: 'pass',
-                                    message: null,
-                                },
-                            },
-                        },
-                        levelA: {
-                            $r: 'pass',
-                            $a: {},
+                    },
+                    levelA: {
+                        $r: 'fatal',
+                        $a: {},
+                        $d: {
                             levelB: {
-                                $r: 'pass',
+                                $r: 'fatal',
                                 $a: {
                                     aspB: {
                                         value: 'test',
                                         result: 'pass',
                                         message: null,
+                                    },
+                                    aspC: {
+                                        value: 42,
+                                        result: 'fatal',
+                                        message: 'level A Required',
+                                    },
+                                },
+                                $d: {
+                                    testString: {
+                                        $r: 'pass',
+                                        $a: {
+                                            aspA: {
+                                                value: true,
+                                                result: 'pass',
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                    levelA: {
+                                        $r: 'pass',
+                                        $a: {},
+                                        $d: {
+                                            levelB: {
+                                                $r: 'pass',
+                                                $a: {
+                                                    aspB: {
+                                                        value: 'test',
+                                                        result: 'pass',
+                                                        message: null,
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -320,7 +350,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     aspC: {
@@ -329,46 +359,21 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'pass',
-                    $a: {},
-                    levelB: {
+                $d: {
+                    testString: {
                         $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
-                                result: 'pass',
-                                message: null,
-                            },
-                            aspC: {
-                                value: 42,
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
                             },
                         },
-                        testString: {
-                            $r: 'pass',
-                            $a: {
-                                aspA: {
-                                    value: true,
-                                    result: 'pass',
-                                    message: null,
-                                },
-                            },
-                        },
-                        levelA: {
-                            $r: 'pass',
-                            $a: {},
+                    },
+                    levelA: {
+                        $r: 'pass',
+                        $a: {},
+                        $d: {
                             levelB: {
                                 $r: 'pass',
                                 $a: {
@@ -376,6 +381,39 @@ describe('Lazy Structure', () => {
                                         value: 'test',
                                         result: 'pass',
                                         message: null,
+                                    },
+                                    aspC: {
+                                        value: 42,
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                },
+                                $d: {
+                                    testString: {
+                                        $r: 'pass',
+                                        $a: {
+                                            aspA: {
+                                                value: true,
+                                                result: 'pass',
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                    levelA: {
+                                        $r: 'pass',
+                                        $a: {},
+                                        $d: {
+                                            levelB: {
+                                                $r: 'pass',
+                                                $a: {
+                                                    aspB: {
+                                                        value: 'test',
+                                                        result: 'pass',
+                                                        message: null,
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -400,7 +438,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     aspC: {
@@ -409,46 +447,21 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
-                        },
-                    },
-                },
-                levelA: {
-                    $r: 'pass',
-                    $a: {},
-                    levelB: {
+                $d: {
+                    testString: {
                         $r: 'pass',
                         $a: {
-                            aspB: {
-                                value: 'test',
-                                result: 'pass',
-                                message: null,
-                            },
-                            aspC: {
-                                value: 42,
+                            aspA: {
+                                value: true,
                                 result: 'pass',
                                 message: null,
                             },
                         },
-                        testString: {
-                            $r: 'pass',
-                            $a: {
-                                aspA: {
-                                    value: true,
-                                    result: 'pass',
-                                    message: null,
-                                },
-                            },
-                        },
-                        levelA: {
-                            $r: 'pass',
-                            $a: {},
+                    },
+                    levelA: {
+                        $r: 'pass',
+                        $a: {},
+                        $d: {
                             levelB: {
                                 $r: 'pass',
                                 $a: {
@@ -456,6 +469,39 @@ describe('Lazy Structure', () => {
                                         value: 'test',
                                         result: 'pass',
                                         message: null,
+                                    },
+                                    aspC: {
+                                        value: 42,
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                },
+                                $d: {
+                                    testString: {
+                                        $r: 'pass',
+                                        $a: {
+                                            aspA: {
+                                                value: true,
+                                                result: 'pass',
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                    levelA: {
+                                        $r: 'pass',
+                                        $a: {},
+                                        $d: {
+                                            levelB: {
+                                                $r: 'pass',
+                                                $a: {
+                                                    aspB: {
+                                                        value: 'test',
+                                                        result: 'pass',
+                                                        message: null,
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -480,7 +526,7 @@ describe('Lazy Structure', () => {
         };
 
         return structure.run(value).then((result) => {
-            expect(result).to.eql({
+            expect(result.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     aspC: {
@@ -489,46 +535,21 @@ describe('Lazy Structure', () => {
                         message: null,
                     },
                 },
-                testString: {
-                    $r: 'pass',
-                    $a: {
-                        aspA: {
-                            value: true,
-                            result: 'pass',
-                            message: null,
+                $d: {
+                    testString: {
+                        $r: 'pass',
+                        $a: {
+                            aspA: {
+                                value: true,
+                                result: 'pass',
+                                message: null,
+                            },
                         },
                     },
-                },
-                levelA: {
-                    $r: 'fatal',
-                    $a: {},
-                    levelB: {
+                    levelA: {
                         $r: 'fatal',
-                        $a: {
-                            aspB: {
-                                value: 'test',
-                                result: 'pass',
-                                message: null,
-                            },
-                            aspC: {
-                                value: 42,
-                                result: 'pass',
-                                message: null,
-                            },
-                        },
-                        testString: {
-                            $r: 'pass',
-                            $a: {
-                                aspA: {
-                                    value: true,
-                                    result: 'pass',
-                                    message: null,
-                                },
-                            },
-                        },
-                        levelA: {
-                            $r: 'fatal',
-                            $a: {},
+                        $a: {},
+                        $d: {
                             levelB: {
                                 $r: 'fatal',
                                 $a: {
@@ -539,30 +560,67 @@ describe('Lazy Structure', () => {
                                     },
                                     aspC: {
                                         value: 42,
-                                        result: 'fatal',
-                                        message: 'level A Required',
+                                        result: 'pass',
+                                        message: null,
                                     },
                                 },
-                                testString: {
-                                    $r: 'fatal',
-                                    $a: {
-                                        aspA: {
-                                            value: true,
-                                            result: 'fatal',
-                                            message: 'Required',
-                                        },
-                                    },
-                                },
-                                levelA: {
-                                    $r: 'pass',
-                                    $a: {},
-                                    levelB: {
+                                $d: {
+                                    testString: {
                                         $r: 'pass',
                                         $a: {
-                                            aspB: {
-                                                value: 'test',
+                                            aspA: {
+                                                value: true,
                                                 result: 'pass',
                                                 message: null,
+                                            },
+                                        },
+                                    },
+                                    levelA: {
+                                        $r: 'fatal',
+                                        $a: {},
+                                        $d: {
+                                            levelB: {
+                                                $r: 'fatal',
+                                                $a: {
+                                                    aspB: {
+                                                        value: 'test',
+                                                        result: 'pass',
+                                                        message: null,
+                                                    },
+                                                    aspC: {
+                                                        value: 42,
+                                                        result: 'fatal',
+                                                        message: 'level A Required',
+                                                    },
+                                                },
+                                                $d: {
+                                                    testString: {
+                                                        $r: 'fatal',
+                                                        $a: {
+                                                            aspA: {
+                                                                value: true,
+                                                                result: 'fatal',
+                                                                message: 'Required',
+                                                            },
+                                                        },
+                                                    },
+                                                    levelA: {
+                                                        $r: 'pass',
+                                                        $a: {},
+                                                        $d: {
+                                                            levelB: {
+                                                                $r: 'pass',
+                                                                $a: {
+                                                                    aspB: {
+                                                                        value: 'test',
+                                                                        result: 'pass',
+                                                                        message: null,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
                                             },
                                         },
                                     },

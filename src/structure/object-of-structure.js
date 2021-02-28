@@ -5,32 +5,29 @@ import isPlainObject from 'lodash/isPlainObject';
 import { keys } from 'lodash';
 import Structure from './structure';
 import VerificationError from '../verification-error';
-import combineResults from '../common/combine-results';
+import ValidationResult from '../validation-result';
 
-function validator(runtime, structure) {
+function validator(runtime, validators) {
     const groupResults = [];
 
-    const childResults = reduce(runtime.value, (acc, childValue, childIndex) => {
-        const childRuntime = runtime.branch(childIndex);
+    const childResults = reduce(validators, (acc, childValidator, propertyId) => {
+        const childRuntime = runtime.branch(propertyId);
 
-        const propertyResults = structure.validate(childRuntime, childValue);
+        const propertyResults = childValidator(childRuntime);
 
-        groupResults.push(propertyResults.$r);
+        groupResults.push(propertyResults.getResult());
 
-        acc[childIndex] = propertyResults;
+        acc[propertyId] = propertyResults;
 
         return acc;
     }, {});
 
-    childResults.$a = {};
-    childResults.$r = combineResults(groupResults)
-        .then((finalResult) => {
-            childResults.$r = finalResult;
+    const result = new ValidationResult();
 
-            return finalResult;
-        });
+    result.applyResults(groupResults);
+    result.setData(childResults);
 
-    return childResults;
+    return result;
 }
 
 function verifier(structure, value) {
@@ -46,14 +43,16 @@ function verifier(structure, value) {
         return null;
     }
 
+    const childValidators = {};
+
     forEach(value, (propertyValue, propertyId) => {
         VerificationError.try(propertyId, () => {
-            structure.verify(propertyValue);
+            childValidators[propertyId] = structure.verify(propertyValue);
         });
     });
 
     return (runtime) => {
-        return validator(runtime, structure);
+        return validator(runtime, childValidators);
     };
 }
 

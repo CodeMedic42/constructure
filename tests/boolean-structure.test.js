@@ -8,7 +8,7 @@ describe('Boolean Structure', () => {
         const structure = Structure.boolean();
 
         return structure.run(null).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -19,7 +19,7 @@ describe('Boolean Structure', () => {
         const structure = Structure.boolean();
 
         return structure.run().then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -30,7 +30,7 @@ describe('Boolean Structure', () => {
         const structure = Structure.boolean();
 
         return structure.run(false).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -41,7 +41,7 @@ describe('Boolean Structure', () => {
         const structure = Structure.boolean();
 
         return structure.run(true).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
             });
@@ -93,7 +93,7 @@ describe('Boolean Structure', () => {
             .aspect('required', Aspect.required());
 
         return structure.run(true).then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
                     required: {
@@ -111,7 +111,7 @@ describe('Boolean Structure', () => {
             .aspect('required', Aspect.required());
 
         return structure.run().then((aspectValues) => {
-            expect(aspectValues).to.eql({
+            expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
                     required: {

@@ -3,8 +3,8 @@ import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
-import combineResults from '../common/combine-results';
 import VerificationError from '../verification-error';
+import ValidationResult from '../validation-result';
 
 function validator(runtime, validators) {
     const groupResults = [];
@@ -14,22 +14,21 @@ function validator(runtime, validators) {
 
         const propertyResults = childValidator(childRuntime);
 
-        groupResults.push(propertyResults.$r);
+        propertyResults.foo = propertyId;
+
+        groupResults.push(propertyResults.getResult());
 
         acc[propertyId] = propertyResults;
 
         return acc;
     }, {});
 
-    childResults.$a = {};
-    childResults.$r = combineResults(groupResults)
-        .then((finalResult) => {
-            childResults.$r = finalResult;
+    const result = new ValidationResult();
 
-            return finalResult;
-        });
+    result.applyResults(groupResults);
+    result.setData(childResults);
 
-    return childResults;
+    return result;
 }
 
 function verifier(properties = {}, options = {}, value) {
