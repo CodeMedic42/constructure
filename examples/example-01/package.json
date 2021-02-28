@@ -5,7 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
-    "constructure": "1.0.6",
+    "constructure": "1.0.7",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-scripts": "3.4.4"
