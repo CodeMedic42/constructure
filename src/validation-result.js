@@ -27,7 +27,7 @@ function flattenResult(initialResult) {
 
         if (!isNil(data)) {
             forEach(data, (item, key) => {
-                compressResult(item, `${path}.${key}`);
+                compressResult(item, path.length > 0 ? `${path}.${key}` : key);
             });
         }
     };
