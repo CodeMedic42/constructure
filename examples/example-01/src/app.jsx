@@ -28,12 +28,12 @@ const testValue = {
     firstName: 'John',
     lastName: null,
     dateOfBirth: '13/33/1980',
-    address: Structure.shape({
+    address: {
       street1: '237 Example Street',
       city: 'Raleigh',
       state: 'NC',
       postalCode: '12345',
-    }),
+    },
     phones: {
       cell: '123-456-7890',
       home: '123-34-AAAA',
@@ -57,8 +57,8 @@ function App() {
   const verify = () => {
     personStructure.run(testValue).then((verifyResult) => {
       setResult(verifyResult);
-    }).catch(() => {
-      debugger;
+    }).catch((error) => {
+      console.error(error);
     });
   };
 
