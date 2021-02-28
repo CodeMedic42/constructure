@@ -14,8 +14,6 @@ function validator(runtime, validators) {
 
         const propertyResults = childValidator(childRuntime);
 
-        propertyResults.foo = propertyId;
-
         groupResults.push(propertyResults.getResult());
 
         acc[propertyId] = propertyResults;
