@@ -4,18 +4,21 @@ module.exports = {
         es2021: true,
         mocha: true,
     },
+    parser: '@babel/eslint-parser',
     extends: [
-        'airbnb-base',
+        'airbnb',
     ],
-    plugins: ['react/recommended'],
+    plugins: ['react'],
     parserOptions: {
-        ecmaVersion: 12,
+        ecmaVersion: 9,
         sourceType: 'module',
+        allowImportExportEverywhere: false,
+        codeFrame: false,
         ecmaFeatures: {
-            // globalReturn: true,
-            // impliedStrict: true,
+            globalReturn: true,
+            impliedStrict: true,
             jsx: true,
-            // arrowFunction: true,
+            arrowFunction: true,
         },
     },
     rules: {
@@ -31,4 +34,9 @@ module.exports = {
             },
         },
     ],
+    settings: {
+        react: {
+            version: '17.0',
+        },
+    },
 };
