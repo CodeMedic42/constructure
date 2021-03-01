@@ -9,6 +9,7 @@ import minDateAspect from './min-date-aspect';
 import maxDateAspect from './max-date-aspect';
 import patternAspect from './pattern-aspect';
 import emailPatternAspect from './email-pattern-aspect';
+import exactLengthAspect from './exact-length-aspect';
 
 const createAspect = (aspectValue) => {
     return new Aspect(aspectValue);
@@ -24,5 +25,7 @@ createAspect.minDate = minDateAspect;
 createAspect.maxDate = maxDateAspect;
 createAspect.patternDate = patternAspect;
 createAspect.emailPattern = emailPatternAspect;
+createAspect.exactLength = exactLengthAspect;
+
 
 export default createAspect;

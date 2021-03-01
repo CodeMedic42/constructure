@@ -20,8 +20,10 @@ const personStructure = Structure.shape({
         phones: Structure.objectOf(Structure.string()),
     }),
     relations: Structure.arrayOf(Structure.shape({
-        relationship: Structure.string(),
-        relation: Structure.lazy(() => personStructure),
+        relationship: Structure.string()
+            .aspect('required', Aspect.required()),
+        relation: Structure.lazy(() => personStructure)
+            .aspect('required', Aspect.required()),
     })),
 });
 
@@ -34,7 +36,7 @@ const testValue = {
             street1: '237 Example Street',
             city: 'Raleigh',
             state: 'NC',
-            postalCode: '12345',
+            postalCode: '145',
         },
         phones: {
             cell: '123-456-7890',

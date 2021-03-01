@@ -8,6 +8,10 @@ function convertToDate(value, aspectValue) {
         return null;
     }
 
+    if (value instanceof Date) {
+        return value;
+    }
+
     return new Date(value);
 }
 
