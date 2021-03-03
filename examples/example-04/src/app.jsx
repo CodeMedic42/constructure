@@ -1,7 +1,6 @@
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom';
-// import Structure, { Aspect } from 'constructure';
-import Structure, { Aspect } from '../../../src';
+import Structure, { Aspect } from 'constructure';
 import logic from './logic';
 
 function App() {
@@ -23,14 +22,13 @@ function App() {
     return (
         <div className="App">
             <h1>Example 4: Pattern Aspects</h1>
-            <p>This example should show how to apply a required aspect. Also the initial state has two validation failures. The lastName structure is required but it is missing in two places.</p>
             <div>
-                <label>
-                    <input type="checkbox" onChange={handleFlattenChange} />
+                <label htmlFor="flatten-check">
+                    <input id="flatten-check" type="checkbox" onChange={handleFlattenChange} />
                     Flatten
                 </label>
             </div>
-            <button onClick={handleExecuteClick}>Execute</button>
+            <button type="button" onClick={handleExecuteClick}>Execute</button>
             <pre>{result != null ? JSON.stringify(result.toJS(flatten), null, 4) : ''}</pre>
         </div>
     );
@@ -43,5 +41,4 @@ ReactDOM.render((
         <App />
     </StrictMode>
 ),
-    rootElement,
-);
+rootElement);

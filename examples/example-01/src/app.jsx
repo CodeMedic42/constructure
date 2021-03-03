@@ -23,12 +23,12 @@ function App() {
         <div className="App">
             <h1>Example 1: Person</h1>
             <div>
-                <label>
-                    <input type="checkbox" onChange={handleFlattenChange} />
+                <label htmlFor="flatten-check">
+                    <input id="flatten-check" type="checkbox" onChange={handleFlattenChange} />
                     Flatten
                 </label>
             </div>
-            <button onClick={handleExecuteClick}>Execute</button>
+            <button type="button" onClick={handleExecuteClick}>Execute</button>
             <pre>{result != null ? JSON.stringify(result.toJS(flatten), null, 4) : ''}</pre>
         </div>
     );
@@ -41,5 +41,4 @@ ReactDOM.render((
         <App />
     </StrictMode>
 ),
-    rootElement,
-);
+rootElement);
