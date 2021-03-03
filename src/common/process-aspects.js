@@ -5,8 +5,21 @@ import forEach from 'lodash/forEach';
 import slice from 'lodash/slice';
 import isString from 'lodash/isString';
 import findIndex from 'lodash/findIndex';
+import get from 'lodash/get';
+import isUndefined from 'lodash/isUndefined';
 import getWorstResult from './get-worst-result';
-import getter from './getter';
+
+function getter(target, path, defaultValue) {
+    if (path.length <= 0) {
+        if (isUndefined(target)) {
+            return defaultValue;
+        }
+
+        return target;
+    }
+
+    return get(target, path, defaultValue);
+}
 
 function getResultFromPath(result, path) {
     let target = result;
