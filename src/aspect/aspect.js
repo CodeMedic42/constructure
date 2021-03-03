@@ -1,7 +1,11 @@
 import Symbol from 'es6-symbol';
+import { isNil } from 'lodash';
 import isFunction from 'lodash/isFunction';
 import isPlainObject from 'lodash/isPlainObject';
-import Requirements from '../requirements';
+import isString from 'lodash/isString';
+import split from 'lodash/split';
+import toPath from 'lodash/toPath';
+import startsWith from 'lodash/startsWith';
 
 const FIELDS = {
     value: Symbol('value'),
@@ -9,6 +13,43 @@ const FIELDS = {
     fatal: Symbol('fatal'),
     requirements: Symbol('requirements'),
 };
+
+function processRequirements(requirements) {
+    const processed = [];
+
+    if (isNil(requirements)) {
+        return processed;
+    }
+
+    for (let counter = 0; counter < requirements.length; counter += 1) {
+        const requirement = requirements[counter];
+
+        let path = null;
+        let aspect = null;
+
+        if (isString(requirement)) {
+            const parts = split(requirement, ':');
+
+            [path, aspect] = parts;
+        } else {
+            path = requirement.path;
+            aspect = requirement.aspect;
+        }
+
+        path = toPath(path);
+
+        if (!startsWith(path[0], '$')) {
+            path.splice(0, 0, '$this');
+        }
+
+        processed.push({
+            path,
+            aspect,
+        });
+    }
+
+    return processed;
+}
 
 class Aspect {
     constructor(value, options = {}) {
@@ -32,7 +73,7 @@ class Aspect {
             this[FIELDS.onValidate] = onValidate;
         }
 
-        this[FIELDS.requirements] = new Requirements(require);
+        this[FIELDS.requirements] = processRequirements(require);
 
         this[FIELDS.value] = isFunction(value) ? value : () => value;
     }

@@ -169,7 +169,7 @@ function processAspects(runtime, aspects = {}) {
     const aspectGroupResultPromise = Promise.all(
         map(aspects, (aspect, aspectId) => {
             const aspectResultPromise = Promise.map(
-                aspect.getRequirements().get(),
+                aspect.getRequirements(),
                 (requirement) => {
                     return getRequirement(runtime, requirement.path, requirement.aspect);
                 },
