@@ -3,6 +3,7 @@ import isNil from 'lodash/isNil';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import slice from 'lodash/slice';
+import isString from 'lodash/isString';
 import findIndex from 'lodash/findIndex';
 import getWorstResult from './get-worst-result';
 import getter from './getter';
@@ -135,7 +136,7 @@ function getRequirement(runtime, path, aspect) {
     throw new Error('Invalid requirement path');
 }
 
-function runValidator(value, aspectValue, validator, requirements) {
+function runValidator(value, aspectValue, validator, fatal, requirements) {
     if (isNil(aspectValue) || isNil(validator)) {
         return {
             value: aspectValue,
@@ -144,15 +145,14 @@ function runValidator(value, aspectValue, validator, requirements) {
         };
     }
 
-    return validator
-        .run(value, aspectValue, requirements)
-        .then((validationResult) => {
+    return Promise.resolve(validator(value, aspectValue, requirements))
+        .then((resultMessage) => {
             let result = 'pass';
             let message = null;
 
-            if (!isNil(validationResult)) {
-                message = validationResult.getMessage();
-                result = validationResult.isFatal() ? 'fatal' : 'non-fatal';
+            if (isString(resultMessage)) {
+                message = resultMessage;
+                result = fatal ? 'fatal' : 'non-fatal';
             }
 
             return {
@@ -201,7 +201,8 @@ function processAspects(runtime, aspects = {}) {
                         return runValidator(
                             runtime.getThis().getValue(),
                             aspectValueResult,
-                            aspect.getValidator(),
+                            aspect.getOnValidate(),
+                            aspect.getFatal(),
                             requirementValues,
                         );
                     });

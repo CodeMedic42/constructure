@@ -25,8 +25,16 @@ function getWorstResultLevel(current, next) {
 function getWorstResult(results) {
     let worst = results[0];
 
+    if (worst === 'fatal') {
+        return worst;
+    }
+
     for (let counter = 1; counter < results.length; counter += 1) {
         worst = getWorstResultLevel(worst, results[counter]);
+
+        if (worst === 'fatal') {
+            return worst;
+        }
     }
 
     return worst;

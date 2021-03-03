@@ -1,12 +1,12 @@
 import Symbol from 'es6-symbol';
 import isFunction from 'lodash/isFunction';
 import isPlainObject from 'lodash/isPlainObject';
-import Validator from '../validator';
 import Requirements from '../requirements';
 
 const FIELDS = {
     value: Symbol('value'),
-    validator: Symbol('validator'),
+    onValidate: Symbol('onValidate'),
+    fatal: Symbol('fatal'),
     requirements: Symbol('requirements'),
 };
 
@@ -26,8 +26,10 @@ class Aspect {
             onValidate = validator;
         }
 
+        this[FIELDS.fatal] = isFatal;
+
         if (isFunction(onValidate)) {
-            this[FIELDS.validator] = new Validator(onValidate, isFatal === true);
+            this[FIELDS.onValidate] = onValidate;
         }
 
         this[FIELDS.requirements] = new Requirements(require);
@@ -39,8 +41,12 @@ class Aspect {
         return this[FIELDS.value];
     }
 
-    getValidator() {
-        return this[FIELDS.validator];
+    getOnValidate() {
+        return this[FIELDS.onValidate];
+    }
+
+    getFatal() {
+        return this[FIELDS.fatal];
     }
 
     getRequirements() {
