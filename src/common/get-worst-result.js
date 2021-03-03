@@ -22,4 +22,14 @@ function getWorstResultLevel(current, next) {
     return currentLevel < nextLevel ? next : current;
 }
 
-export default getWorstResultLevel;
+function getWorstResult(results) {
+    let worst = results[0];
+
+    for (let counter = 1; counter < results.length; counter += 1) {
+        worst = getWorstResultLevel(worst, results[counter]);
+    }
+
+    return worst;
+}
+
+export default getWorstResult;

@@ -1,26 +1,29 @@
 import isNil from 'lodash/isNil';
+import keys from 'lodash/keys';
 import forEach from 'lodash/forEach';
-import reduce from 'lodash/reduce';
 import isPlainObject from 'lodash/isPlainObject';
-import { keys } from 'lodash';
 import Structure from './structure';
 import VerificationError from '../verification-error';
 import ValidationResult from '../validation-result';
 
 function validator(runtime, validators) {
     const groupResults = [];
+    const childResults = {};
 
-    const childResults = reduce(validators, (acc, childValidator, propertyId) => {
+    const propertyIds = keys(validators);
+
+    for (let counter = 0; counter < propertyIds.length; counter += 1) {
+        const propertyId = propertyIds[counter];
+        const childValidator = validators[propertyId];
+
         const childRuntime = runtime.branch(propertyId);
 
         const propertyResults = childValidator(childRuntime);
 
         groupResults.push(propertyResults.getResult());
 
-        acc[propertyId] = propertyResults;
-
-        return acc;
-    }, {});
+        childResults[propertyId] = propertyResults;
+    }
 
     const result = new ValidationResult();
 

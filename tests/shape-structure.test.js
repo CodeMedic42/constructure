@@ -1,6 +1,6 @@
 import chai from 'chai';
 import Promise from 'bluebird';
-import Structure, { VerificationError } from '../src';
+import Structure, { Aspect, VerificationError } from '../src';
 
 const { expect } = chai;
 
@@ -132,7 +132,7 @@ describe('Shape Structure', () => {
                         testString: {
                             $r: 'pass',
                             $a: {
-                                flagged: buildFlaggedResult(null, 'pass', null),
+                                flagged: buildFlaggedResult(undefined, 'pass', null),
                             },
                         },
                     },
@@ -210,7 +210,7 @@ describe('Shape Structure', () => {
                         testString: {
                             $r: 'pass',
                             $a: {
-                                flagged: buildFlaggedResult(null, 'pass', null),
+                                flagged: buildFlaggedResult(undefined, 'pass', null),
                             },
                         },
                     },
@@ -288,7 +288,7 @@ describe('Shape Structure', () => {
                         testString: {
                             $r: 'pass',
                             $a: {
-                                flagged: buildFlaggedResult(null, 'pass', null),
+                                flagged: buildFlaggedResult(undefined, 'pass', null),
                             },
                         },
                     },
@@ -349,7 +349,7 @@ describe('Shape Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            flagged: buildFlaggedResult(null, 'pass', null),
+                                            flagged: buildFlaggedResult(undefined, 'pass', null),
                                         },
                                     },
                                 },
@@ -440,7 +440,7 @@ describe('Shape Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            flagged: buildFlaggedResult(null, 'pass', null),
+                                            flagged: buildFlaggedResult(undefined, 'pass', null),
                                         },
                                     },
                                 },
@@ -896,6 +896,264 @@ describe('Shape Structure', () => {
                                             $a: {},
                                         },
                                     },
+                                },
+                            },
+                        },
+                    },
+                });
+            });
+        });
+    });
+
+    describe('Blocking Test', () => {
+        const structure = Structure.shape({
+            firstName: Structure.string()
+                .aspect('required', Aspect.required())
+                .aspect('isEven', (value) => {
+                    return value.length % 2 === 0;
+                }, {
+                    require: [':required'],
+                }),
+            lastName: Structure.string()
+                .aspect('required', Aspect.required())
+                .aspect('matchOnEven', true, {
+                    validator: (value, _, [firstIsEvent]) => {
+                        if (!firstIsEvent) {
+                            return null;
+                        }
+
+                        if (value.length % 2 === 0) {
+                            return null;
+                        }
+
+                        return 'Also must be even';
+                    },
+                    require: ['$parent.firstName:isEven', ':required'],
+                }),
+        });
+
+        it('All Null', () => {
+            const value = {
+                firstName: null,
+                lastName: null,
+            };
+
+            return structure.run(value).then((result) => {
+                expect(result.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $d: {
+                        firstName: {
+                            $r: 'fatal',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'fatal',
+                                    message: 'Required',
+                                },
+                                isEven: {
+                                    value: null,
+                                    result: 'blocked',
+                                    message: null,
+                                },
+                            },
+                        },
+                        lastName: {
+                            $r: 'fatal',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'fatal',
+                                    message: 'Required',
+                                },
+                                matchOnEven: {
+                                    value: null,
+                                    result: 'blocked',
+                                    message: null,
+                                },
+                            },
+                        },
+                    },
+                });
+            });
+        });
+
+        it('last exists, is odd', () => {
+            const value = {
+                firstName: null,
+                lastName: 'Doe',
+            };
+
+            return structure.run(value).then((result) => {
+                expect(result.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $d: {
+                        firstName: {
+                            $r: 'fatal',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'fatal',
+                                    message: 'Required',
+                                },
+                                isEven: {
+                                    value: null,
+                                    result: 'blocked',
+                                    message: null,
+                                },
+                            },
+                        },
+                        lastName: {
+                            $r: 'blocked',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                matchOnEven: {
+                                    value: null,
+                                    result: 'blocked',
+                                    message: null,
+                                },
+                            },
+                        },
+                    },
+                });
+            });
+        });
+
+        it('first exists, is odd, last exists, is odd', () => {
+            const value = {
+                firstName: 'Jon',
+                lastName: 'Doe',
+            };
+
+            return structure.run(value).then((result) => {
+                expect(result.toJS()).to.eql({
+                    $r: 'pass',
+                    $a: {},
+                    $d: {
+                        firstName: {
+                            $r: 'pass',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                isEven: {
+                                    value: false,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                            },
+                        },
+                        lastName: {
+                            $r: 'pass',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                matchOnEven: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                            },
+                        },
+                    },
+                });
+            });
+        });
+
+        it('first exists, is even, last exists, is odd', () => {
+            const value = {
+                firstName: 'John',
+                lastName: 'Doe',
+            };
+
+            return structure.run(value).then((result) => {
+                expect(result.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $d: {
+                        firstName: {
+                            $r: 'pass',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                isEven: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                            },
+                        },
+                        lastName: {
+                            $r: 'fatal',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                matchOnEven: {
+                                    value: true,
+                                    result: 'fatal',
+                                    message: 'Also must be even',
+                                },
+                            },
+                        },
+                    },
+                });
+            });
+        });
+
+        it('first exists, is even, last exists, is even', () => {
+            const value = {
+                firstName: 'John',
+                lastName: 'Does',
+            };
+
+            return structure.run(value).then((result) => {
+                expect(result.toJS()).to.eql({
+                    $r: 'pass',
+                    $a: {},
+                    $d: {
+                        firstName: {
+                            $r: 'pass',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                isEven: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                            },
+                        },
+                        lastName: {
+                            $r: 'pass',
+                            $a: {
+                                required: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
+                                },
+                                matchOnEven: {
+                                    value: true,
+                                    result: 'pass',
+                                    message: null,
                                 },
                             },
                         },

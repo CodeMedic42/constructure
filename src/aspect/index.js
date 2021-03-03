@@ -23,9 +23,8 @@ createAspect.min = minAspect;
 createAspect.validDate = validDateAspect;
 createAspect.minDate = minDateAspect;
 createAspect.maxDate = maxDateAspect;
-createAspect.patternDate = patternAspect;
+createAspect.pattern = patternAspect;
 createAspect.emailPattern = emailPatternAspect;
 createAspect.exactLength = exactLengthAspect;
-
 
 export default createAspect;

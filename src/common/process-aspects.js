@@ -1,11 +1,10 @@
 import Promise from 'bluebird';
 import isNil from 'lodash/isNil';
 import map from 'lodash/map';
-import reduce from 'lodash/reduce';
 import forEach from 'lodash/forEach';
 import slice from 'lodash/slice';
 import findIndex from 'lodash/findIndex';
-import getWorstResultLevel from './get-worst-level';
+import getWorstResult from './get-worst-result';
 import getter from './getter';
 
 function getResultFromPath(result, path) {
@@ -201,7 +200,7 @@ function processAspects(runtime, aspects = {}) {
                     ).then((aspectValueResult) => {
                         return runValidator(
                             runtime.getThis().getValue(),
-                            aspectValueResult || null,
+                            aspectValueResult,
                             aspect.getValidator(),
                             requirementValues,
                         );
@@ -228,14 +227,7 @@ function processAspects(runtime, aspects = {}) {
         }),
     )
         .then((results) => {
-            return reduce(
-                results,
-                (acc, result) => getWorstResultLevel(acc, result),
-                'pass',
-            );
-        })
-        .then((finalResult) => {
-            return finalResult;
+            return getWorstResult(results);
         });
 
     return {

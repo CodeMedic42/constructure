@@ -1,12 +1,10 @@
-// import combineResults from '../common/combine-results';
 import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import cloneDeep from 'lodash/cloneDeep';
 import forEach from 'lodash/forEach';
-import reduce from 'lodash/reduce';
 import { clone } from 'lodash';
-import getWorstResultLevel from './common/get-worst-level';
+import getWorstResult from './common/get-worst-result';
 
 const FIELDS = {
     aspects: Symbol('aspects'),
@@ -49,16 +47,11 @@ class ValidationResult {
 
         this[FIELDS.result] = Promise.all(p)
             .then((results) => {
-                return reduce(
-                    results,
-                    (acc, result) => getWorstResultLevel(acc, result),
-                    null,
-                );
-            })
-            .then((finalResult) => {
-                this[FIELDS.result] = finalResult;
+                const worst = getWorstResult(results);
 
-                return finalResult;
+                this[FIELDS.result] = worst;
+
+                return worst;
             });
     }
 

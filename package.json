@@ -45,6 +45,7 @@
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.12.13",
+    "benchmark": "^2.1.4",
     "chai": "^4.3.0",
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^1.0.0",

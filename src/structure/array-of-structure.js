@@ -1,6 +1,5 @@
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
-import reduce from 'lodash/reduce';
 import isArray from 'lodash/isArray';
 import Structure from './structure';
 import ValidationResult from '../validation-result';
@@ -8,18 +7,19 @@ import VerificationError from '../verification-error';
 
 function validator(runtime, validators) {
     const groupResults = [];
+    const childResults = [];
 
-    const childResults = reduce(validators, (acc, childValidator, propertyId) => {
-        const childRuntime = runtime.branch(propertyId);
+    for (let counter = 0; counter < validators.length; counter += 1) {
+        const childValidator = validators[counter];
+
+        const childRuntime = runtime.branch(counter);
 
         const propertyResults = childValidator(childRuntime);
 
         groupResults.push(propertyResults.getResult());
 
-        acc[propertyId] = propertyResults;
-
-        return acc;
-    }, []);
+        childResults[counter] = propertyResults;
+    }
 
     const result = new ValidationResult();
 

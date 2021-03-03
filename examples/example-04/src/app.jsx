@@ -1,6 +1,7 @@
 import React, { StrictMode, useState } from 'react';
 import ReactDOM from 'react-dom';
-import Structure, { Aspect } from 'constructure';
+// import Structure, { Aspect } from 'constructure';
+import Structure, { Aspect } from '../../../src';
 import logic from './logic';
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Example 3: Length Aspects</h1>
+            <h1>Example 4: Pattern Aspects</h1>
             <p>This example should show how to apply a required aspect. Also the initial state has two validation failures. The lastName structure is required but it is missing in two places.</p>
             <div>
                 <label>

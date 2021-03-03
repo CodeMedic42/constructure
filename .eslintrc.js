@@ -24,7 +24,7 @@ module.exports = {
         indent: ['error', 4],
         'arrow-body-style': 0,
         'import/no-unresolved': ['error', { ignore: ['react', 'constructure'] }],
-        'react/jsx-indent': 4,
+        'react/jsx-indent': ['error', 4],
     },
     overrides: [
         {

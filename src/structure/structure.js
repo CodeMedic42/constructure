@@ -57,8 +57,8 @@ class Structure {
 
     run(value, options = {}) {
         return Promise.try(() => {
-            return this.verify(value);
-        }).then((validator) => {
+            const validator = this.verify(value);
+
             const runtime = new Runtime(specialInternalAccessor, value, options);
 
             const aspectResults = validator(runtime);
