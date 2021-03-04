@@ -29,60 +29,82 @@ function validator(runtime, validators) {
     return result;
 }
 
-function verifier(structure, options = {}, value) {
-    let target = value;
-
+function valueVerifier(value) {
     if (isNil(value)) {
-        target = {};
-    } else if (!isArray(value)) {
+        return null;
+    }
+
+    if (!isArray(value)) {
         throw new VerificationError('Must be an array');
     }
 
-    if (isNil(structure)) {
+    return value;
+}
+
+function basicArrayVerifier(value) {
+    valueVerifier(value);
+}
+
+function singleStructureVerifier(structure, value) {
+    if (isNil(valueVerifier(value))) {
+        return null;
+    }
+
+    if (value.length <= 0) {
         return null;
     }
 
     const childValidators = [];
 
-    if (structure instanceof Structure) {
-        forEach(value, (itemValue, itemIndex) => {
-            VerificationError.try(itemIndex, () => {
-                childValidators[itemIndex] = structure.verify(itemValue);
-            });
+    forEach(value, (itemValue, itemIndex) => {
+        VerificationError.try(itemIndex, () => {
+            childValidators[itemIndex] = structure.verify(itemValue);
         });
-    } else {
-        let itemCounter = 0;
+    });
 
-        forEach(structure, (childStructure) => {
-            let targetStructure = childStructure;
-            let instanceLength = 1;
+    return (runtime) => {
+        return validator(runtime, childValidators);
+    };
+}
 
-            if (isArray(childStructure)) {
-                [targetStructure, instanceLength] = childStructure;
-            }
+function shapeVerifier(structure, exact, rest, value) {
+    let target = value;
 
-            for (let instanceCounter = 0; instanceCounter < instanceLength; instanceCounter += 1) {
-                // eslint-disable-next-line no-loop-func
-                VerificationError.try(itemCounter, () => {
-                    childValidators[itemCounter] = targetStructure.verify(target[itemCounter]);
-                });
+    if (isNil(valueVerifier(value))) {
+        target = {};
+    }
 
-                itemCounter += 1;
-            }
-        });
+    if (value.length <= 0) {
+        return null;
+    }
 
-        const {
-            rest,
-            exact,
-        } = options;
+    const childValidators = [];
+    let itemCounter = 0;
 
-        if (rest instanceof Structure) {
-            for (itemCounter; itemCounter < target.length; itemCounter += 1) {
-                childValidators[itemCounter] = rest.verify(target[itemCounter]);
-            }
-        } else if (exact && itemCounter !== target.length) {
-            throw new Error(`Array must have exactly ${itemCounter} item(s)`);
+    forEach(structure, (childStructure) => {
+        let targetStructure = childStructure;
+        let instanceLength = 1;
+
+        if (isArray(childStructure)) {
+            [targetStructure, instanceLength] = childStructure;
         }
+
+        for (let instanceCounter = 0; instanceCounter < instanceLength; instanceCounter += 1) {
+            // eslint-disable-next-line no-loop-func
+            VerificationError.try(itemCounter, () => {
+                childValidators[itemCounter] = targetStructure.verify(target[itemCounter]);
+            });
+
+            itemCounter += 1;
+        }
+    });
+
+    if (rest instanceof Structure) {
+        for (itemCounter; itemCounter < target.length; itemCounter += 1) {
+            childValidators[itemCounter] = rest.verify(target[itemCounter]);
+        }
+    } else if (exact && itemCounter < target.length) {
+        throw new Error(`Array cannot have more than ${itemCounter} item(s)`);
     }
 
     return (runtime) => {
@@ -90,4 +112,21 @@ function verifier(structure, options = {}, value) {
     };
 }
 
-export default (structure, options) => new Structure(verifier.bind(null, structure, options));
+export default (structure, options = {}) => {
+    let verifier = null;
+
+    const {
+        exact = false,
+        rest = null,
+    } = options;
+
+    if (isNil(structure)) {
+        verifier = basicArrayVerifier;
+    } else if (structure instanceof Structure) {
+        verifier = singleStructureVerifier.bind(null, structure);
+    } else if (isArray(structure)) {
+        verifier = shapeVerifier.bind(null, structure, exact, rest);
+    }
+
+    return new Structure(verifier);
+};

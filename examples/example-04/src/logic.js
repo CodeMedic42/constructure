@@ -35,7 +35,7 @@ export default function getResult(Structure, Aspect) {
             email: Structure.string()
                 .aspect('pattern', Aspect.emailPattern()),
         }),
-        relations: Structure.arrayOf(Structure.object({
+        relations: Structure.array(Structure.object({
             relationship: Structure.string()
                 .aspect('required', Aspect.required()),
             relation: Structure.lazy(() => personStructure)

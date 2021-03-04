@@ -15,7 +15,7 @@ export default function getResult(Structure) {
             phones: Structure.object(Structure.string()),
             email: Structure.string(),
         }),
-        relations: Structure.arrayOf(Structure.object({
+        relations: Structure.array(Structure.object({
             relationship: Structure.string(),
             relation: Structure.lazy(() => personStructure),
         })),
