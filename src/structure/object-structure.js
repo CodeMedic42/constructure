@@ -50,28 +50,6 @@ function basicObjectVerifier(value) {
     valueVerifier(value);
 }
 
-function singleStructureVerifier(structure, value) {
-    if (isNil(valueVerifier(value))) {
-        return null;
-    }
-
-    if (keys(value).length <= 0) {
-        return null;
-    }
-
-    const childValidators = {};
-
-    forEach(value, (propertyValue, propertyId) => {
-        VerificationError.try(propertyId, () => {
-            childValidators[propertyId] = structure.verify(propertyValue);
-        });
-    });
-
-    return (runtime) => {
-        return validator(runtime, childValidators);
-    };
-}
-
 function regExVerifier(patterns, exact, rest, value) {
     if (isNil(valueVerifier(value))) {
         return null;
@@ -157,7 +135,7 @@ export default (structure, options = {}) => {
     if (isNil(structure)) {
         verifier = basicObjectVerifier;
     } else if (structure instanceof Structure) {
-        verifier = singleStructureVerifier.bind(null, structure);
+        verifier = shapeVerifier.bind(null, {}, exact, structure);
     } else if (isArray(structure)) {
         verifier = regExVerifier.bind(null, structure, exact, rest);
     } else if (isPlainObject(structure)) {

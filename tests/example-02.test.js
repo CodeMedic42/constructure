@@ -181,6 +181,7 @@ describe('Example 02', () => {
                                                     },
                                                     phones: {
                                                         $a: {},
+                                                        $d: {},
                                                         $r: 'pass',
                                                     },
                                                 },
