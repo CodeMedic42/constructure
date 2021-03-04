@@ -5,12 +5,12 @@ const { expect } = chai;
 
 describe('Shape Structure', () => {
     describe('Complex Structure', () => {
-        const structure = Structure.shape({
+        const structure = Structure.object({
             testString: Structure.string(),
             testOneOfType: Structure.oneOfType([
                 Structure.string(),
                 Structure.number(),
-                Structure.shape({
+                Structure.object({
                     testString: Structure.string(),
                     testNumber: Structure.number(),
                 }),
@@ -164,7 +164,7 @@ describe('Shape Structure', () => {
             const shapeValue = '3';
 
             const buildStructure = (commonValue) => {
-                return Structure.shape({
+                return Structure.object({
                     testReqValueA: Structure.string(),
                     testReqValueB: Structure.string(),
                     testReqValueC: Structure.string(),
@@ -205,7 +205,7 @@ describe('Shape Structure', () => {
                                 },
                                 require: ['$parent.testReqValueB'],
                             }),
-                        Structure.shape({
+                        Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', (value, requirements) => {
                                     expect(value).to.eql(shapeValue);

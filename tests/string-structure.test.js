@@ -188,3 +188,24 @@ describe('String Structure', () => {
         });
     });
 });
+
+// const e = Structure.object();
+// const e = Structure.object(Structure);
+// const e = Structure.object({});
+// const e = Structure.object({}, {
+//     exact: true,
+//     rest: Structure,
+//     regEx: true,
+// });
+// const e = Structure.object([{pattern: //, structure: }], {
+//     exact: true,
+//     rest: Structure,
+// });
+
+// const e = Structure.array();
+// const e = Structure.array(Structure);
+// const e = Structure.array([Structure.string(), [Structure.string(), 4]]);
+// const e = Structure.array([Structure.string(), [Structure.string(), 4]], {
+//     exact: true,
+//     rest: Structure
+// });

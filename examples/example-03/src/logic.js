@@ -1,6 +1,6 @@
 export default function getResult(Structure, Aspect) {
-    const personStructure = Structure.shape({
-        demographics: Structure.shape({
+    const personStructure = Structure.object({
+        demographics: Structure.object({
             firstName: Structure.string()
                 .aspect('required', Aspect.required())
                 .aspect('minLength', Aspect.minLength(1))
@@ -13,7 +13,7 @@ export default function getResult(Structure, Aspect) {
                 .aspect('minLength', Aspect.minLength(1))
                 .aspect('maxLength', Aspect.maxLength(50)),
             dateOfBirth: Structure.string(),
-            address: Structure.shape({
+            address: Structure.object({
                 street1: Structure.string()
                     .aspect('minLength', Aspect.minLength(1))
                     .aspect('maxLength', Aspect.maxLength(100)),
@@ -29,10 +29,10 @@ export default function getResult(Structure, Aspect) {
                     .aspect('minLength', Aspect.minLength(5))
                     .aspect('maxLength', Aspect.maxLength(10)),
             }),
-            phones: Structure.objectOf(Structure.string()),
+            phones: Structure.object(Structure.string()),
             email: Structure.string(),
         }),
-        relations: Structure.arrayOf(Structure.shape({
+        relations: Structure.arrayOf(Structure.object({
             relationship: Structure.string()
                 .aspect('required', Aspect.required()),
             relation: Structure.lazy(() => personStructure)

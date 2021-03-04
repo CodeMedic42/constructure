@@ -19,10 +19,10 @@ const onValidate = (value, aspectResultValue) => buildValidatorMessage(
     aspectResultValue,
 );
 
-describe('Shape Structure', () => {
+describe('object Structure', () => {
     describe('Simple Structure', () => {
         it('Basic Property Fail Verify', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string(),
             });
 
@@ -38,7 +38,7 @@ describe('Shape Structure', () => {
         });
 
         it('Basic Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string(),
             });
 
@@ -61,7 +61,7 @@ describe('Shape Structure', () => {
         });
 
         it('Static Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', aspectValue),
             });
@@ -89,7 +89,7 @@ describe('Shape Structure', () => {
         });
 
         it('Null Static Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', null),
             });
@@ -115,7 +115,7 @@ describe('Shape Structure', () => {
         });
 
         it('Undefined Static Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', undefined),
             });
@@ -141,7 +141,7 @@ describe('Shape Structure', () => {
         });
 
         it('Dynamic Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', () => aspectValue),
             });
@@ -167,7 +167,7 @@ describe('Shape Structure', () => {
         });
 
         it('Null Dynamic Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', () => null),
             });
@@ -193,7 +193,7 @@ describe('Shape Structure', () => {
         });
 
         it('Undefined Dynamic Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', () => undefined),
             });
@@ -219,7 +219,7 @@ describe('Shape Structure', () => {
         });
 
         it('Async Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', () => Promise.delay(500).then(() => aspectValue)),
             });
@@ -245,7 +245,7 @@ describe('Shape Structure', () => {
         });
 
         it('Null Async Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', () => Promise.delay(500).then(() => null)),
             });
@@ -271,7 +271,7 @@ describe('Shape Structure', () => {
         });
 
         it('Undefined Async Property Aspect', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testString: Structure.string()
                     .aspect('flagged', () => Promise.delay(500).then(() => undefined)),
             });
@@ -302,7 +302,7 @@ describe('Shape Structure', () => {
 
                 describe(`Result is ${fatalType}`, () => {
                     it('Null Static Property Aspect', () => {
-                        const structure = Structure.shape({
+                        const structure = Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', null, {
                                     validator: { onValidate, isFatal },
@@ -330,7 +330,7 @@ describe('Shape Structure', () => {
                     });
 
                     it('Undefined Static Property Aspect', () => {
-                        const structure = Structure.shape({
+                        const structure = Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', undefined, {
                                     validator: { onValidate, isFatal },
@@ -358,7 +358,7 @@ describe('Shape Structure', () => {
                     });
 
                     it('Static Property Aspect', () => {
-                        const structure = Structure.shape({
+                        const structure = Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', aspectValue, {
                                     validator: { onValidate, isFatal },
@@ -393,7 +393,7 @@ describe('Shape Structure', () => {
                     });
 
                     it('Null Dynamic Property Aspect', () => {
-                        const structure = Structure.shape({
+                        const structure = Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', () => null, {
                                     validator: { onValidate, isFatal },
@@ -421,7 +421,7 @@ describe('Shape Structure', () => {
                     });
 
                     it('Undefined Dynamic Property Aspect', () => {
-                        const structure = Structure.shape({
+                        const structure = Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', () => undefined, {
                                     validator: { onValidate, isFatal },
@@ -449,7 +449,7 @@ describe('Shape Structure', () => {
                     });
 
                     it('Dynamic Property Aspect', () => {
-                        const structure = Structure.shape({
+                        const structure = Structure.object({
                             testString: Structure.string()
                                 .aspect('flagged', () => aspectValue, {
                                     validator: { onValidate, isFatal },
@@ -492,7 +492,7 @@ describe('Shape Structure', () => {
         describe('With Requirements', () => {
             describe('Internal Requirements', () => {
                 it('Static Property Aspect flagged => requiredAttA', () => {
-                    const structure = Structure.shape({
+                    const structure = Structure.object({
                         testString: Structure.string()
                             .aspect(
                                 'flagged',
@@ -530,7 +530,7 @@ describe('Shape Structure', () => {
                 });
 
                 it('Static Property Aspect flagged => requiredAttA => requiredAttB', () => {
-                    const structure = Structure.shape({
+                    const structure = Structure.object({
                         testString: Structure.string()
                             .aspect(
                                 'flagged',
@@ -574,7 +574,7 @@ describe('Shape Structure', () => {
 
             describe('Child Requirements', () => {
                 it('Static Property Aspect flagged => requiredAttA', () => {
-                    const structure = Structure.shape({
+                    const structure = Structure.object({
                         testString: Structure.string()
                             .aspect('requiredAttA', 42),
                     })
@@ -612,7 +612,7 @@ describe('Shape Structure', () => {
                 });
 
                 it('Static Property Aspect flagged => requiredAttA => requiredAttB', () => {
-                    const structure = Structure.shape({
+                    const structure = Structure.object({
                         testString: Structure.string()
                             .aspect('requiredAttA', 42, {
                                 require: ['$parent.testNumber:requiredAttB'],
@@ -665,14 +665,14 @@ describe('Shape Structure', () => {
     });
 
     describe('Deep Structure', () => {
-        it('Null shape', () => {
-            const structure = Structure.shape({
+        it('Null object', () => {
+            const structure = Structure.object({
                 testString: Structure.string(),
                 testNumber: Structure.number(),
-                testShape: Structure.shape({
+                testobject: Structure.object({
                     testString: Structure.string(),
                     testNumber: Structure.number(),
-                    testShape: Structure.shape({
+                    testobject: Structure.object({
                         testString: Structure.string(),
                         testNumber: Structure.number(),
                     }),
@@ -697,7 +697,7 @@ describe('Shape Structure', () => {
                             $r: 'pass',
                             $a: {},
                         },
-                        testShape: {
+                        testobject: {
                             $r: 'pass',
                             $a: {},
                             $d: {
@@ -709,7 +709,7 @@ describe('Shape Structure', () => {
                                     $r: 'pass',
                                     $a: {},
                                 },
-                                testShape: {
+                                testobject: {
                                     $r: 'pass',
                                     $a: {},
                                     $d: {
@@ -730,14 +730,14 @@ describe('Shape Structure', () => {
             });
         });
 
-        it('Full shape', () => {
-            const structure = Structure.shape({
+        it('Full object', () => {
+            const structure = Structure.object({
                 testString: Structure.string(),
                 testNumber: Structure.number(),
-                testShape: Structure.shape({
+                testobject: Structure.object({
                     testString: Structure.string(),
                     testNumber: Structure.number(),
-                    testShape: Structure.shape({
+                    testobject: Structure.object({
                         testString: Structure.string(),
                         testNumber: Structure.number(),
                     }),
@@ -747,10 +747,10 @@ describe('Shape Structure', () => {
             const value = {
                 testString: 'test',
                 testNumber: 42,
-                testShape: {
+                testobject: {
                     testString: 'test',
                     testNumber: 42,
-                    testShape: {
+                    testobject: {
                         testString: 'test',
                         testNumber: 42,
                     },
@@ -770,7 +770,7 @@ describe('Shape Structure', () => {
                             $r: 'pass',
                             $a: {},
                         },
-                        testShape: {
+                        testobject: {
                             $r: 'pass',
                             $a: {},
                             $d: {
@@ -782,7 +782,7 @@ describe('Shape Structure', () => {
                                     $r: 'pass',
                                     $a: {},
                                 },
-                                testShape: {
+                                testobject: {
                                     $r: 'pass',
                                     $a: {},
                                     $d: {
@@ -804,14 +804,14 @@ describe('Shape Structure', () => {
         });
 
         it('Deep Failing Validation with Requirements', () => {
-            const structure = Structure.shape({
+            const structure = Structure.object({
                 testStringA: Structure.string()
                     .aspect('requiredAttA', 'foo'),
                 testNumber: Structure.number(),
-                testShapeA: Structure.shape({
+                testobjectA: Structure.object({
                     testString: Structure.string(),
                     testNumber: Structure.number(),
-                    testShapeB: Structure.shape({
+                    testobjectB: Structure.object({
                         testStringB: Structure.string()
                             .aspect('flagged', (value, requirements) => {
                                 expect(value).to.eql('test');
@@ -836,10 +836,10 @@ describe('Shape Structure', () => {
             const value = {
                 testStringA: 'test',
                 testNumber: 42,
-                testShapeA: {
+                testobjectA: {
                     testString: 'test',
                     testNumber: 42,
-                    testShapeB: {
+                    testobjectB: {
                         testStringB: 'test',
                         testNumber: 42,
                     },
@@ -865,7 +865,7 @@ describe('Shape Structure', () => {
                             $r: 'pass',
                             $a: {},
                         },
-                        testShapeA: {
+                        testobjectA: {
                             $r: 'fatal',
                             $a: {},
                             $d: {
@@ -877,7 +877,7 @@ describe('Shape Structure', () => {
                                     $r: 'pass',
                                     $a: {},
                                 },
-                                testShapeB: {
+                                testobjectB: {
                                     $r: 'fatal',
                                     $a: {},
                                     $d: {
@@ -906,7 +906,7 @@ describe('Shape Structure', () => {
     });
 
     describe('Blocking Test', () => {
-        const structure = Structure.shape({
+        const structure = Structure.object({
             firstName: Structure.string()
                 .aspect('required', Aspect.required())
                 .aspect('isEven', (value) => {
