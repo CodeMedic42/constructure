@@ -8,6 +8,7 @@ import toPath from 'lodash/toPath';
 import startsWith from 'lodash/startsWith';
 
 const FIELDS = {
+    id: Symbol('id'),
     value: Symbol('value'),
     onValidate: Symbol('onValidate'),
     fatal: Symbol('fatal'),
@@ -52,11 +53,13 @@ function processRequirements(requirements) {
 }
 
 class Aspect {
-    constructor(value, options = {}) {
+    constructor(id, value, options = {}) {
         const {
             validator,
             require,
         } = options;
+
+        this[FIELDS.id] = id;
 
         let onValidate = null;
         let isFatal = true;
@@ -76,6 +79,10 @@ class Aspect {
         this[FIELDS.requirements] = processRequirements(require);
 
         this[FIELDS.value] = isFunction(value) ? value : () => value;
+    }
+
+    getId() {
+        return this[FIELDS.id];
     }
 
     getValue() {

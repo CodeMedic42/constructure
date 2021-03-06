@@ -908,14 +908,14 @@ describe('object Structure', () => {
     describe('Blocking Test', () => {
         const structure = Structure.object({
             firstName: Structure.string()
-                .aspect('required', Aspect.required())
+                .aspect(Aspect.required())
                 .aspect('isEven', (value) => {
                     return value.length % 2 === 0;
                 }, {
                     require: [':required'],
                 }),
             lastName: Structure.string()
-                .aspect('required', Aspect.required())
+                .aspect(Aspect.required())
                 .aspect('matchOnEven', true, {
                     validator: (value, _, [firstIsEvent]) => {
                         if (!firstIsEvent) {

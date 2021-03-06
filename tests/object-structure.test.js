@@ -79,7 +79,7 @@ describe('Object Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.object()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run({}).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -97,7 +97,7 @@ describe('Object Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.object()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run().then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({

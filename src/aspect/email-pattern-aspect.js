@@ -18,12 +18,13 @@ function emailPatternLogic(message, value, aspectValue) {
 
 export default (aspectValue = true, options = {}) => {
     const {
+        id = 'emailPattern',
         message = 'Email Pattern',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: emailPatternLogic.bind(null, message),
             isFatal,

@@ -79,7 +79,7 @@ describe('Number Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.number()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run(5).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -97,7 +97,7 @@ describe('Number Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.number()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run().then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -115,7 +115,7 @@ describe('Number Structure', () => {
 
     it('Basic Min Passed', () => {
         const structure = Structure.number()
-            .aspect('min', Aspect.min(3));
+            .aspect(Aspect.min(3));
 
         return structure.run(5).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -133,7 +133,7 @@ describe('Number Structure', () => {
 
     it('Basic Min Fails', () => {
         const structure = Structure.number()
-            .aspect('min', Aspect.min(8));
+            .aspect(Aspect.min(8));
 
         return structure.run(5).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -151,7 +151,7 @@ describe('Number Structure', () => {
 
     it('Basic Max Passed', () => {
         const structure = Structure.number()
-            .aspect('max', Aspect.max(8));
+            .aspect(Aspect.max(8));
 
         return structure.run(5).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -169,7 +169,7 @@ describe('Number Structure', () => {
 
     it('Basic Max Fails', () => {
         const structure = Structure.number()
-            .aspect('max', Aspect.max(3));
+            .aspect(Aspect.max(3));
 
         return structure.run(5).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({

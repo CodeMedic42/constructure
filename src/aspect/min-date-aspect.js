@@ -26,12 +26,13 @@ const minDateLogic = (message, value, aspectValue, requirements) => {
 
 export default (aspectValue, options = {}) => {
     const {
+        id = 'minDate',
         message = 'Min Date',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: minDateLogic.bind(null, message),
             isFatal,

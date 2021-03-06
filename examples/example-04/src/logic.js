@@ -2,44 +2,44 @@ export default function getResult(Structure, Aspect) {
     const personStructure = Structure.object({
         demographics: Structure.object({
             firstName: Structure.string()
-                .aspect('required', Aspect.required())
-                .aspect('minLength', Aspect.minLength(1))
-                .aspect('maxLength', Aspect.maxLength(50)),
+                .aspect(Aspect.required())
+                .aspect(Aspect.minLength(1))
+                .aspect(Aspect.maxLength(50)),
             middleName: Structure.string()
-                .aspect('minLength', Aspect.minLength(1))
-                .aspect('maxLength', Aspect.maxLength(50)),
+                .aspect(Aspect.minLength(1))
+                .aspect(Aspect.maxLength(50)),
             lastName: Structure.string()
-                .aspect('required', Aspect.required())
-                .aspect('minLength', Aspect.minLength(1))
-                .aspect('maxLength', Aspect.maxLength(50)),
+                .aspect(Aspect.required())
+                .aspect(Aspect.minLength(1))
+                .aspect(Aspect.maxLength(50)),
             dateOfBirth: Structure.string(),
             address: Structure.object({
                 street1: Structure.string()
-                    .aspect('minLength', Aspect.minLength(1))
-                    .aspect('maxLength', Aspect.maxLength(100)),
+                    .aspect(Aspect.minLength(1))
+                    .aspect(Aspect.maxLength(100)),
                 street2: Structure.string()
-                    .aspect('minLength', Aspect.minLength(1))
-                    .aspect('maxLength', Aspect.maxLength(100)),
+                    .aspect(Aspect.minLength(1))
+                    .aspect(Aspect.maxLength(100)),
                 city: Structure.string()
-                    .aspect('minLength', Aspect.minLength(1))
-                    .aspect('maxLength', Aspect.maxLength(50)),
+                    .aspect(Aspect.minLength(1))
+                    .aspect(Aspect.maxLength(50)),
                 state: Structure.string()
-                    .aspect('exactLength', Aspect.exactLength(2)),
+                    .aspect(Aspect.exactLength(2)),
                 postalCode: Structure.string()
-                    .aspect('pattern', Aspect.pattern(/^[0-9]{5}(?:-[0-9]{4})?$/)),
+                    .aspect(Aspect.pattern(/^[0-9]{5}(?:-[0-9]{4})?$/)),
             }),
             phones: Structure.object(
                 Structure.string()
-                    .aspect('pattern', Aspect.pattern(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/)),
+                    .aspect(Aspect.pattern(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/)),
             ),
             email: Structure.string()
-                .aspect('pattern', Aspect.emailPattern()),
+                .aspect(Aspect.emailPattern()),
         }),
         relations: Structure.array(Structure.object({
             relationship: Structure.string()
-                .aspect('required', Aspect.required()),
+                .aspect(Aspect.required()),
             relation: Structure.lazy(() => personStructure)
-                .aspect('required', Aspect.required()),
+                .aspect(Aspect.required()),
         })),
     });
 

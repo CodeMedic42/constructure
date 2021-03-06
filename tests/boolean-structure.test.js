@@ -90,7 +90,7 @@ describe('Boolean Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.boolean()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run(true).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -108,7 +108,7 @@ describe('Boolean Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.boolean()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run().then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({

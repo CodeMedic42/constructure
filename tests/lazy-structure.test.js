@@ -7,7 +7,7 @@ const { expect } = chai;
 describe('Lazy Structure', () => {
     const structure = Structure.object({
         testString: Structure.string()
-            .aspect('aspA', Aspect.required()),
+            .aspect(Aspect.required()),
         levelA: Structure.object({
             levelB: Structure.lazy(() => structure)
                 .aspect('aspB', 'test'),
@@ -41,7 +41,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -89,7 +89,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -139,7 +139,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -191,7 +191,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -220,7 +220,7 @@ describe('Lazy Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            aspA: {
+                                            required: {
                                                 value: true,
                                                 result: 'pass',
                                                 message: null,
@@ -277,7 +277,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -306,7 +306,7 @@ describe('Lazy Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            aspA: {
+                                            required: {
                                                 value: true,
                                                 result: 'pass',
                                                 message: null,
@@ -363,7 +363,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -392,7 +392,7 @@ describe('Lazy Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            aspA: {
+                                            required: {
                                                 value: true,
                                                 result: 'pass',
                                                 message: null,
@@ -451,7 +451,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -480,7 +480,7 @@ describe('Lazy Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            aspA: {
+                                            required: {
                                                 value: true,
                                                 result: 'pass',
                                                 message: null,
@@ -539,7 +539,7 @@ describe('Lazy Structure', () => {
                     testString: {
                         $r: 'pass',
                         $a: {
-                            aspA: {
+                            required: {
                                 value: true,
                                 result: 'pass',
                                 message: null,
@@ -568,7 +568,7 @@ describe('Lazy Structure', () => {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
-                                            aspA: {
+                                            required: {
                                                 value: true,
                                                 result: 'pass',
                                                 message: null,
@@ -597,7 +597,7 @@ describe('Lazy Structure', () => {
                                                     testString: {
                                                         $r: 'fatal',
                                                         $a: {
-                                                            aspA: {
+                                                            required: {
                                                                 value: true,
                                                                 result: 'fatal',
                                                                 message: 'Required',

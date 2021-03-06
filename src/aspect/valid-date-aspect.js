@@ -48,12 +48,13 @@ function validDateLogic(message, _, aspectValue) {
 
 export default (aspectValue = true, options) => {
     const {
+        id = 'validDate',
         message = 'Invalid Date',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValueLogic.bind(null, aspectValue), {
+    return new Aspect(id, aspectValueLogic.bind(null, aspectValue), {
         validator: {
             onValidate: validDateLogic.bind(null, message),
             isFatal,

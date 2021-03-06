@@ -47,10 +47,18 @@ class Structure {
         };
     }
 
-    aspect(id, aspectValue, options) {
-        this[FIELDS.aspects][id] = aspectValue instanceof Aspect
-            ? aspectValue
-            : new Aspect(aspectValue, options);
+    aspect(firstParam, aspectValue, options) {
+        let aspect = null;
+
+        if (firstParam instanceof Aspect) {
+            aspect = firstParam;
+        } else {
+            aspect = new Aspect(firstParam, aspectValue, options);
+        }
+
+        const id = aspect.getId();
+
+        this[FIELDS.aspects][id] = aspect;
 
         return this;
     }

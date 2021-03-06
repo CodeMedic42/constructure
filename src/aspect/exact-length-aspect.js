@@ -21,12 +21,13 @@ function exactLengthLogic(message, value, aspectValue) {
 
 export default (aspectValue, options = {}) => {
     const {
+        id = 'exactLength',
         message = 'Exact Length',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: exactLengthLogic.bind(null, message),
             isFatal,

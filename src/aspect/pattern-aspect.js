@@ -16,12 +16,13 @@ function patternLogic(message, value, aspectValue) {
 
 export default (aspectValue, options = {}) => {
     const {
+        id = 'pattern',
         message = 'Pattern',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: patternLogic.bind(null, message),
             isFatal,

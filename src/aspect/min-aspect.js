@@ -21,12 +21,13 @@ function minLogic(message, value, aspectValue) {
 
 export default (aspectValue, options = {}) => {
     const {
+        id = 'min',
         message = 'Min',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: minLogic.bind(null, message),
             isFatal,

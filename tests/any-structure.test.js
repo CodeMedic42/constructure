@@ -83,7 +83,7 @@ describe('Any Structure', () => {
 
     it('Basic Required Passed', () => {
         const structure = Structure.any()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -101,7 +101,7 @@ describe('Any Structure', () => {
 
     it('Basic Required Fails', () => {
         const structure = Structure.any()
-            .aspect('required', Aspect.required());
+            .aspect(Aspect.required());
 
         return structure.run().then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -119,7 +119,7 @@ describe('Any Structure', () => {
 
     it('Basic MinLength Passed', () => {
         const structure = Structure.any()
-            .aspect('minLength', Aspect.minLength(3));
+            .aspect(Aspect.minLength(3));
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -137,7 +137,7 @@ describe('Any Structure', () => {
 
     it('Basic MinLength Fails', () => {
         const structure = Structure.any()
-            .aspect('minLength', Aspect.minLength(8));
+            .aspect(Aspect.minLength(8));
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -155,7 +155,7 @@ describe('Any Structure', () => {
 
     it('Basic MaxLength Passed', () => {
         const structure = Structure.any()
-            .aspect('maxLength', Aspect.maxLength(8));
+            .aspect(Aspect.maxLength(8));
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
@@ -173,7 +173,7 @@ describe('Any Structure', () => {
 
     it('Basic MaxLength Fails', () => {
         const structure = Structure.any()
-            .aspect('maxLength', Aspect.maxLength(3));
+            .aspect(Aspect.maxLength(3));
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({

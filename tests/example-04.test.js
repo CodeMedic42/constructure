@@ -78,7 +78,7 @@ describe('Example 04', () => {
                             },
                             email: {
                                 $a: {
-                                    pattern: {
+                                    emailPattern: {
                                         message: null,
                                         result: 'pass',
                                         value: true,
@@ -278,7 +278,7 @@ describe('Example 04', () => {
                                                     },
                                                     email: {
                                                         $a: {
-                                                            pattern: {
+                                                            emailPattern: {
                                                                 message: null,
                                                                 result: 'pass',
                                                                 value: true,
@@ -451,7 +451,7 @@ describe('Example 04', () => {
                 },
                 'demographics.email': {
                     $a: {
-                        pattern: {
+                        emailPattern: {
                             message: null,
                             result: 'pass',
                             value: true,
@@ -645,7 +645,7 @@ describe('Example 04', () => {
                 },
                 'relations.0.relation.demographics.email': {
                     $a: {
-                        pattern: {
+                        emailPattern: {
                             message: null,
                             result: 'pass',
                             value: true,

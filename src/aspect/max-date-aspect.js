@@ -20,12 +20,13 @@ const maxDataLogic = (message, value, aspectValue) => {
 
 export default (aspectValue, options = {}) => {
     const {
+        id = 'maxDate',
         message = 'Max Date',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: maxDataLogic.bind(null, message),
             isFatal,

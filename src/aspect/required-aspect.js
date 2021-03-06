@@ -16,12 +16,13 @@ function requiredLogic(message, value, aspectValue) {
 
 export default (aspectValue = true, options = {}) => {
     const {
+        id = 'required',
         message = 'Required',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: requiredLogic.bind(null, message),
             isFatal,

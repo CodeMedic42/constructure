@@ -2,10 +2,10 @@ export default function getResult(Structure, Aspect) {
     const personStructure = Structure.object({
         demographics: Structure.object({
             firstName: Structure.string()
-                .aspect('required', Aspect.required()),
+                .aspect(Aspect.required()),
             middleName: Structure.string(),
             lastName: Structure.string()
-                .aspect('required', Aspect.required()),
+                .aspect(Aspect.required()),
             dateOfBirth: Structure.string(),
             address: Structure.object({
                 street1: Structure.string(),
@@ -19,9 +19,9 @@ export default function getResult(Structure, Aspect) {
         }),
         relations: Structure.array(Structure.object({
             relationship: Structure.string()
-                .aspect('required', Aspect.required()),
+                .aspect(Aspect.required()),
             relation: Structure.lazy(() => personStructure)
-                .aspect('required', Aspect.required()),
+                .aspect(Aspect.required()),
         })),
     });
 

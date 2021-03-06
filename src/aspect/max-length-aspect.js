@@ -21,12 +21,13 @@ const maxLengthLogic = (message, value, aspectValue) => {
 
 export default (aspectValue, options = {}) => {
     const {
+        id = 'maxLength',
         message = 'Max Length',
         isFatal = true,
         require,
     } = options;
 
-    return new Aspect(aspectValue, {
+    return new Aspect(id, aspectValue, {
         validator: {
             onValidate: maxLengthLogic.bind(null, message),
             isFatal,
