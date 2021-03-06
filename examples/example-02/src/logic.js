@@ -1,23 +1,23 @@
 export default function getResult(Structure, Aspect) {
-    const personStructure = Structure.shape({
-        demographics: Structure.shape({
+    const personStructure = Structure.object({
+        demographics: Structure.object({
             firstName: Structure.string()
                 .aspect('required', Aspect.required()),
             middleName: Structure.string(),
             lastName: Structure.string()
                 .aspect('required', Aspect.required()),
             dateOfBirth: Structure.string(),
-            address: Structure.shape({
+            address: Structure.object({
                 street1: Structure.string(),
                 street2: Structure.string(),
                 city: Structure.string(),
                 state: Structure.string(),
                 postalCode: Structure.string(),
             }),
-            phones: Structure.objectOf(Structure.string()),
+            phones: Structure.object(Structure.string()),
             email: Structure.string(),
         }),
-        relations: Structure.arrayOf(Structure.shape({
+        relations: Structure.array(Structure.object({
             relationship: Structure.string()
                 .aspect('required', Aspect.required()),
             relation: Structure.lazy(() => personStructure)

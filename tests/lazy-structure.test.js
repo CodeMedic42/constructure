@@ -5,10 +5,10 @@ import Structure, { Aspect, VerificationError } from '../src';
 const { expect } = chai;
 
 describe('Lazy Structure', () => {
-    const structure = Structure.shape({
+    const structure = Structure.object({
         testString: Structure.string()
             .aspect('aspA', Aspect.required()),
-        levelA: Structure.shape({
+        levelA: Structure.object({
             levelB: Structure.lazy(() => structure)
                 .aspect('aspB', 'test'),
         }),
