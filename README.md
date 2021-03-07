@@ -50,12 +50,9 @@ import Structure from 'constructure';
 - [String](#String)
 - [Number](#Number)
 - [Boolean](#Boolean)
-- [Array](#Array)
-- [Object](#Object)
 - [Date](#Date)
-- [Shape](#Shape)
-- [ObjectOf](#ObjectOf)
-- [ArrayOf](#ArrayOf)
+- [Object](#Object)
+- [Array](#Array)
 - [Any](#Any)
 - [OneOfType](#OneOfType)
 - [Lazy](#Lazy)
@@ -86,61 +83,101 @@ This will verify that your value is a boolean.
 const structure = Structure.boolean();
 ```
 
-### Array
-
-This will verify that your value is a array. This however will not verify the contents of the array. If you need to verify the contents then [ArrayOf](#ArrayOf) should be used.
-
-```js
-const structure = Structure.array();
-```
-
-### Object
-
-This will verify that your value is a object. This however will not verify the contents of the object. If you need to verify the contents then [ObjectOf](#ObjectOf) should be used.
-
-```js
-const structure = Structure.object();
-```
-
 ### Date
 
 This will verify that your value is a Date object.
 
 ```js
-const structure = Structure.boolean();
+const structure = Structure.Date();
 ```
 
-### Shape
+### Object
 
-This will verify that your value is an object with the given properties. If your value has properties which do not match then they will be ignored, unless exact is set to true which is false by default.
+This will verify that your value is a object. But it can do a lot more than that.
 
 ```js
-const structure = Structure.shape({
-    yourPropertyName: Structure.string() // Any other structure can go here
-    defineAnyPropertyNameYouWant: Structure.shape({}),  // Yep even another shape!
-}, {
-  exact: false // Default;
+const structure = Structure.object();
+```
+
+If the properties in your object have the same structure then you can verify these very easily. Here in this example you can see every property in the object must be a string. You can pass any structure you want this way.
+
+```js
+const structure = Structure.object(Structure.string());
+```
+
+If the properties do not share the same structure then you can call each one out individually.
+
+```js
+const structure = Structure.object({
+  foo: Structure.string(),
+  bar: Structure.number(),
+  baz: Structure.object(),
 });
 ```
 
-### Object Of
+Still this will only check for these properties and will let any others pass without verification. There are two ways to handle this. You can either indicate that the properties must match exactly and no extras should be found, or you can provide a default structure for the rest of them.
 
-This will verify that your value is an object. Then for each property of the value it will run the given structure against them.
+> **Note:** If you provide the rest option then the exact option does not matter as a match will be found no matter what.
 
 ```js
-const structure = Structure.objectOf(Structure.string()); // Here each property value of the the object must be a string.
-const structure = Structure.objectOf(Structure.shape({})); // Here each property value of the the object must be an object with the given shape.
-const structure = Structure.objectOf(Structure.objectOf(Structure.string())); // Here each property value of the the object must be an object where each object has properties of type string.
+const structure = Structure.object({
+  foo: Structure.string(),
+  bar: Structure.number(),
+  baz: Structure.object(),
+}, {
+  exact: true,
+  rest: Structure.boolean()
+});
 ```
 
-### Array Of
+But what if you have a pattern which the keys the of each property follow. Perhaps you want to match on this pattern. Try this...
 
-This will verify that your value is an array. Then for each item of the value it will run the given structure against them.
+> **Note:** The exact and rest options also work for this as well.
+
+> **Note:** The order in the array matters. The first to match is the structure which will be used to verify the property.
 
 ```js
-const structure = Structure.arrayOf(Structure.string()); // Here each item value of the the array must be a string.
-const structure = Structure.arrayOf(Structure.shape({})); // Here each item value of the the array must be an object with the given shape.
-const structure = Structure.arrayOf(Structure.arrayOf(Structure.string())); // Here each item value of the the array must be an array where each item is of type string.
+const structure = Structure.object(
+  [
+    { pattern: /^\d*$/, structure: Structure.number() }
+    { pattern: /^[a-zA-z]*$/, structure: Structure.string() }
+  ], 
+  {
+    exact: true,
+    rest: Structure.boolean()
+  }
+);
+```
+
+### Array
+
+This will verify that your value is a array. But it can do a lot more than that.
+
+```js
+const structure = Structure.array();
+```
+
+If the items in your array have the same structure then you can verify these very easily. Here in this example you can see every item in the array must be a string. You can pass any structure you want this way.
+
+```js
+const structure = Structure.array(Structure.string());
+```
+
+If the item do not share the same structure then you can call each one out individually, or even as a group. In this example the first item must be a string, followed by 4 items each of which are numbers, then finally the sixth item is a boolean. If there are any extra items passed the last defined one then they are ignored, unless you set the exact option. There the rest option can be set to a structure. This structure will be used to verify any additional items.
+
+Also There are some optional parameters which can be used. If you set exact to true then
+
+```js
+const structure = Structure.array(
+  [
+    Structure.string(), 
+    [Structure.number(), 4], 
+    Structure.boolean()
+  ], {
+    exact: true,
+    rest: Structure.date()
+  }
+);
 ```
 
 ### Any
@@ -199,7 +236,7 @@ To create your own custom structure all need to do is call Structure as a method
     
     Once this method is complete you can optionally return another callback. This callback is to run any additional validation when the validation step is ran. When this callback is executed it will be passed one parameter, an object called a runtime. Unless you are validating child properties you can just pass this along to any additional validator.
 
-    I recommend looking at how both Shape, OneOfType, and Lazy work. They are the three most complex example I have.
+    I recommend looking at how both Object, Array, OneOfType, and Lazy work. They are the four most complex examples I have.
 
 ```js
 
@@ -235,11 +272,11 @@ Aspects are keyed pieces of data which can be associated to each structure. Afte
 Defining aspects for a structure is as simple as calling the aspect method off of a structure. You can call this method as many times as you want. The first parameter is the id of the aspect. If you call the aspect method again with the same id then it will override the first. The second parameter is the aspect value. This value will be useful when validating and will be available when we get the final results which you will see in the [Execute](#Execute) section. Aspects can be applied to any structure and their values can be any value type.
 
 ```js
-import structure, { Aspect } from 'constructure';
+import Structure, { Aspect } from 'constructure';
 
-structure
+const structure = Structure.any()
     .aspect('apsA', 'test')
-    .aspect('apsB', Aspect(42))
+    .aspect(Aspect('apsB', 42))
 });
 ```
 
@@ -247,9 +284,9 @@ A callback function can be provided by which the aspect value can be dynamically
 
 ```js
 structure
-    .aspect('dynamicAsp', (value, requirements) => 'test')
-    .aspect('dynamicAsp', Aspect((value, requirements) => 42))
-    .aspect('dynamicAsp', (value, requirements) => Promise.resolve('asyncResult'))
+    .aspect('dynamicAspA', (value, requirements) => 'test')
+    .aspect(Aspect('dynamicAspB', (value, requirements) => 42))
+    .aspect('dynamicAspC', (value, requirements) => Promise.resolve('asyncResult'))
 });
 ```
 
@@ -266,7 +303,7 @@ structure
     .aspect('aspA', 'test', {
         validator: () => {}
     })
-    .aspect('aspB', Aspect(42, {
+    .aspect(Aspect('aspB', 42, {
         validator: {
             onValidate() => {},
             isFatal: false
@@ -330,7 +367,7 @@ const structure = Structure.shape({
     .aspect('attB', 'test', {
       require: [':attA']
     })
-    .aspect('attC',true,{
+    .aspect('attC', true, {
       require: [':attB']
     })
   }),
@@ -515,15 +552,15 @@ There are also a number of pre-defined aspects. These can be found on the Aspect
 
 #### **Required**
 
-This will define an aspect which has validation logic which will result in a fatal message indicating that the value is nil and should not be. This aspect can be used with any structure. The
+This will define an aspect which has validation logic which will result in a fatal message indicating that the value is nil and should not be. This aspect can be used with any structure. The default aspect id is "required".
 
 ```js
 const structure = Structure.string()
-  .aspect('required', Aspect.required())
+  .aspect(Aspect.required())
   // This will disable the validator, you would not do this
-  .aspect('requiredA', Aspect.required(false))
+  .aspect(Aspect.required(false))
   // AHH you can dynamically control it now!
-  .aspect('requiredB', Aspect.required(() => false))
+  .aspect(Aspect.required(() => false))
 ```
 
 ### Back to the date example
@@ -535,12 +572,12 @@ import Structure, { Aspect } from 'constructure';
 
 const structure = Structure.shape({
   fromDate: Structure.string()
-    .aspect('isValidDate', Aspect.validDate()),
+    .aspect(Aspect.validDate()),
   toDate: Structure.string()
-    .aspect('isValidDate', Aspect.validDate())
+    .aspect(Aspect.validDate())
     // This is one of the more complex standard aspects. See it's description for how it works.
-    .aspect('isGreater', Aspect.minDate((_, req) => req[1], {
-      require: ['$this:isValidDate', '$parent.fromDate:isValidDate']
+    .aspect(Aspect.minDate((_, req) => req[1], {
+      require: ['$this:validDate', '$parent.fromDate:validDate']
     }))
 });
 ```
