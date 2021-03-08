@@ -1,6 +1,7 @@
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import isArray from 'lodash/isArray';
+import isBoolean from 'lodash/isBoolean';
 import Structure from './structure';
 import VerificationError from '../verification-error';
 import ValidationResult from '../validation-result';
@@ -82,7 +83,7 @@ function shapeVerifier(structure, exact, rest, value) {
             childValidators[itemCounter] = rest.verify(target[itemCounter]);
         }
     } else if (exact && itemCounter < target.length) {
-        throw new Error(`Array cannot have more than ${itemCounter} item(s)`);
+        throw new VerificationError(`Array cannot have more than ${itemCounter} item(s)`);
     }
 
     return (runtime) => {
@@ -90,20 +91,29 @@ function shapeVerifier(structure, exact, rest, value) {
     };
 }
 
-export default (structure, options = {}) => {
+export default (structure, options) => {
     let verifier = null;
+    let exact = false;
+    let rest = null;
 
-    const {
-        exact = false,
-        rest = null,
-    } = options;
+    if (!isNil(options)) {
+        if (isBoolean(options)) {
+            exact = options;
+        } else if (options instanceof Structure) {
+            rest = options;
+        } else {
+            ({ exact, rest } = options);
+        }
+    }
 
     if (isNil(structure)) {
         verifier = basicArrayVerifier;
     } else if (structure instanceof Structure) {
-        verifier = shapeVerifier.bind(null, [], exact, structure);
+        verifier = shapeVerifier.bind(null, [], false, structure);
     } else if (isArray(structure)) {
         verifier = shapeVerifier.bind(null, structure, exact, rest);
+    } else {
+        throw new Error('Invalid parameters for array structure');
     }
 
     return new Structure(verifier);

@@ -21,7 +21,7 @@ module.exports = {
         },
     },
     rules: {
-        indent: ['error', 4],
+        indent: ['error', 4, { SwitchCase: 1 }],
         'arrow-body-style': 0,
         'import/no-unresolved': ['error', { ignore: ['react', 'constructure'] }],
         'react/jsx-indent': ['error', 4],

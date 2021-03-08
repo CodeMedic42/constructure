@@ -8,6 +8,7 @@ import arrayStructure from './array-structure';
 import oneOfTypeStructure from './one-of-type-structure';
 import lazyStructure from './lazy-structure';
 import dateStructure from './date-structure';
+import fromSchema from './from-schema';
 
 const createStructure = (verifier, validator) => {
     return new Structure(verifier, validator);
@@ -22,5 +23,6 @@ createStructure.array = arrayStructure;
 createStructure.oneOfType = oneOfTypeStructure;
 createStructure.lazy = lazyStructure;
 createStructure.date = dateStructure;
+createStructure.fromSchema = fromSchema.bind(createStructure);
 
 export default createStructure;

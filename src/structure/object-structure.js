@@ -2,6 +2,7 @@ import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
 import keys from 'lodash/keys';
 import isArray from 'lodash/isArray';
+import isBoolean from 'lodash/isBoolean';
 import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
 import VerificationError from '../verification-error';
@@ -68,7 +69,7 @@ function regExVerifier(patterns, exact, rest, value) {
                     childValidators[childValueId] = rest.verify(childValue);
                 });
             } else if (exact) {
-                throw new Error(`The property ${childValueId} is invalid`);
+                throw new VerificationError(`The property ${childValueId} is invalid`);
             }
         } else {
             VerificationError.try(childValueId, () => {
@@ -101,7 +102,7 @@ function shapeVerifier(properties, exact, rest, value) {
         };
     } else if (exact) {
         handleExtra = (_, childPropertyId) => {
-            throw new Error(`The property ${childPropertyId} is invalid`);
+            throw new VerificationError(`The property ${childPropertyId} is invalid`);
         };
     }
 
@@ -124,18 +125,25 @@ function shapeVerifier(properties, exact, rest, value) {
     };
 }
 
-export default (structure, options = {}) => {
+export default (structure, options) => {
     let verifier = null;
+    let exact = false;
+    let rest = null;
 
-    const {
-        exact = false,
-        rest = null,
-    } = options;
+    if (!isNil(options)) {
+        if (isBoolean(options)) {
+            exact = options;
+        } else if (options instanceof Structure) {
+            rest = options;
+        } else {
+            ({ exact, rest } = options);
+        }
+    }
 
     if (isNil(structure)) {
         verifier = basicObjectVerifier;
     } else if (structure instanceof Structure) {
-        verifier = shapeVerifier.bind(null, {}, exact, structure);
+        verifier = shapeVerifier.bind(null, {}, false, structure);
     } else if (isArray(structure)) {
         verifier = regExVerifier.bind(null, structure, exact, rest);
     } else if (isPlainObject(structure)) {

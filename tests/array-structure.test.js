@@ -112,4 +112,229 @@ describe('Array Structure', () => {
             });
         });
     });
+
+    it('Is unique within pass', () => {
+        const structure = Structure.object({
+            array: Structure.array(
+                Structure.object({
+                    id: Structure.string()
+                        .aspect(Aspect.unique('$parent.$parent:idKey')),
+                }),
+            ).aspect(Aspect.register('idKey')),
+        });
+
+        const value = {
+            array: [{
+                id: 'foo',
+            }, {
+                id: 'bar',
+            }, {
+                id: 'faz',
+            }, {
+                id: 'baz',
+            }],
+        };
+
+        return structure.run(value).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'pass',
+                $a: {},
+                $d: {
+                    array: {
+                        $r: 'pass',
+                        $a: {
+                            idKey: {
+                                result: 'pass',
+                                value: {
+                                    foo: true,
+                                    bar: true,
+                                    faz: true,
+                                    baz: true,
+                                },
+                                message: null,
+                            },
+                        },
+                        $d: [
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        });
+    });
+
+    it('Is unique within fail', () => {
+        const structure = Structure.object({
+            array: Structure.array(
+                Structure.object({
+                    id: Structure.string()
+                        .aspect(Aspect.unique('$parent.$parent:idKey')),
+                }),
+            ).aspect(Aspect.register('idKey')),
+        });
+
+        const value = {
+            array: [{
+                id: 'foo',
+            }, {
+                id: 'bar',
+            }, {
+                id: 'foo',
+            }, {
+                id: 'baz',
+            }],
+        };
+
+        return structure.run(value).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $d: {
+                    array: {
+                        $r: 'fatal',
+                        $a: {
+                            idKey: {
+                                result: 'pass',
+                                value: {
+                                    foo: true,
+                                    bar: true,
+                                    baz: true,
+                                },
+                                message: null,
+                            },
+                        },
+                        $d: [
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                $r: 'fatal',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'fatal',
+                                        $a: {
+                                            unique: {
+                                                result: 'fatal',
+                                                value: true,
+                                                message: 'Unique',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            {
+                                $r: 'pass',
+                                $a: {},
+                                $d: {
+                                    id: {
+                                        $r: 'pass',
+                                        $a: {
+                                            unique: {
+                                                result: 'pass',
+                                                value: true,
+                                                message: null,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            });
+        });
+    });
 });
