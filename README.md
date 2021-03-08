@@ -117,17 +117,26 @@ const structure = Structure.object({
 
 Still this will only check for these properties and will let any others pass without verification. There are two ways to handle this. You can either indicate that the properties must match exactly and no extras should be found, or you can provide a default structure for the rest of them.
 
-> **Note:** If you provide the rest option then the exact option does not matter as a match will be found no matter what.
+```js
+const structure = Structure.object(
+  {
+    foo: Structure.string(),
+    bar: Structure.number(),
+    baz: Structure.object(),
+  }, 
+  true
+);
+```
 
 ```js
-const structure = Structure.object({
-  foo: Structure.string(),
-  bar: Structure.number(),
-  baz: Structure.object(),
-}, {
-  exact: true,
-  rest: Structure.boolean()
-});
+const structure = Structure.object(
+  {
+    foo: Structure.string(),
+    bar: Structure.number(),
+    baz: Structure.object(),
+  }, 
+  Structure.boolean()
+);
 ```
 
 But what if you have a pattern which the keys the of each property follow. Perhaps you want to match on this pattern. Try this...
@@ -142,12 +151,25 @@ const structure = Structure.object(
     { pattern: /^\d*$/, structure: Structure.number() }
     { pattern: /^[a-zA-z]*$/, structure: Structure.string() }
   ], 
-  {
-    exact: true,
-    rest: Structure.boolean()
+  Structure.boolean()
+);
+```
+
+> **Note:** If you prefer to be more visually explicit, you can pass the second parameter as an object like this...
+
+```js
+const structure = Structure.object(
+  [
+    { pattern: /^\d*$/, structure: Structure.number() }
+    { pattern: /^[a-zA-z]*$/, structure: Structure.string() }
+  ], {
+    exist: true,
+    rest: Structure.boolean(),
   }
 );
 ```
+
+> **Note:** If you provide the rest option then the exact option does not matter as a match will be found no matter what.
 
 ### Array
 
@@ -163,9 +185,7 @@ If the items in your array have the same structure then you can verify these ver
 const structure = Structure.array(Structure.string());
 ```
 
-If the item do not share the same structure then you can call each one out individually, or even as a group. In this example the first item must be a string, followed by 4 items each of which are numbers, then finally the sixth item is a boolean. If there are any extra items passed the last defined one then they are ignored, unless you set the exact option. There the rest option can be set to a structure. This structure will be used to verify any additional items.
-
-Also There are some optional parameters which can be used. If you set exact to true then
+If the item do not share the same structure then you can call each one out individually, or even as a group. In this example the first item must be a string, followed by 4 items each of which are numbers, then finally the sixth item is a boolean. If there are any extra items passed the last defined one then they are ignored, unless you set the exact option. There the rest option can be set to a structure. This structure will be used to verify any additional items. Both of these work the same as it does in [Object](#Object).s
 
 ```js
 const structure = Structure.array(
@@ -173,10 +193,19 @@ const structure = Structure.array(
     Structure.string(), 
     [Structure.number(), 4], 
     Structure.boolean()
-  ], {
-    exact: true,
-    rest: Structure.date()
-  }
+  ], 
+  true
+);
+```
+
+```js
+const structure = Structure.array(
+  [
+    Structure.string(), 
+    [Structure.number(), 4], 
+    Structure.boolean()
+  ], 
+  Structure.date()
 );
 ```
 
