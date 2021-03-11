@@ -3,7 +3,7 @@ import Structure, { Aspect, VerificationError } from '../src';
 
 const { expect } = chai;
 
-describe('Number Structure', () => {
+xdescribe('Number Structure', () => {
     it('Null Value', () => {
         const structure = Structure.number();
 

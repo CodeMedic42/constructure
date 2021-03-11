@@ -1,9 +1,97 @@
 /* eslint-disable no-use-before-define */
 import { reduce } from 'bluebird';
 import {
-    forEach, isBoolean, isEmpty, isNil, mapValues, isArray, map, isNumber, isString,
+    forEach, isBoolean, isEmpty, isNil, mapValues, isArray, map, isNumber, isString, isFinite,
 } from 'lodash';
 import Aspect from '../aspect';
+
+const KEYWORD_TYPE_REFERENCE = {
+    type: [],
+    minLength: {
+        requires: null,
+        types: ['string'],
+    },
+    maxLength: {
+        requires: null,
+        types: ['string'],
+    },
+    pattern: {
+        requires: null,
+        types: ['string'],
+    },
+    minimum: {
+        requires: null,
+        types: ['number', 'integer'],
+    },
+    maximum: {
+        requires: null,
+        types: ['number', 'integer'],
+    },
+    exclusiveMinimum: {
+        requires: null,
+        types: ['number', 'integer'],
+    },
+    exclusiveMaximum: {
+        requires: null,
+        types: ['number', 'integer'],
+    },
+    multipleOf: {
+        requires: null,
+        types: ['number', 'integer'],
+    },
+    minItems: {
+        requires: null,
+        types: ['array'],
+    },
+    maxItems: {
+        requires: null,
+        types: ['array'],
+    },
+    items: {
+        requires: null,
+        types: ['array'],
+    },
+    additionalItems: {
+        requires: 'items',
+        types: ['array'],
+    },
+    uniqueItems: {
+        requires: null,
+        types: ['array'],
+    },
+    properties: {
+        requires: null,
+        types: ['object'],
+    },
+    additionalProperties: {
+        requires: 'properties',
+        types: ['object'],
+    },
+    required: {
+        requires: null,
+        types: ['object'],
+    },
+    minProperties: {
+        requires: null,
+        types: ['object'],
+    },
+    maxProperties: {
+        requires: null,
+        types: ['object'],
+    },
+    dependencies: {
+        requires: null,
+        types: ['object'],
+    },
+    patternProperties: {
+        requires: null,
+        types: ['object'],
+    },
+    regexp: {
+        requires: null,
+        types: ['object'],
+    },
+};
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -78,9 +166,11 @@ function fromArrayType(schema) {
         minItems,
         maxItems,
         uniqueItems,
+        additionalItems,
     } = schema;
 
     let shape = null;
+    let optional = null;
 
     if (isArray(items)) {
         shape = map(items, (item) => {
@@ -92,7 +182,15 @@ function fromArrayType(schema) {
 
             return itemStructure;
         });
-    } else {
+
+        if (isBoolean(additionalItems)) {
+            // exact
+            optional = additionalItems === false;
+        } else if (!isNil(additionalItems)) {
+            // rest
+            optional = fromType.call(this, additionalItems);
+        }
+    } else if (!isNil(items)) {
         shape = fromType.call(this, items);
 
         if (uniqueItems) {
@@ -100,7 +198,7 @@ function fromArrayType(schema) {
         }
     }
 
-    const arrayStructure = this.array(shape);
+    const arrayStructure = this.array(shape, optional);
 
     if (isNumber(minItems)) {
         arrayStructure.aspect(Aspect.minLength(minItems));
@@ -150,6 +248,91 @@ function fromStringType(schema) {
     return structure;
 }
 
+function fromMinMax(incomingValue, incomingExclusive, error, createAspect) {
+    let value = null;
+    let exclusive = false;
+
+    if (isBoolean(incomingExclusive)) {
+        exclusive = true;
+
+        if (isNumber(incomingValue)) {
+            value = incomingValue;
+        }
+    } else if (isFinite(incomingExclusive)) {
+        if (isNumber(incomingValue)) {
+            throw new Error(error);
+        }
+
+        value = incomingExclusive;
+        exclusive = true;
+    } else if (isNumber(incomingValue)) {
+        value = incomingValue;
+    }
+
+    if (!isNil(value)) {
+        createAspect(value, exclusive);
+    }
+}
+
+function commonNumberAspects(schema, structure) {
+    const {
+        multipleOf,
+        minimum,
+        exclusiveMinimum,
+        maximum,
+        exclusiveMaximum,
+    } = schema;
+
+    if (!isNil(multipleOf)) {
+        structure.aspect(Aspect.multiple(multipleOf));
+    }
+
+    fromMinMax(
+        minimum,
+        exclusiveMinimum,
+        'Both minimum and exclusiveMinimum cannot be defined at the same time.',
+        (min, exclusive) => {
+            structure.aspect(Aspect.min({
+                min,
+                exclusive,
+            }));
+        },
+    );
+
+    fromMinMax(
+        maximum,
+        exclusiveMaximum,
+        'Both maximum and exclusiveMaximum cannot be defined at the same time.',
+        (max, exclusive) => {
+            structure.aspect(Aspect.max({
+                max,
+                exclusive,
+            }));
+        },
+    );
+}
+
+function fromIntegerType(schema) {
+    const structure = this.number()
+        .aspect(Aspect.integer());
+
+    commonNumberAspects(schema, structure);
+
+    return structure;
+}
+
+function fromNumberType(schema) {
+    const structure = this.number();
+
+    commonNumberAspects(schema, structure);
+
+    return structure;
+}
+
+function fromBooleanType() {
+    return this.boolean();
+}
+
 function applyEnum(schema, structure) {
     const {
         enum: enumerations,
@@ -171,40 +354,76 @@ function applyEnum(schema, structure) {
     }
 }
 
+const TYPE_PROCESSOR = {
+    string: fromStringType,
+    integer: fromIntegerType,
+    number: fromNumberType,
+    boolean: fromBooleanType,
+    object: fromObjectType,
+    array: fromArrayType,
+};
+
+function inferSchemas(schema) {
+    const types = {};
+
+    forEach(schema, (_, key) => {
+        const supportedTypes = KEYWORD_TYPE_REFERENCE[key];
+
+        if (isNil(supportedTypes)) {
+            throw new Error(`Cannot infer type from keyword ${key}`);
+        }
+
+        if (!isNil(supportedTypes.requires) && isNil(schema[supportedTypes.requires])) {
+            // This keyword requires another.
+            // If that required keyword does not exist then we ignore this keyword.
+            return;
+        }
+
+        forEach(supportedTypes.types, (type) => {
+            if (isNil(types[type])) {
+                types[type] = TYPE_PROCESSOR[type].call(this, schema);
+            }
+        });
+    });
+
+    const structures = map(types, (type) => type);
+
+    if (structures.length <= 0) {
+        return this.any();
+    }
+
+    if (structures.length === 1) {
+        return structures[0];
+    }
+
+    throw new Error('Not supported yet');
+}
+
 function fromType(schema) {
     const {
         type,
+        $ref,
     } = schema;
 
     let structure = null;
 
-    if (isNil(type)) {
-        structure = this.any();
+    if (!isNil($ref)) {
+        throw new Error('Not Supported');
+        // if (!isNil(type)) {
+        //     throw new Error('');
+        // }
     }
 
-    switch (type) {
-        case 'string':
-            structure = fromStringType.call(this, schema);
-            break;
-        case 'integer':
-            structure = this.integer();
-            break;
-        case 'number':
-            structure = this.number();
-            break;
-        case 'boolean':
-            structure = this.boolean();
-            break;
-        case 'object':
-            structure = fromObjectType.call(this, schema);
-            break;
-        case 'array':
-            structure = fromArrayType.call(this, schema);
-            break;
-        case 'null':
-            throw new Error('Null type not supported');
-        default:
-            throw new Error(`Invalid type ${type}`);
+    if (isNil(type)) {
+        structure = inferSchemas.call(this, schema);
+    } else {
+        const typeProcessor = TYPE_PROCESSOR[type];
+
+        if (isNil(typeProcessor)) {
+            throw new Error(`Unknown type: ${type}`);
+        }
+
+        structure = typeProcessor.call(this, schema);
     }
 
     applyEnum(schema, structure);
@@ -223,3 +442,43 @@ function fromSchema(schema) {
 }
 
 export default fromSchema;
+
+/*
+Notes
+
+allOf
+    Verify if there are any types that do not match.
+    If there is then generate structure.nothing to just fail anything unless is it nil.
+
+    However of the types do match then do not combine but create different structures for each.
+    This could result it multiple similar aspects groups.
+    This then forces the need tp stop combining attributes like with lazy and others.
+    This could also make dynamic linking of required items more difficult.
+    Could I give the structure an id to group them?
+    Could I use index to do that?
+
+    Possible new structure could be ...
+
+    {
+        $r: '',
+        $a: [{
+
+        }],
+        $d: {
+            $r: '',
+            $a: {
+
+            },
+        }
+    }
+
+    When creating structure must combine like types.
+    Any combines with anything else.
+    If Any types do not match then the result is structure.nothing
+
+anyOf
+
+    Should validate against one or
+    more which means we CANNOT combine and because they do verification and validation
+
+*/

@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-describe('String Structure', () => {
+xdescribe('String Structure', () => {
     it('Null Value', () => {
         const structure = Structure.string();
 

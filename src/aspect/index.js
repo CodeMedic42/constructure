@@ -12,6 +12,7 @@ import emailPatternAspect from './email-pattern-aspect';
 import exactLengthAspect from './exact-length-aspect';
 import registerAspect from './register-aspect';
 import uniqueAspect from './unique-aspect';
+import integerAspect from './integer-aspect';
 
 const createAspect = (aspectValue) => {
     return new Aspect(aspectValue);
@@ -30,5 +31,6 @@ createAspect.emailPattern = emailPatternAspect;
 createAspect.exactLength = exactLengthAspect;
 createAspect.register = registerAspect;
 createAspect.unique = uniqueAspect;
+createAspect.integer = integerAspect;
 
 export default createAspect;

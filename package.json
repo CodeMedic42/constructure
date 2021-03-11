@@ -15,7 +15,8 @@
     "verify": "npm run lint && npm test",
     "build": "./node_modules/.bin/babel ./src --out-dir lib",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run verify"
+    "prepublishOnly": "npm run verify",
+    "generate:schema-tests": "npx babel-node ./tests/json-schema/build-from-source"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -42,9 +43,11 @@
     "@babel/cli": "^7.13.0",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.13.8",
+    "@babel/node": "^7.13.10",
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
     "@babel/register": "^7.12.13",
+    "axios": "^0.21.1",
     "benchmark": "^2.1.4",
     "chai": "^4.3.0",
     "chai-as-promised": "^7.1.1",
@@ -55,6 +58,7 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.22.0",
     "husky": "^5.0.9",
+    "json-schema-test": "^2.0.0",
     "lint-staged": "^10.5.4",
     "mocha": "^8.3.0"
   }

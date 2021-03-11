@@ -3,7 +3,7 @@ import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-describe('Any Structure', () => {
+xdescribe('Any Structure', () => {
     it('Null Value', () => {
         const structure = Structure.any();
 

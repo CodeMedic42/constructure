@@ -4,7 +4,7 @@ import example01Logic from '../examples/example-01/src/logic';
 
 const { expect } = chai;
 
-describe('Example 01', () => {
+xdescribe('Example 01', () => {
     it('Regular', () => {
         return example01Logic(Structure).then((result) => {
             expect(result.toJS()).to.eql({

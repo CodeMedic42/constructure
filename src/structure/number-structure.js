@@ -1,14 +1,14 @@
 import isNil from 'lodash/isNil';
-import isNumber from 'lodash/isNumber';
+import isFinite from 'lodash/isFinite';
 import Structure from './structure';
 import VerificationError from '../verification-error';
 
 function verifier(value) {
-    if (isNil(value) || isNumber(value)) {
+    if (isNil(value) || isFinite(value)) {
         return;
     }
 
-    throw new VerificationError('Must be a number');
+    throw new VerificationError('Must be a real number');
 }
 
 export default () => new Structure(verifier);
