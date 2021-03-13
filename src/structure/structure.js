@@ -1,7 +1,5 @@
 import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
-import isNil from 'lodash/isNil';
-import isFunction from 'lodash/isFunction';
 import Aspect from '../aspect/aspect';
 import Runtime from '../runtime';
 import processAspects from '../common/process-aspects';
@@ -22,29 +20,27 @@ class Structure {
         this[FIELDS.aspects] = {};
     }
 
-    verify(value) {
-        const additionalValidator = this[FIELDS.verifier](value);
+    verify(runtime, value) {
+        const validationResult = this[FIELDS.verifier](runtime, value);
 
-        if (!isNil(additionalValidator) && !isFunction(additionalValidator)) {
+        if (!(validationResult instanceof ValidationResult)) {
             throw new Error('Verify must return a nil value or a function');
         }
 
-        return (runtime) => {
-            const results = processAspects(runtime, this[FIELDS.aspects]);
+        const results = processAspects(
+            runtime,
+            this[FIELDS.aspects],
+            validationResult.getValueResult() !== 'pass',
+        );
 
-            const validationResult = !isNil(additionalValidator)
-                ? additionalValidator(runtime)
-                : new ValidationResult();
+        validationResult.applyResults([results.$r]);
+        validationResult.applyAspects(results.$a);
 
-            validationResult.applyResults([results.$r]);
-            validationResult.applyAspects(results.$a);
+        const thisValueGroup = runtime.getThis();
 
-            const thisValueGroup = runtime.getThis();
+        thisValueGroup[specialInternalAccessor] = validationResult;
 
-            thisValueGroup[specialInternalAccessor] = validationResult;
-
-            return validationResult;
-        };
+        return validationResult;
     }
 
     aspect(firstParam, aspectValue, options) {
@@ -64,16 +60,12 @@ class Structure {
     }
 
     run(value, options = {}) {
-        return Promise.try(() => {
-            const validator = this.verify(value);
+        const runtime = new Runtime(specialInternalAccessor, value, options);
 
-            const runtime = new Runtime(specialInternalAccessor, value, options);
+        const validationResult = this.verify(runtime, value);
 
-            const aspectResults = validator(runtime);
-
-            return aspectResults.getResult().then(() => {
-                return aspectResults;
-            });
+        return Promise.resolve(validationResult.getResult()).then(() => {
+            return validationResult;
         });
     }
 }

@@ -1,10 +1,10 @@
 import chai from 'chai';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-xdescribe('Object Structure', () => {
-    xdescribe('Value Verification', () => {
+describe('Object Structure', () => {
+    describe('Value Verification', () => {
         it('Null Value', () => {
             const structure = Structure.object();
 
@@ -12,6 +12,10 @@ xdescribe('Object Structure', () => {
                 expect(aspectValues.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                 });
             });
         });
@@ -23,6 +27,10 @@ xdescribe('Object Structure', () => {
                 expect(aspectValues.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                 });
             });
         });
@@ -34,6 +42,10 @@ xdescribe('Object Structure', () => {
                 expect(aspectValues.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                 });
             });
         });
@@ -41,41 +53,61 @@ xdescribe('Object Structure', () => {
         it('Number Value', () => {
             const structure = Structure.object();
 
-            return expect(structure.run(42))
-                .to.be.rejectedWith(VerificationError, 'Must be an object')
-                .then((error) => {
-                    expect(error.path).to.eql([]);
+            return structure.run(42).then((aspectValues) => {
+                expect(aspectValues.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $v: {
+                        $r: 'fatal',
+                        $m: 'Must be an object',
+                    },
                 });
+            });
         });
 
         it('String Value', () => {
             const structure = Structure.object();
 
-            return expect(structure.run('test'))
-                .to.be.rejectedWith(VerificationError, 'Must be an object')
-                .then((error) => {
-                    expect(error.path).to.eql([]);
+            return structure.run('test').then((aspectValues) => {
+                expect(aspectValues.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $v: {
+                        $r: 'fatal',
+                        $m: 'Must be an object',
+                    },
                 });
+            });
         });
 
         it('Boolean Value', () => {
             const structure = Structure.object();
 
-            return expect(structure.run(true))
-                .to.be.rejectedWith(VerificationError, 'Must be an object')
-                .then((error) => {
-                    expect(error.path).to.eql([]);
+            return structure.run(true).then((aspectValues) => {
+                expect(aspectValues.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $v: {
+                        $r: 'fatal',
+                        $m: 'Must be an object',
+                    },
                 });
+            });
         });
 
         it('Array Value', () => {
             const structure = Structure.object();
 
-            return expect(structure.run([]))
-                .to.be.rejectedWith(VerificationError, 'Must be an object')
-                .then((error) => {
-                    expect(error.path).to.eql([]);
+            return structure.run([]).then((aspectValues) => {
+                expect(aspectValues.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $v: {
+                        $r: 'fatal',
+                        $m: 'Must be an object',
+                    },
                 });
+            });
         });
 
         it('Basic Required Passed', () => {
@@ -91,6 +123,10 @@ xdescribe('Object Structure', () => {
                             result: 'pass',
                             message: null,
                         },
+                    },
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
                     },
                 });
             });
@@ -110,13 +146,17 @@ xdescribe('Object Structure', () => {
                             message: 'Required',
                         },
                     },
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                 });
             });
         });
     });
 
-    xdescribe('Single Structure Verification', () => {
-        xdescribe('String Structure', () => {
+    describe('Single Structure Verification', () => {
+        describe('String Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.string());
 
@@ -132,18 +172,34 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -159,15 +215,46 @@ xdescribe('Object Structure', () => {
                     property3: 'test3',
                 };
 
-                return expect(structure.run(value))
-                    .to.be.rejectedWith(VerificationError, 'Must be a string')
-                    .then((error) => {
-                        expect(error.path).to.eql(['property2']);
+                return structure.run(value).then((aspectValues) => {
+                    expect(aspectValues.toJS()).to.eql({
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
+                        $d: {
+                            property1: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property2: {
+                                $r: 'fatal',
+                                $a: {},
+                                $v: {
+                                    $r: 'fatal',
+                                    $m: 'Must be a string',
+                                },
+                            },
+                            property3: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                        },
                     });
+                });
             });
         });
 
-        xdescribe('Number Structure', () => {
+        describe('Number Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.number());
 
@@ -183,18 +270,34 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -210,15 +313,46 @@ xdescribe('Object Structure', () => {
                     property3: 7,
                 };
 
-                return expect(structure.run(value))
-                    .to.be.rejectedWith(VerificationError, 'Must be a number')
-                    .then((error) => {
-                        expect(error.path).to.eql(['property2']);
+                return structure.run(value).then((aspectValues) => {
+                    expect(aspectValues.toJS()).to.eql({
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
+                        $d: {
+                            property1: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property2: {
+                                $r: 'fatal',
+                                $a: {},
+                                $v: {
+                                    $r: 'fatal',
+                                    $m: 'Must be a real number',
+                                },
+                            },
+                            property3: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                        },
                     });
+                });
             });
         });
 
-        xdescribe('Any Structure', () => {
+        describe('Any Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.any());
 
@@ -234,18 +368,34 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -253,7 +403,7 @@ xdescribe('Object Structure', () => {
             });
         });
 
-        xdescribe('Array Structure', () => {
+        describe('Array Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.array());
 
@@ -269,18 +419,34 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -296,17 +462,48 @@ xdescribe('Object Structure', () => {
                     property3: [],
                 };
 
-                return expect(structure.run(value))
-                    .to.be.rejectedWith(VerificationError, 'Must be an array')
-                    .then((error) => {
-                        expect(error.path).to.eql(['property2']);
+                return structure.run(value).then((aspectValues) => {
+                    expect(aspectValues.toJS()).to.eql({
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
+                        $d: {
+                            property1: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property2: {
+                                $r: 'fatal',
+                                $a: {},
+                                $v: {
+                                    $r: 'fatal',
+                                    $m: 'Must be an array',
+                                },
+                            },
+                            property3: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                        },
                     });
+                });
             });
         });
     });
 
-    xdescribe('Shaped Structure Verification', () => {
-        xdescribe('String Structure', () => {
+    describe('Shaped Structure Verification', () => {
+        describe('String Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object({
                     property1: Structure.string(),
@@ -326,18 +523,34 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -364,22 +577,42 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property4: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -405,18 +638,34 @@ xdescribe('Object Structure', () => {
                     expect(ret).to.eql({
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: {
                             property1: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property2: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                             property3: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                             },
                         },
                     });
@@ -436,11 +685,42 @@ xdescribe('Object Structure', () => {
                     property3: [],
                 };
 
-                return expect(structure.run(value))
-                    .to.be.rejectedWith(VerificationError, 'Must be an object')
-                    .then((error) => {
-                        expect(error.path).to.eql(['property3']);
+                return structure.run(value).then((aspectValues) => {
+                    expect(aspectValues.toJS()).to.eql({
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
+                        $d: {
+                            property1: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property2: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property3: {
+                                $r: 'fatal',
+                                $a: {},
+                                $v: {
+                                    $r: 'fatal',
+                                    $m: 'Must be an object',
+                                },
+                            },
+                        },
                     });
+                });
             });
 
             it('Fail Verification with rest', () => {
@@ -457,11 +737,50 @@ xdescribe('Object Structure', () => {
                     property4: 'test4',
                 };
 
-                return expect(structure.run(value))
-                    .to.be.rejectedWith(VerificationError, 'Must be a boolean')
-                    .then((error) => {
-                        expect(error.path).to.eql(['property4']);
+                return structure.run(value).then((aspectValues) => {
+                    expect(aspectValues.toJS()).to.eql({
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
+                        $d: {
+                            property1: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property2: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property3: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property4: {
+                                $r: 'fatal',
+                                $a: {},
+                                $v: {
+                                    $r: 'fatal',
+                                    $m: 'Must be a boolean',
+                                },
+                            },
+                        },
                     });
+                });
             });
 
             it('Fail Verification with exact', () => {
@@ -478,11 +797,50 @@ xdescribe('Object Structure', () => {
                     property4: true,
                 };
 
-                return expect(structure.run(value))
-                    .to.be.rejectedWith(VerificationError, 'The property property4 is invalid')
-                    .then((error) => {
-                        expect(error.path).to.eql([]);
+                return structure.run(value).then((aspectValues) => {
+                    expect(aspectValues.toJS()).to.eql({
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
+                        $d: {
+                            property1: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property2: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property3: {
+                                $r: 'pass',
+                                $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
+                            },
+                            property4: {
+                                $r: 'fatal',
+                                $a: {},
+                                $v: {
+                                    $r: 'fatal',
+                                    $m: 'The property property4 is invalid',
+                                },
+                            },
+                        },
                     });
+                });
             });
         });
     });

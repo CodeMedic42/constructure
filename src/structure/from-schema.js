@@ -1,97 +1,107 @@
 /* eslint-disable no-use-before-define */
 import { reduce } from 'bluebird';
 import {
-    forEach, isBoolean, isEmpty, isNil, mapValues, isArray, map, isNumber, isString, isFinite,
+    forEach,
+    isBoolean,
+    isEmpty,
+    isNil,
+    mapValues,
+    isArray,
+    map,
+    isNumber,
+    isString,
+    isFinite,
+    isUndefined,
 } from 'lodash';
 import Aspect from '../aspect';
 
-const KEYWORD_TYPE_REFERENCE = {
-    type: [],
-    minLength: {
-        requires: null,
-        types: ['string'],
-    },
-    maxLength: {
-        requires: null,
-        types: ['string'],
-    },
-    pattern: {
-        requires: null,
-        types: ['string'],
-    },
-    minimum: {
-        requires: null,
-        types: ['number', 'integer'],
-    },
-    maximum: {
-        requires: null,
-        types: ['number', 'integer'],
-    },
-    exclusiveMinimum: {
-        requires: null,
-        types: ['number', 'integer'],
-    },
-    exclusiveMaximum: {
-        requires: null,
-        types: ['number', 'integer'],
-    },
-    multipleOf: {
-        requires: null,
-        types: ['number', 'integer'],
-    },
-    minItems: {
-        requires: null,
-        types: ['array'],
-    },
-    maxItems: {
-        requires: null,
-        types: ['array'],
-    },
-    items: {
-        requires: null,
-        types: ['array'],
-    },
-    additionalItems: {
-        requires: 'items',
-        types: ['array'],
-    },
-    uniqueItems: {
-        requires: null,
-        types: ['array'],
-    },
-    properties: {
-        requires: null,
-        types: ['object'],
-    },
-    additionalProperties: {
-        requires: 'properties',
-        types: ['object'],
-    },
-    required: {
-        requires: null,
-        types: ['object'],
-    },
-    minProperties: {
-        requires: null,
-        types: ['object'],
-    },
-    maxProperties: {
-        requires: null,
-        types: ['object'],
-    },
-    dependencies: {
-        requires: null,
-        types: ['object'],
-    },
-    patternProperties: {
-        requires: null,
-        types: ['object'],
-    },
-    regexp: {
-        requires: null,
-        types: ['object'],
-    },
-};
+// const KEYWORD_TYPE_REFERENCE = {
+//     type: [],
+//     minLength: {
+//         requires: null,
+//         types: ['string'],
+//     },
+//     maxLength: {
+//         requires: null,
+//         types: ['string'],
+//     },
+//     pattern: {
+//         requires: null,
+//         types: ['string'],
+//     },
+//     minimum: {
+//         requires: null,
+//         types: ['number', 'integer'],
+//     },
+//     maximum: {
+//         requires: null,
+//         types: ['number', 'integer'],
+//     },
+//     exclusiveMinimum: {
+//         requires: null,
+//         types: ['number', 'integer'],
+//     },
+//     exclusiveMaximum: {
+//         requires: null,
+//         types: ['number', 'integer'],
+//     },
+//     multipleOf: {
+//         requires: null,
+//         types: ['number', 'integer'],
+//     },
+//     minItems: {
+//         requires: null,
+//         types: ['array'],
+//     },
+//     maxItems: {
+//         requires: null,
+//         types: ['array'],
+//     },
+//     items: {
+//         requires: null,
+//         types: ['array'],
+//     },
+//     additionalItems: {
+//         requires: 'items',
+//         types: ['array'],
+//     },
+//     uniqueItems: {
+//         requires: null,
+//         types: ['array'],
+//     },
+//     properties: {
+//         requires: null,
+//         types: ['object'],
+//     },
+//     additionalProperties: {
+//         requires: 'properties',
+//         types: ['object'],
+//     },
+//     required: {
+//         requires: null,
+//         types: ['object'],
+//     },
+//     minProperties: {
+//         requires: null,
+//         types: ['object'],
+//     },
+//     maxProperties: {
+//         requires: null,
+//         types: ['object'],
+//     },
+//     dependencies: {
+//         requires: null,
+//         types: ['object'],
+//     },
+//     patternProperties: {
+//         requires: null,
+//         types: ['object'],
+//     },
+//     regexp: {
+//         requires: null,
+//         types: ['object'],
+//     },
+// };
 
 function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
@@ -134,7 +144,7 @@ function fromObjectType(schema) {
     let shape = null;
 
     if (!isEmpty(patternProperties)) {
-        shape = asRegEx(properties, patternProperties);
+        shape = asRegEx.call(this, properties, patternProperties);
     } else {
         shape = mapValues(properties, (propertySchema, propertyId) => {
             const structure = fromType.call(this, propertySchema);
@@ -148,7 +158,7 @@ function fromObjectType(schema) {
     }
 
     if (isBoolean(additionalProperties)) {
-        return this.object(shape, additionalProperties);
+        return this.object(shape, !additionalProperties);
     }
 
     if (!isNil(additionalProperties)) {
@@ -237,12 +247,14 @@ function fromStringType(schema) {
         structure.aspect(Aspect.pattern(pattern));
     }
 
-    switch (format) {
-        case 'email':
-            structure.aspect(Aspect.emailPattern());
-            break;
-        default:
-            console.warn(`The string format ${format} is not supported at this time.`);
+    if (!isNil(format)) {
+        switch (format) {
+            case 'email':
+                structure.aspect(Aspect.emailPattern());
+                break;
+            default:
+                console.warn(`The string format ${format} is not supported at this time.`);
+        }
     }
 
     return structure;
@@ -341,7 +353,7 @@ function applyEnum(schema, structure) {
 
     const values = [];
 
-    if (!isNil(constant)) {
+    if (!isUndefined(constant)) {
         values.push(constant);
     }
 
@@ -363,41 +375,41 @@ const TYPE_PROCESSOR = {
     array: fromArrayType,
 };
 
-function inferSchemas(schema) {
-    const types = {};
+// function inferSchemas(schema) {
+//     const types = {};
 
-    forEach(schema, (_, key) => {
-        const supportedTypes = KEYWORD_TYPE_REFERENCE[key];
+//     forEach(schema, (_, key) => {
+//         const supportedTypes = KEYWORD_TYPE_REFERENCE[key];
 
-        if (isNil(supportedTypes)) {
-            throw new Error(`Cannot infer type from keyword ${key}`);
-        }
+//         if (isNil(supportedTypes)) {
+//             throw new Error(`Cannot infer type from keyword ${key}`);
+//         }
 
-        if (!isNil(supportedTypes.requires) && isNil(schema[supportedTypes.requires])) {
-            // This keyword requires another.
-            // If that required keyword does not exist then we ignore this keyword.
-            return;
-        }
+//         if (!isNil(supportedTypes.requires) && isNil(schema[supportedTypes.requires])) {
+//             // This keyword requires another.
+//             // If that required keyword does not exist then we ignore this keyword.
+//             return;
+//         }
 
-        forEach(supportedTypes.types, (type) => {
-            if (isNil(types[type])) {
-                types[type] = TYPE_PROCESSOR[type].call(this, schema);
-            }
-        });
-    });
+//         forEach(supportedTypes.types, (type) => {
+//             if (isNil(types[type])) {
+//                 types[type] = TYPE_PROCESSOR[type].call(this, schema);
+//             }
+//         });
+//     });
 
-    const structures = map(types, (type) => type);
+//     const structures = map(types, (type) => type);
 
-    if (structures.length <= 0) {
-        return this.any();
-    }
+//     if (structures.length <= 0) {
+//         return this.any();
+//     }
 
-    if (structures.length === 1) {
-        return structures[0];
-    }
+//     if (structures.length === 1) {
+//         return structures[0];
+//     }
 
-    throw new Error('Not supported yet');
-}
+//     throw new Error('Not supported yet');
+// }
 
 function fromType(schema) {
     const {
@@ -415,7 +427,13 @@ function fromType(schema) {
     }
 
     if (isNil(type)) {
-        structure = inferSchemas.call(this, schema);
+        structure = this.oneOfType(map(TYPE_PROCESSOR, (processor) => {
+            return processor.call(this, schema);
+        }));
+    } else if (isArray(type)) {
+        structure = this.oneOfType(map(type, (typeId) => {
+            return TYPE_PROCESSOR[typeId].call(this, schema);
+        }));
     } else {
         const typeProcessor = TYPE_PROCESSOR[type];
 
@@ -435,7 +453,7 @@ function fromSchema(schema) {
     if (schema === true) {
         return this.any();
     } if (schema === false) {
-        return null;
+        return this.nothing('undefined');
     }
 
     return fromType.call(this, schema);

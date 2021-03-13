@@ -1,128 +1,107 @@
 import isNil from 'lodash/isNil';
 import forEach from 'lodash/forEach';
-import keys from 'lodash/keys';
 import isArray from 'lodash/isArray';
 import isBoolean from 'lodash/isBoolean';
 import isPlainObject from 'lodash/isPlainObject';
 import Structure from './structure';
-import VerificationError from '../verification-error';
 import ValidationResult from '../validation-result';
 
-function validator(runtime, validators) {
+function valueVerifier(value) {
+    if (isNil(value) || isPlainObject(value)) {
+        return new ValidationResult();
+    }
+
+    return new ValidationResult('fatal', 'Must be an object');
+}
+
+function basicObjectVerifier(runtime, value) {
+    return valueVerifier(value);
+}
+
+function regExVerifier(patterns, exact, rest, runtime, value) {
+    const validationResult = valueVerifier(value);
+
     const groupResults = [];
     const childResults = {};
-
-    const propertyIds = keys(validators);
-
-    for (let counter = 0; counter < propertyIds.length; counter += 1) {
-        const propertyId = propertyIds[counter];
-        const childValidator = validators[propertyId];
-
-        const childRuntime = runtime.branch(propertyId);
-
-        const propertyResults = childValidator(childRuntime);
-
-        groupResults.push(propertyResults.getResult());
-
-        childResults[propertyId] = propertyResults;
-    }
-
-    const result = new ValidationResult();
-
-    result.applyResults(groupResults);
-    result.setData(childResults);
-
-    return result;
-}
-
-function valueVerifier(value) {
-    if (isNil(value)) {
-        return null;
-    }
-
-    if (!isPlainObject(value)) {
-        throw new VerificationError('Must be an object');
-    }
-
-    return value;
-}
-
-function basicObjectVerifier(value) {
-    valueVerifier(value);
-}
-
-function regExVerifier(patterns, exact, rest, value) {
-    if (isNil(valueVerifier(value))) {
-        return null;
-    }
-
-    const childValidators = {};
 
     forEach(value, (childValue, childValueId) => {
         const targetPatternItem = patterns.find(
             (patternItem) => childValueId.match(patternItem.pattern),
         );
 
+        const childRuntime = runtime.branch(childValueId);
+        let childValidationResult = null;
+
         if (isNil(targetPatternItem)) {
             if (!isNil(rest)) {
-                VerificationError.try(childValueId, () => {
-                    childValidators[childValueId] = rest.verify(childValue);
-                });
+                childValidationResult = rest.verify(childRuntime, childValue);
             } else if (exact) {
-                throw new VerificationError(`The property ${childValueId} is invalid`);
+                childValidationResult = new ValidationResult('fatal', `The property ${childValueId} is invalid`);
             }
         } else {
-            VerificationError.try(childValueId, () => {
-                childValidators[childValueId] = targetPatternItem.structure.verify(childValue);
-            });
+            childValidationResult = targetPatternItem.structure.verify(childRuntime, childValue);
         }
+
+        groupResults.push(childValidationResult.getResult());
+        childResults[childValueId] = childValidationResult;
     });
 
-    return (runtime) => {
-        return validator(runtime, childValidators);
-    };
+    validationResult.applyResults(groupResults);
+    validationResult.setData(childResults);
+
+    return validationResult;
 }
 
-function shapeVerifier(properties, exact, rest, value) {
+function shapeVerifier(properties, exact, rest, runtime, value) {
+    const validationResult = valueVerifier(value);
+
     let target = value;
 
-    if (isNil(valueVerifier(value))) {
+    if (isNil(value) || validationResult.getValueResult() !== 'pass') {
         target = {};
     }
 
-    const childValidators = {};
+    const groupResults = [];
+    const childResults = {};
 
     let handleExtra = null;
 
     if (rest instanceof Structure) {
-        handleExtra = (childProperty, childPropertyId) => {
-            VerificationError.try(childPropertyId, () => {
-                childValidators[childPropertyId] = rest.verify(childProperty);
-            });
+        handleExtra = (childRuntime, childValue) => {
+            return rest.verify(childRuntime, childValue);
         };
     } else if (exact) {
-        handleExtra = (_, childPropertyId) => {
-            throw new VerificationError(`The property ${childPropertyId} is invalid`);
+        handleExtra = (childRuntime, childValue, childValueId) => {
+            return new ValidationResult('fatal', `The property ${childValueId} is invalid`);
         };
     }
 
     if (!isNil(handleExtra)) {
-        forEach(target, (childProperty, childPropertyId) => {
-            if (isNil(properties[childPropertyId])) {
-                handleExtra(childProperty, childPropertyId);
+        forEach(target, (childValue, childValueId) => {
+            const childRuntime = runtime.branch(childValueId);
+
+            if (isNil(properties[childValueId])) {
+                const childValidationResult = handleExtra(childRuntime, childValue, childValueId);
+
+                groupResults.push(childValidationResult.getResult());
+                childResults[childValueId] = childValidationResult;
             }
         });
     }
 
     forEach(properties, (childStructure, childStructureId) => {
-        VerificationError.try(childStructureId, () => {
-            childValidators[childStructureId] = childStructure.verify(target[childStructureId]);
-        });
+        const childRuntime = runtime.branch(childStructureId);
+
+        const childValidationResult = childStructure.verify(childRuntime, target[childStructureId]);
+
+        groupResults.push(childValidationResult.getResult());
+        childResults[childStructureId] = childValidationResult;
     });
 
-    return (runtime) => {
-        return validator(runtime, childValidators);
-    };
+    validationResult.applyResults(groupResults);
+    validationResult.setData(childResults);
+
+    return validationResult;
 }
 
 export default (structure, options) => {

@@ -1,6 +1,6 @@
 import chai from 'chai';
 import Promise from 'bluebird';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
@@ -19,8 +19,8 @@ const onValidate = (value, aspectResultValue) => buildValidatorMessage(
     aspectResultValue,
 );
 
-xdescribe('object Structure', () => {
-    xdescribe('Simple Structure', () => {
+describe('object Structure', () => {
+    describe('Simple Structure', () => {
         it('Basic Property Fail Verify', () => {
             const structure = Structure.object({
                 testString: Structure.string(),
@@ -30,11 +30,26 @@ xdescribe('object Structure', () => {
                 testString: 42,
             };
 
-            return expect(structure.run(value))
-                .to.be.rejectedWith(VerificationError, 'Must be a string')
-                .then((error) => {
-                    expect(error.path).to.eql(['testString']);
+            return structure.run(value).then((aspectValues) => {
+                expect(aspectValues.toJS()).to.eql({
+                    $r: 'fatal',
+                    $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
+                    $d: {
+                        testString: {
+                            $r: 'fatal',
+                            $a: {},
+                            $v: {
+                                $r: 'fatal',
+                                $m: 'Must be a string',
+                            },
+                        },
+                    },
                 });
+            });
         });
 
         it('Basic Property Aspect', () => {
@@ -50,10 +65,18 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                     },
                 });
@@ -76,11 +99,19 @@ xdescribe('object Structure', () => {
                 expect(ret).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(aspectValue, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -102,11 +133,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(null, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -128,11 +167,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(undefined, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -154,11 +201,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(aspectValue, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -180,11 +235,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(null, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -206,11 +269,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(undefined, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -232,11 +303,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(aspectValue, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -258,11 +337,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(null, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -284,11 +371,19 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {
                                 flagged: buildFlaggedResult(undefined, 'pass', null),
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -296,11 +391,11 @@ xdescribe('object Structure', () => {
             });
         });
 
-        xdescribe('Validation', () => {
+        describe('Validation', () => {
             const runValidationTests = (isFatal) => {
                 const fatalType = isFatal ? 'fatal' : 'non-fatal';
 
-                xdescribe(`Result is ${fatalType}`, () => {
+                describe(`Result is ${fatalType}`, () => {
                     it('Null Static Property Aspect', () => {
                         const structure = Structure.object({
                             testString: Structure.string()
@@ -317,11 +412,19 @@ xdescribe('object Structure', () => {
                             expect(result.toJS()).to.eql({
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
                                             flagged: buildFlaggedResult(null, 'pass', null),
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -345,11 +448,19 @@ xdescribe('object Structure', () => {
                             expect(result.toJS()).to.eql({
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
                                             flagged: buildFlaggedResult(undefined, 'pass', null),
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -373,6 +484,10 @@ xdescribe('object Structure', () => {
                             expect(result.toJS()).to.eql({
                                 $r: fatalType,
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     testString: {
                                         $r: fatalType,
@@ -385,6 +500,10 @@ xdescribe('object Structure', () => {
                                                     aspectValue,
                                                 ),
                                             ),
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -408,11 +527,19 @@ xdescribe('object Structure', () => {
                             expect(result.toJS()).to.eql({
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
                                             flagged: buildFlaggedResult(null, 'pass', null),
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -436,11 +563,19 @@ xdescribe('object Structure', () => {
                             expect(result.toJS()).to.eql({
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
                                         $a: {
                                             flagged: buildFlaggedResult(undefined, 'pass', null),
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -464,6 +599,10 @@ xdescribe('object Structure', () => {
                             expect(result.toJS()).to.eql({
                                 $r: fatalType,
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     testString: {
                                         $r: fatalType,
@@ -477,6 +616,10 @@ xdescribe('object Structure', () => {
                                                 ),
                                             ),
                                         },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
+                                        },
                                     },
                                 },
                             });
@@ -489,8 +632,8 @@ xdescribe('object Structure', () => {
             runValidationTests(false);
         });
 
-        xdescribe('With Requirements', () => {
-            xdescribe('Internal Requirements', () => {
+        describe('With Requirements', () => {
+            describe('Internal Requirements', () => {
                 it('Static Property Aspect flagged => requiredAttA', () => {
                     const structure = Structure.object({
                         testString: Structure.string()
@@ -516,12 +659,20 @@ xdescribe('object Structure', () => {
                         expect(result.toJS()).to.eql({
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {
                                         flagged: buildFlaggedResult(aspectValue, 'pass', null),
                                         requiredAttA: buildFlaggedResult(42, 'pass', null),
+                                    },
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
                                     },
                                 },
                             },
@@ -557,6 +708,10 @@ xdescribe('object Structure', () => {
                         expect(result.toJS()).to.eql({
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
@@ -565,6 +720,10 @@ xdescribe('object Structure', () => {
                                         requiredAttA: buildFlaggedResult(42, 'pass', null),
                                         requiredAttB: buildFlaggedResult('foo', 'pass', null),
                                     },
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                             },
                         });
@@ -572,7 +731,7 @@ xdescribe('object Structure', () => {
                 });
             });
 
-            xdescribe('Child Requirements', () => {
+            describe('Child Requirements', () => {
                 it('Static Property Aspect flagged => requiredAttA', () => {
                     const structure = Structure.object({
                         testString: Structure.string()
@@ -599,11 +758,19 @@ xdescribe('object Structure', () => {
                             $a: {
                                 flagged: buildFlaggedResult(aspectValue, 'pass', null),
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {
                                         requiredAttA: buildFlaggedResult(42, 'pass', null),
+                                    },
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
                                     },
                                 },
                             },
@@ -643,17 +810,29 @@ xdescribe('object Structure', () => {
                             $a: {
                                 flagged: buildFlaggedResult(aspectValue, 'pass', null),
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {
                                         requiredAttA: buildFlaggedResult(42, 'pass', null),
                                     },
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testNumber: {
                                     $r: 'pass',
                                     $a: {
                                         requiredAttB: buildFlaggedResult('foo', 'pass', null),
+                                    },
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
                                     },
                                 },
                             },
@@ -664,7 +843,7 @@ xdescribe('object Structure', () => {
         });
     });
 
-    xdescribe('Deep Structure', () => {
+    describe('Deep Structure', () => {
         it('Null object', () => {
             const structure = Structure.object({
                 testString: Structure.string(),
@@ -688,38 +867,74 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         testNumber: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         testobject: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testNumber: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testobject: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                     $d: {
                                         testString: {
                                             $r: 'pass',
                                             $a: {},
+                                            $v: {
+                                                $r: 'pass',
+                                                $m: null,
+                                            },
                                         },
                                         testNumber: {
                                             $r: 'pass',
                                             $a: {},
+                                            $v: {
+                                                $r: 'pass',
+                                                $m: null,
+                                            },
                                         },
                                     },
                                 },
@@ -761,38 +976,74 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         testNumber: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         testobject: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testNumber: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testobject: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                     $d: {
                                         testString: {
                                             $r: 'pass',
                                             $a: {},
+                                            $v: {
+                                                $r: 'pass',
+                                                $m: null,
+                                            },
                                         },
                                         testNumber: {
                                             $r: 'pass',
                                             $a: {},
+                                            $v: {
+                                                $r: 'pass',
+                                                $m: null,
+                                            },
                                         },
                                     },
                                 },
@@ -850,6 +1101,10 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'fatal',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         testStringA: {
                             $r: 'pass',
@@ -860,26 +1115,50 @@ xdescribe('object Structure', () => {
                                     message: null,
                                 },
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         testNumber: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         testobjectA: {
                             $r: 'fatal',
                             $a: {},
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testNumber: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                 },
                                 testobjectB: {
                                     $r: 'fatal',
                                     $a: {},
+                                    $v: {
+                                        $r: 'pass',
+                                        $m: null,
+                                    },
                                     $d: {
                                         testStringB: {
                                             $r: 'fatal',
@@ -890,10 +1169,18 @@ xdescribe('object Structure', () => {
                                                     message: 'Failing Message',
                                                 },
                                             },
+                                            $v: {
+                                                $r: 'pass',
+                                                $m: null,
+                                            },
                                         },
                                         testNumber: {
                                             $r: 'pass',
                                             $a: {},
+                                            $v: {
+                                                $r: 'pass',
+                                                $m: null,
+                                            },
                                         },
                                     },
                                 },
@@ -905,7 +1192,7 @@ xdescribe('object Structure', () => {
         });
     });
 
-    xdescribe('Blocking Test', () => {
+    describe('Blocking Test', () => {
         const structure = Structure.object({
             firstName: Structure.string()
                 .aspect(Aspect.required())
@@ -942,6 +1229,10 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'fatal',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         firstName: {
                             $r: 'fatal',
@@ -957,6 +1248,10 @@ xdescribe('object Structure', () => {
                                     message: null,
                                 },
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         lastName: {
                             $r: 'fatal',
@@ -971,6 +1266,10 @@ xdescribe('object Structure', () => {
                                     result: 'blocked',
                                     message: null,
                                 },
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -988,6 +1287,10 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'fatal',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         firstName: {
                             $r: 'fatal',
@@ -1003,6 +1306,10 @@ xdescribe('object Structure', () => {
                                     message: null,
                                 },
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         lastName: {
                             $r: 'blocked',
@@ -1017,6 +1324,10 @@ xdescribe('object Structure', () => {
                                     result: 'blocked',
                                     message: null,
                                 },
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -1034,6 +1345,10 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         firstName: {
                             $r: 'pass',
@@ -1049,6 +1364,10 @@ xdescribe('object Structure', () => {
                                     message: null,
                                 },
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         lastName: {
                             $r: 'pass',
@@ -1063,6 +1382,10 @@ xdescribe('object Structure', () => {
                                     result: 'pass',
                                     message: null,
                                 },
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -1080,6 +1403,10 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'fatal',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         firstName: {
                             $r: 'pass',
@@ -1095,6 +1422,10 @@ xdescribe('object Structure', () => {
                                     message: null,
                                 },
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         lastName: {
                             $r: 'fatal',
@@ -1109,6 +1440,10 @@ xdescribe('object Structure', () => {
                                     result: 'fatal',
                                     message: 'Also must be even',
                                 },
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },
@@ -1126,6 +1461,10 @@ xdescribe('object Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $r: 'pass',
+                        $m: null,
+                    },
                     $d: {
                         firstName: {
                             $r: 'pass',
@@ -1141,6 +1480,10 @@ xdescribe('object Structure', () => {
                                     message: null,
                                 },
                             },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
+                            },
                         },
                         lastName: {
                             $r: 'pass',
@@ -1155,6 +1498,10 @@ xdescribe('object Structure', () => {
                                     result: 'pass',
                                     message: null,
                                 },
+                            },
+                            $v: {
+                                $r: 'pass',
+                                $m: null,
                             },
                         },
                     },

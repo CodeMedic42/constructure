@@ -4,7 +4,7 @@ import {
 } from 'lodash';
 import fs from 'fs';
 import path from 'path';
-import Structure, { VerificationError } from '../../src';
+import Structure from '../../src';
 
 const { expect } = chai;
 
@@ -63,8 +63,6 @@ export default function buildTests(testsPath, enabledTests) {
 
                                 return structure.run(test.data).then((validationResult) => {
                                     expect(validationResult.getResult()).to.equal('fatal');
-                                }).catch((error) => {
-                                    expect(error).to.be.instanceOf(VerificationError);
                                 });
                             });
                         }

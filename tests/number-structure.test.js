@@ -1,9 +1,9 @@
 import chai from 'chai';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-xdescribe('Number Structure', () => {
+describe('Number Structure', () => {
     it('Null Value', () => {
         const structure = Structure.number();
 
@@ -11,6 +11,10 @@ xdescribe('Number Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -22,6 +26,10 @@ xdescribe('Number Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -33,6 +41,10 @@ xdescribe('Number Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -40,41 +52,61 @@ xdescribe('Number Structure', () => {
     it('String', () => {
         const structure = Structure.number();
 
-        return expect(structure.run('test'))
-            .to.be.rejectedWith(VerificationError, 'Must be a number')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a real number',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Boolean', () => {
         const structure = Structure.number();
 
-        return expect(structure.run(true))
-            .to.be.rejectedWith(VerificationError, 'Must be a number')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run(true).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a real number',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Object', () => {
         const structure = Structure.number();
 
-        return expect(structure.run({}))
-            .to.be.rejectedWith(VerificationError, 'Must be a number')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run({}).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a real number',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Array', () => {
         const structure = Structure.number();
 
-        return expect(structure.run([]))
-            .to.be.rejectedWith(VerificationError, 'Must be a number')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run([]).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a real number',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Basic Required Passed', () => {
@@ -90,6 +122,10 @@ xdescribe('Number Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });
@@ -109,6 +145,10 @@ xdescribe('Number Structure', () => {
                         message: 'Required',
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -126,6 +166,10 @@ xdescribe('Number Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });
@@ -145,6 +189,10 @@ xdescribe('Number Structure', () => {
                         message: 'Min',
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -163,6 +211,10 @@ xdescribe('Number Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -180,6 +232,10 @@ xdescribe('Number Structure', () => {
                         result: 'fatal',
                         message: 'Max',
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });

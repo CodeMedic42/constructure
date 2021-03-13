@@ -3,61 +3,31 @@ import forEach from 'lodash/forEach';
 import isArray from 'lodash/isArray';
 import isBoolean from 'lodash/isBoolean';
 import Structure from './structure';
-import VerificationError from '../verification-error';
 import ValidationResult from '../validation-result';
 
-function validator(runtime, validators) {
-    const groupResults = [];
-    const childResults = [];
-
-    for (let counter = 0; counter < validators.length; counter += 1) {
-        const childValidator = validators[counter];
-
-        const childRuntime = runtime.branch(counter);
-
-        const propertyResults = childValidator(childRuntime);
-
-        groupResults.push(propertyResults.getResult());
-
-        childResults[counter] = propertyResults;
-    }
-
-    const result = new ValidationResult();
-
-    result.applyResults(groupResults);
-    result.setData(childResults);
-
-    return result;
-}
-
 function valueVerifier(value) {
-    if (isNil(value)) {
-        return null;
+    if (isNil(value) || isArray(value)) {
+        return new ValidationResult();
     }
 
-    if (!isArray(value)) {
-        throw new VerificationError('Must be an array');
-    }
-
-    return value;
+    return new ValidationResult('fatal', 'Must be an array');
 }
 
-function basicArrayVerifier(value) {
-    valueVerifier(value);
+function basicArrayVerifier(runtime, value) {
+    return valueVerifier(value);
 }
 
-function shapeVerifier(structure, exact, rest, value) {
+function shapeVerifier(structure, exact, rest, runtime, value) {
+    const validationResult = valueVerifier(value);
+
     let target = value;
 
-    if (isNil(valueVerifier(value))) {
+    if (isNil(value) || validationResult.getValueResult() !== 'pass') {
         target = [];
     }
 
-    if (target.length <= 0) {
-        return null;
-    }
-
-    const childValidators = [];
+    const groupResults = [];
+    const childResults = [];
     let itemCounter = 0;
 
     forEach(structure, (childStructure) => {
@@ -69,26 +39,44 @@ function shapeVerifier(structure, exact, rest, value) {
         }
 
         for (let instanceCounter = 0; instanceCounter < instanceLength; instanceCounter += 1) {
-            // eslint-disable-next-line no-loop-func
-            VerificationError.try(itemCounter, () => {
-                childValidators[itemCounter] = targetStructure.verify(target[itemCounter]);
-            });
+            const childRuntime = runtime.branch(itemCounter);
+
+            const childValidationResult = targetStructure.verify(childRuntime, target[itemCounter]);
+
+            groupResults.push(childValidationResult.getResult());
+            childResults[itemCounter] = childValidationResult;
 
             itemCounter += 1;
         }
     });
 
+    let handleExtra = null;
+
     if (rest instanceof Structure) {
-        for (itemCounter; itemCounter < target.length; itemCounter += 1) {
-            childValidators[itemCounter] = rest.verify(target[itemCounter]);
-        }
+        handleExtra = (childRuntime, childItem) => {
+            return rest.verify(childRuntime, childItem);
+        };
     } else if (exact && itemCounter < target.length) {
-        throw new VerificationError(`Array cannot have more than ${itemCounter} item(s)`);
+        handleExtra = (childRuntime, childItem, childIndex) => {
+            return new ValidationResult('fatal', `Item number ${childIndex} should not exist`);
+        };
     }
 
-    return (runtime) => {
-        return validator(runtime, childValidators);
-    };
+    if (!isNil(handleExtra)) {
+        for (itemCounter; itemCounter < target.length; itemCounter += 1) {
+            const childRuntime = runtime.branch(itemCounter);
+
+            const childValidationResult = handleExtra(childRuntime, target[itemCounter]);
+
+            groupResults.push(childValidationResult.getResult());
+            childResults[itemCounter] = childValidationResult;
+        }
+    }
+
+    validationResult.applyResults(groupResults);
+    validationResult.setData(childResults);
+
+    return validationResult;
 }
 
 export default (structure, options) => {

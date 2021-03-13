@@ -1,26 +1,26 @@
 import isNil from 'lodash/isNil';
 import { isNull } from 'lodash';
 import Structure from './structure';
-import VerificationError from '../verification-error';
+import ValidationResult from '../validation-result';
 
-function verifier(exactType, value) {
+function verifier(exactType, runtime, value) {
     let message = exactType;
 
     if (exactType === 'null') {
         if (isNull(exactType)) {
-            return null;
+            return new ValidationResult();
         }
     } else if (exactType === 'undefined') {
         if (isNull(exactType)) {
-            return null;
+            return new ValidationResult();
         }
     } else if (isNil(value)) {
-        return null;
+        return new ValidationResult();
     } else {
         message = 'nil';
     }
 
-    throw new VerificationError(`Must be ${message}`);
+    return new ValidationResult('fatal', `Must be ${message}`);
 }
 
-export default (exactType) => new Structure(verifier.bind(exactType));
+export default (exactType) => new Structure(verifier.bind(null, exactType));

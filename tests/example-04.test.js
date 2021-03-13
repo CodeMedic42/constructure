@@ -4,15 +4,23 @@ import example04Logic from '../examples/example-04/src/logic';
 
 const { expect } = chai;
 
-xdescribe('Example 04', () => {
+describe('Example 04', () => {
     it('Regular', () => {
         return example04Logic(Structure, Aspect).then((result) => {
             expect(result.toJS()).to.eql({
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $r: 'fatal',
                 $d: {
                     demographics: {
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $r: 'fatal',
                         $d: {
                             firstName: {
@@ -34,6 +42,10 @@ xdescribe('Example 04', () => {
                                     },
 
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $r: 'pass',
                             },
                             middleName: {
@@ -48,6 +60,10 @@ xdescribe('Example 04', () => {
                                         result: 'pass',
                                         message: null,
                                     },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
                                 },
                                 $r: 'pass',
                             },
@@ -70,10 +86,18 @@ xdescribe('Example 04', () => {
                                     },
 
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $r: 'fatal',
                             },
                             dateOfBirth: {
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $r: 'pass',
                             },
                             email: {
@@ -84,11 +108,19 @@ xdescribe('Example 04', () => {
                                         value: true,
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $r: 'pass',
                             },
                             address: {
                                 $r: 'fatal',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     street1: {
                                         $a: {
@@ -102,6 +134,10 @@ xdescribe('Example 04', () => {
                                                 result: 'pass',
                                                 message: null,
                                             },
+                                        },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
                                         },
                                         $r: 'pass',
                                     },
@@ -118,6 +154,10 @@ xdescribe('Example 04', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $r: 'pass',
                                     },
                                     city: {
@@ -133,6 +173,10 @@ xdescribe('Example 04', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $r: 'pass',
                                     },
                                     state: {
@@ -142,6 +186,10 @@ xdescribe('Example 04', () => {
                                                 result: 'pass',
                                                 value: 2,
                                             },
+                                        },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
                                         },
                                         $r: 'pass',
                                     },
@@ -154,11 +202,19 @@ xdescribe('Example 04', () => {
                                                 value: /^[0-9]{5}(?:-[0-9]{4})?$/,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                     },
                                 },
                             },
                             phones: {
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $r: 'fatal',
                                 $d: {
                                     cell: {
@@ -168,6 +224,10 @@ xdescribe('Example 04', () => {
                                                 result: 'pass',
                                                 value: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
                                             },
+                                        },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
                                         },
                                         $r: 'pass',
                                     },
@@ -179,6 +239,10 @@ xdescribe('Example 04', () => {
                                                 value: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $r: 'fatal',
                                     },
                                 },
@@ -187,10 +251,18 @@ xdescribe('Example 04', () => {
                     },
                     relations: {
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $r: 'fatal',
                         $d: [
                             {
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $r: 'fatal',
                                 $d: {
                                     relationship: {
@@ -200,6 +272,10 @@ xdescribe('Example 04', () => {
                                                 result: 'pass',
                                                 message: null,
                                             },
+                                        },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
                                         },
                                         $r: 'pass',
                                     },
@@ -211,10 +287,18 @@ xdescribe('Example 04', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $r: 'fatal',
                                         $d: {
                                             demographics: {
                                                 $a: {},
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
+                                                },
                                                 $r: 'fatal',
                                                 $d: {
                                                     firstName: {
@@ -235,6 +319,10 @@ xdescribe('Example 04', () => {
                                                                 message: null,
                                                             },
                                                         },
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $r: 'pass',
                                                     },
                                                     middleName: {
@@ -249,6 +337,10 @@ xdescribe('Example 04', () => {
                                                                 result: 'pass',
                                                                 message: null,
                                                             },
+                                                        },
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
                                                         },
                                                         $r: 'pass',
                                                     },
@@ -270,10 +362,18 @@ xdescribe('Example 04', () => {
                                                                 message: 'Min Length',
                                                             },
                                                         },
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $r: 'fatal',
                                                     },
                                                     dateOfBirth: {
                                                         $a: {},
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $r: 'pass',
                                                     },
                                                     email: {
@@ -284,10 +384,18 @@ xdescribe('Example 04', () => {
                                                                 value: true,
                                                             },
                                                         },
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $r: 'pass',
                                                     },
                                                     address: {
                                                         $a: {},
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $r: 'pass',
                                                         $d: {
                                                             street1: {
@@ -302,6 +410,10 @@ xdescribe('Example 04', () => {
                                                                         result: 'pass',
                                                                         value: 1,
                                                                     },
+                                                                },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
                                                                 },
                                                                 $r: 'pass',
                                                             },
@@ -318,6 +430,10 @@ xdescribe('Example 04', () => {
                                                                         value: 1,
                                                                     },
                                                                 },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
+                                                                },
                                                                 $r: 'pass',
                                                             },
                                                             city: {
@@ -333,6 +449,10 @@ xdescribe('Example 04', () => {
                                                                         value: 1,
                                                                     },
                                                                 },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
+                                                                },
                                                                 $r: 'pass',
                                                             },
                                                             state: {
@@ -342,6 +462,10 @@ xdescribe('Example 04', () => {
                                                                         result: 'pass',
                                                                         value: 2,
                                                                     },
+                                                                },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
                                                                 },
                                                                 $r: 'pass',
                                                             },
@@ -353,12 +477,20 @@ xdescribe('Example 04', () => {
                                                                         value: /^[0-9]{5}(?:-[0-9]{4})?$/,
                                                                     },
                                                                 },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
+                                                                },
                                                                 $r: 'pass',
                                                             },
                                                         },
                                                     },
                                                     phones: {
                                                         $a: {},
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $d: {},
                                                         $r: 'pass',
                                                     },
@@ -366,7 +498,12 @@ xdescribe('Example 04', () => {
                                             },
                                             relations: {
                                                 $a: {},
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
+                                                },
                                                 $r: 'pass',
+                                                $d: [],
                                             },
                                         },
                                     },
@@ -384,10 +521,18 @@ xdescribe('Example 04', () => {
             expect(result.toJS(true)).to.eql({
                 '': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 demographics: {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'demographics.firstName': {
@@ -408,6 +553,10 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'demographics.middleName': {
@@ -422,6 +571,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: 1,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -443,10 +596,18 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'demographics.dateOfBirth': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'demographics.email': {
@@ -457,10 +618,18 @@ xdescribe('Example 04', () => {
                             value: true,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'demographics.address': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'demographics.address.street1': {
@@ -475,6 +644,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: 1,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -491,6 +664,10 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'demographics.address.city': {
@@ -506,6 +683,10 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'demographics.address.state': {
@@ -515,6 +696,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: 2,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -526,10 +711,18 @@ xdescribe('Example 04', () => {
                             value: /^[0-9]{5}(?:-[0-9]{4})?$/,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'demographics.phones': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'demographics.phones.cell': {
@@ -539,6 +732,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -550,14 +747,26 @@ xdescribe('Example 04', () => {
                             value: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 relations: {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'relations.0': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'relations.0.relationship': {
@@ -567,6 +776,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             message: null,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -578,10 +791,18 @@ xdescribe('Example 04', () => {
                             message: null,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'relations.0.relation.demographics': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'relations.0.relation.demographics.firstName': {
@@ -602,6 +823,10 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.middleName': {
@@ -616,6 +841,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: 1,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -637,10 +866,18 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'fatal',
                 },
                 'relations.0.relation.demographics.dateOfBirth': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.email': {
@@ -651,10 +888,18 @@ xdescribe('Example 04', () => {
                             value: true,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.address': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.address.street1': {
@@ -669,6 +914,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: 1,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -685,6 +934,10 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.address.city': {
@@ -700,6 +953,10 @@ xdescribe('Example 04', () => {
                             value: 1,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.address.state': {
@@ -709,6 +966,10 @@ xdescribe('Example 04', () => {
                             result: 'pass',
                             value: 2,
                         },
+                    },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
                     },
                     $r: 'pass',
                 },
@@ -720,14 +981,26 @@ xdescribe('Example 04', () => {
                             value: /^[0-9]{5}(?:-[0-9]{4})?$/,
                         },
                     },
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.demographics.phones': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
                 'relations.0.relation.relations': {
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $r: 'pass',
                 },
             });

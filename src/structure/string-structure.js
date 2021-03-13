@@ -1,14 +1,14 @@
 import isNil from 'lodash/isNil';
 import isString from 'lodash/isString';
 import Structure from './structure';
-import VerificationError from '../verification-error';
+import ValidationResult from '../validation-result';
 
-function verifier(value) {
+function verifier(_, value) {
     if (isNil(value) || isString(value)) {
-        return null;
+        return new ValidationResult();
     }
 
-    throw new VerificationError('Must be a string');
+    return new ValidationResult('fatal', 'Must be a string');
 }
 
 export default () => new Structure(verifier);

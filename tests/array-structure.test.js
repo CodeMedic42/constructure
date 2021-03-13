@@ -1,9 +1,9 @@
 import chai from 'chai';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-xdescribe('Array Structure', () => {
+describe('Array Structure', () => {
     it('Null Value', () => {
         const structure = Structure.array();
 
@@ -11,6 +11,10 @@ xdescribe('Array Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -22,6 +26,10 @@ xdescribe('Array Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -33,6 +41,10 @@ xdescribe('Array Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -40,41 +52,61 @@ xdescribe('Array Structure', () => {
     it('Number Value', () => {
         const structure = Structure.array();
 
-        return expect(structure.run(42))
-            .to.be.rejectedWith(VerificationError, 'Must be an array')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run(42).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be an array',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('String Value', () => {
         const structure = Structure.array();
 
-        return expect(structure.run('test'))
-            .to.be.rejectedWith(VerificationError, 'Must be an array')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be an array',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Boolean Value', () => {
         const structure = Structure.array();
 
-        return expect(structure.run(true))
-            .to.be.rejectedWith(VerificationError, 'Must be an array')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run(true).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be an array',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Object Value', () => {
         const structure = Structure.array();
 
-        return expect(structure.run({}))
-            .to.be.rejectedWith(VerificationError, 'Must be an array')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run({}).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be an array',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Basic Required Passed', () => {
@@ -90,6 +122,10 @@ xdescribe('Array Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
                 },
             });
         });
@@ -108,6 +144,10 @@ xdescribe('Array Structure', () => {
                         result: 'fatal',
                         message: 'Required',
                     },
+                },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
                 },
             });
         });
@@ -139,6 +179,10 @@ xdescribe('Array Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
                 $d: {
                     array: {
                         $r: 'pass',
@@ -154,10 +198,18 @@ xdescribe('Array Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: [
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -168,12 +220,20 @@ xdescribe('Array Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
+                                        },
                                     },
                                 },
                             },
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -184,12 +244,20 @@ xdescribe('Array Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
+                                        },
                                     },
                                 },
                             },
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -200,12 +268,20 @@ xdescribe('Array Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
+                                        },
                                     },
                                 },
                             },
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -215,6 +291,10 @@ xdescribe('Array Structure', () => {
                                                 value: true,
                                                 message: null,
                                             },
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -252,6 +332,10 @@ xdescribe('Array Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
                 $d: {
                     array: {
                         $r: 'fatal',
@@ -266,10 +350,18 @@ xdescribe('Array Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $r: 'pass',
+                            $m: null,
+                        },
                         $d: [
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -280,12 +372,20 @@ xdescribe('Array Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
+                                        },
                                     },
                                 },
                             },
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -295,6 +395,10 @@ xdescribe('Array Structure', () => {
                                                 value: true,
                                                 message: null,
                                             },
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },
@@ -302,6 +406,10 @@ xdescribe('Array Structure', () => {
                             {
                                 $r: 'fatal',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'fatal',
@@ -312,12 +420,20 @@ xdescribe('Array Structure', () => {
                                                 message: 'Unique',
                                             },
                                         },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
+                                        },
                                     },
                                 },
                             },
                             {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $r: 'pass',
+                                    $m: null,
+                                },
                                 $d: {
                                     id: {
                                         $r: 'pass',
@@ -327,6 +443,10 @@ xdescribe('Array Structure', () => {
                                                 value: true,
                                                 message: null,
                                             },
+                                        },
+                                        $v: {
+                                            $r: 'pass',
+                                            $m: null,
                                         },
                                     },
                                 },

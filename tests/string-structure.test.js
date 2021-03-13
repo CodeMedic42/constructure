@@ -1,12 +1,12 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-xdescribe('String Structure', () => {
+describe('String Structure', () => {
     it('Null Value', () => {
         const structure = Structure.string();
 
@@ -14,6 +14,10 @@ xdescribe('String Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -25,6 +29,10 @@ xdescribe('String Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -36,6 +44,10 @@ xdescribe('String Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -43,41 +55,61 @@ xdescribe('String Structure', () => {
     it('Number', () => {
         const structure = Structure.string();
 
-        return expect(structure.run(42))
-            .to.be.rejectedWith(VerificationError, 'Must be a string')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run(42).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a string',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Boolean', () => {
         const structure = Structure.string();
 
-        return expect(structure.run(true))
-            .to.be.rejectedWith(VerificationError, 'Must be a string')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run(true).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a string',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Object', () => {
         const structure = Structure.string();
 
-        return expect(structure.run({}))
-            .to.be.rejectedWith(VerificationError, 'Must be a string')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run({}).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a string',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Array', () => {
         const structure = Structure.string();
 
-        return expect(structure.run([]))
-            .to.be.rejectedWith(VerificationError, 'Must be a string')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run([]).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a string',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Basic Required Passed', () => {
@@ -93,6 +125,10 @@ xdescribe('String Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });
@@ -112,6 +148,10 @@ xdescribe('String Structure', () => {
                         message: 'Required',
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -129,6 +169,10 @@ xdescribe('String Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });
@@ -148,6 +192,10 @@ xdescribe('String Structure', () => {
                         message: 'Min Length',
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -166,6 +214,10 @@ xdescribe('String Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -183,6 +235,10 @@ xdescribe('String Structure', () => {
                         result: 'fatal',
                         message: 'Max Length',
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });

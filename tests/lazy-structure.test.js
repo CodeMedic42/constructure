@@ -1,10 +1,10 @@
 import chai from 'chai';
 import isNil from 'lodash/isNil';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-xdescribe('Lazy Structure', () => {
+describe('Lazy Structure', () => {
     const structure = Structure.object({
         testString: Structure.string()
             .aspect(Aspect.required()),
@@ -37,6 +37,10 @@ xdescribe('Lazy Structure', () => {
                         message: 'level A Required',
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -47,10 +51,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'pass',
@@ -60,6 +72,10 @@ xdescribe('Lazy Structure', () => {
                                         result: 'pass',
                                         message: null,
                                     },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
                                 },
                             },
                         },
@@ -85,6 +101,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -95,10 +115,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'pass',
@@ -108,6 +136,10 @@ xdescribe('Lazy Structure', () => {
                                         result: 'pass',
                                         message: null,
                                     },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
                                 },
                             },
                         },
@@ -135,6 +167,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -145,10 +181,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'pass',
@@ -158,6 +202,10 @@ xdescribe('Lazy Structure', () => {
                                         result: 'pass',
                                         message: null,
                                     },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
                                 },
                             },
                         },
@@ -187,6 +235,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -197,10 +249,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'fatal',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'fatal',
@@ -216,6 +276,10 @@ xdescribe('Lazy Structure', () => {
                                         message: 'level A Required',
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
@@ -226,10 +290,18 @@ xdescribe('Lazy Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                     },
                                     levelA: {
                                         $r: 'pass',
                                         $a: {},
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $d: {
                                             levelB: {
                                                 $r: 'pass',
@@ -239,6 +311,10 @@ xdescribe('Lazy Structure', () => {
                                                         result: 'pass',
                                                         message: null,
                                                     },
+                                                },
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
                                                 },
                                             },
                                         },
@@ -273,6 +349,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -283,10 +363,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'fatal',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'fatal',
@@ -302,6 +390,10 @@ xdescribe('Lazy Structure', () => {
                                         message: 'level A Required',
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
@@ -312,10 +404,18 @@ xdescribe('Lazy Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                     },
                                     levelA: {
                                         $r: 'pass',
                                         $a: {},
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $d: {
                                             levelB: {
                                                 $r: 'pass',
@@ -325,6 +425,10 @@ xdescribe('Lazy Structure', () => {
                                                         result: 'pass',
                                                         message: null,
                                                     },
+                                                },
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
                                                 },
                                             },
                                         },
@@ -359,6 +463,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -369,10 +477,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'pass',
@@ -388,6 +504,10 @@ xdescribe('Lazy Structure', () => {
                                         message: null,
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
@@ -398,10 +518,18 @@ xdescribe('Lazy Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                     },
                                     levelA: {
                                         $r: 'pass',
                                         $a: {},
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $d: {
                                             levelB: {
                                                 $r: 'pass',
@@ -411,6 +539,10 @@ xdescribe('Lazy Structure', () => {
                                                         result: 'pass',
                                                         message: null,
                                                     },
+                                                },
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
                                                 },
                                             },
                                         },
@@ -447,6 +579,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -457,10 +593,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'pass',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'pass',
@@ -476,6 +620,10 @@ xdescribe('Lazy Structure', () => {
                                         message: null,
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
@@ -486,10 +634,18 @@ xdescribe('Lazy Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                     },
                                     levelA: {
                                         $r: 'pass',
                                         $a: {},
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $d: {
                                             levelB: {
                                                 $r: 'pass',
@@ -499,6 +655,10 @@ xdescribe('Lazy Structure', () => {
                                                         result: 'pass',
                                                         message: null,
                                                     },
+                                                },
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
                                                 },
                                             },
                                         },
@@ -535,6 +695,10 @@ xdescribe('Lazy Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
                 $d: {
                     testString: {
                         $r: 'pass',
@@ -545,10 +709,18 @@ xdescribe('Lazy Structure', () => {
                                 message: null,
                             },
                         },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                     },
                     levelA: {
                         $r: 'fatal',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             levelB: {
                                 $r: 'fatal',
@@ -564,6 +736,10 @@ xdescribe('Lazy Structure', () => {
                                         message: null,
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'pass',
@@ -574,10 +750,18 @@ xdescribe('Lazy Structure', () => {
                                                 message: null,
                                             },
                                         },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                     },
                                     levelA: {
                                         $r: 'fatal',
                                         $a: {},
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
                                         $d: {
                                             levelB: {
                                                 $r: 'fatal',
@@ -593,6 +777,10 @@ xdescribe('Lazy Structure', () => {
                                                         message: 'level A Required',
                                                     },
                                                 },
+                                                $v: {
+                                                    $m: null,
+                                                    $r: 'pass',
+                                                },
                                                 $d: {
                                                     testString: {
                                                         $r: 'fatal',
@@ -603,10 +791,18 @@ xdescribe('Lazy Structure', () => {
                                                                 message: 'Required',
                                                             },
                                                         },
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                     },
                                                     levelA: {
                                                         $r: 'pass',
                                                         $a: {},
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
                                                         $d: {
                                                             levelB: {
                                                                 $r: 'pass',
@@ -616,6 +812,10 @@ xdescribe('Lazy Structure', () => {
                                                                         result: 'pass',
                                                                         message: null,
                                                                     },
+                                                                },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
                                                                 },
                                                             },
                                                         },
@@ -646,10 +846,151 @@ xdescribe('Lazy Structure', () => {
             },
         };
 
-        return expect(structure.run(value))
-            .to.be.rejectedWith(VerificationError, 'Must be an object')
-            .then((error) => {
-                expect(error.path).to.eql(['levelA', 'levelB', 'levelA', 'levelB']);
+        return structure.run(value).then((result) => {
+            expect(result.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {
+                    aspC: {
+                        value: 42,
+                        result: 'pass',
+                        message: null,
+                    },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
+                $d: {
+                    testString: {
+                        $r: 'pass',
+                        $a: {
+                            required: {
+                                value: true,
+                                result: 'pass',
+                                message: null,
+                            },
+                        },
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
+                    },
+                    levelA: {
+                        $r: 'fatal',
+                        $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
+                        $d: {
+                            levelB: {
+                                $r: 'fatal',
+                                $a: {
+                                    aspB: {
+                                        value: 'test',
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                    aspC: {
+                                        value: 42,
+                                        result: 'pass',
+                                        message: null,
+                                    },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
+                                $d: {
+                                    testString: {
+                                        $r: 'pass',
+                                        $a: {
+                                            required: {
+                                                value: true,
+                                                result: 'pass',
+                                                message: null,
+                                            },
+                                        },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
+                                    },
+                                    levelA: {
+                                        $r: 'fatal',
+                                        $a: {},
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
+                                        },
+                                        $d: {
+                                            levelB: {
+                                                $r: 'fatal',
+                                                $a: {
+                                                    aspB: {
+                                                        value: null,
+                                                        result: 'blocked',
+                                                        message: null,
+                                                    },
+                                                    aspC: {
+                                                        value: null,
+                                                        result: 'blocked',
+                                                        message: null,
+                                                    },
+                                                },
+                                                $v: {
+                                                    $m: 'Must be an object',
+                                                    $r: 'fatal',
+                                                },
+                                                $d: {
+                                                    testString: {
+                                                        $r: 'fatal',
+                                                        $a: {
+                                                            required: {
+                                                                value: true,
+                                                                result: 'fatal',
+                                                                message: 'Required',
+                                                            },
+                                                        },
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
+                                                    },
+                                                    levelA: {
+                                                        $r: 'pass',
+                                                        $a: {},
+                                                        $v: {
+                                                            $m: null,
+                                                            $r: 'pass',
+                                                        },
+                                                        $d: {
+                                                            levelB: {
+                                                                $r: 'pass',
+                                                                $a: {
+                                                                    aspB: {
+                                                                        value: 'test',
+                                                                        result: 'pass',
+                                                                        message: null,
+                                                                    },
+                                                                },
+                                                                $v: {
+                                                                    $m: null,
+                                                                    $r: 'pass',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             });
+        });
     });
 });

@@ -3,6 +3,7 @@ import isNil from 'lodash/isNil';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import slice from 'lodash/slice';
+import mapValues from 'lodash/mapValues';
 import isString from 'lodash/isString';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
@@ -176,8 +177,19 @@ function runValidator(value, aspectValue, validator, fatal, requirements) {
         });
 }
 
-function processAspects(runtime, aspects = {}) {
+function processAspects(runtime, aspects = {}, typeFailure) {
     const aspectPromises = {};
+
+    if (typeFailure) {
+        return {
+            $r: 'blocked',
+            $a: mapValues(aspects, () => ({
+                value: null,
+                result: 'blocked',
+                message: null,
+            })),
+        };
+    }
 
     const aspectGroupResultPromise = Promise.all(
         map(aspects, (aspect, aspectId) => {

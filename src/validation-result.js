@@ -9,6 +9,7 @@ import getWorstResult from './common/get-worst-result';
 const FIELDS = {
     aspects: Symbol('aspects'),
     result: Symbol('result'),
+    value: Symbol('value'),
     data: Symbol('data'),
 };
 
@@ -19,6 +20,10 @@ function flattenResult(initialResult) {
         output[path] = {
             $a: cloneDeep(validationResult[FIELDS.aspects]),
             $r: validationResult[FIELDS.result],
+            $v: {
+                $r: validationResult[FIELDS.value].result,
+                $m: validationResult[FIELDS.value].message,
+            },
         };
 
         const data = validationResult[FIELDS.data];
@@ -36,10 +41,14 @@ function flattenResult(initialResult) {
 }
 
 class ValidationResult {
-    constructor() {
+    constructor(result = 'pass', message = null) {
         this[FIELDS.aspects] = {};
-        this[FIELDS.result] = 'pass';
+        this[FIELDS.result] = result;
         this[FIELDS.data] = null;
+        this[FIELDS.value] = {
+            result,
+            message,
+        };
     }
 
     applyResults(pendingResults) {
@@ -85,6 +94,14 @@ class ValidationResult {
         return this[FIELDS.result];
     }
 
+    getValueResult() {
+        return this[FIELDS.value].result;
+    }
+
+    getValueMessage() {
+        return this[FIELDS.value].message;
+    }
+
     getData() {
         return this[FIELDS.data];
     }
@@ -97,7 +114,15 @@ class ValidationResult {
         const jsObj = {
             $a: cloneDeep(this[FIELDS.aspects]),
             $r: this[FIELDS.result],
+            $v: {
+                $r: this[FIELDS.value].result,
+                $m: this[FIELDS.value].message,
+            },
         };
+
+        if (!isNil(this[FIELDS.message])) {
+            jsObj.$m = this[FIELDS.message];
+        }
 
         if (!isNil(this[FIELDS.data])) {
             const dataCopy = clone(this[FIELDS.data]);

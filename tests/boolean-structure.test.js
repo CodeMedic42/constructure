@@ -1,9 +1,9 @@
 import chai from 'chai';
-import Structure, { Aspect, VerificationError } from '../src';
+import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-xdescribe('Boolean Structure', () => {
+describe('Boolean Structure', () => {
     it('Null Value', () => {
         const structure = Structure.boolean();
 
@@ -11,6 +11,10 @@ xdescribe('Boolean Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -22,6 +26,10 @@ xdescribe('Boolean Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -33,6 +41,10 @@ xdescribe('Boolean Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -44,6 +56,10 @@ xdescribe('Boolean Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $m: null,
+                    $r: 'pass',
+                },
             });
         });
     });
@@ -51,41 +67,61 @@ xdescribe('Boolean Structure', () => {
     it('Number', () => {
         const structure = Structure.boolean();
 
-        return expect(structure.run(42))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run(42).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a boolean',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('String', () => {
         const structure = Structure.boolean();
 
-        return expect(structure.run('test'))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run('test').then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a boolean',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Object', () => {
         const structure = Structure.boolean();
 
-        return expect(structure.run({}))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run({}).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a boolean',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Array', () => {
         const structure = Structure.boolean();
 
-        return expect(structure.run([]))
-            .to.be.rejectedWith(VerificationError, 'Must be a boolean')
-            .then((error) => {
-                expect(error.path).to.eql([]);
+        return structure.run([]).then((aspectValues) => {
+            expect(aspectValues.toJS()).to.eql({
+                $r: 'fatal',
+                $a: {},
+                $v: {
+                    $m: 'Must be a boolean',
+                    $r: 'fatal',
+                },
             });
+        });
     });
 
     it('Basic Required Passed', () => {
@@ -101,6 +137,10 @@ xdescribe('Boolean Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });
@@ -119,6 +159,10 @@ xdescribe('Boolean Structure', () => {
                         result: 'fatal',
                         message: 'Required',
                     },
+                },
+                $v: {
+                    $m: null,
+                    $r: 'pass',
                 },
             });
         });

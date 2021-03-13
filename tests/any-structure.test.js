@@ -3,7 +3,7 @@ import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-xdescribe('Any Structure', () => {
+describe('Any Structure', () => {
     it('Null Value', () => {
         const structure = Structure.any();
 
@@ -11,6 +11,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -22,6 +26,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -33,6 +41,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -44,6 +56,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -55,6 +71,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -66,6 +86,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -77,6 +101,10 @@ xdescribe('Any Structure', () => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {},
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -94,6 +122,10 @@ xdescribe('Any Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
                 },
             });
         });
@@ -113,6 +145,10 @@ xdescribe('Any Structure', () => {
                         message: 'Required',
                     },
                 },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -130,6 +166,10 @@ xdescribe('Any Structure', () => {
                         result: 'pass',
                         message: null,
                     },
+                },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
                 },
             });
         });
@@ -149,6 +189,10 @@ xdescribe('Any Structure', () => {
                         message: 'Min Length',
                     },
                 },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -167,6 +211,10 @@ xdescribe('Any Structure', () => {
                         message: null,
                     },
                 },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
+                },
             });
         });
     });
@@ -184,6 +232,10 @@ xdescribe('Any Structure', () => {
                         result: 'fatal',
                         message: 'Max Length',
                     },
+                },
+                $v: {
+                    $r: 'pass',
+                    $m: null,
                 },
             });
         });

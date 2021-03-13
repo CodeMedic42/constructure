@@ -3,8 +3,8 @@ import Structure from '../src';
 
 const { expect } = chai;
 
-xdescribe('Shape Structure', () => {
-    xdescribe('Complex Structure', () => {
+describe('Shape Structure', () => {
+    describe('Complex Structure', () => {
         const structure = Structure.object({
             testString: Structure.string(),
             testOneOfType: Structure.oneOfType([
@@ -26,14 +26,26 @@ xdescribe('Shape Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                         testOneOfType: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                     },
                 });
@@ -50,14 +62,26 @@ xdescribe('Shape Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                         testOneOfType: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                     },
                 });
@@ -74,14 +98,26 @@ xdescribe('Shape Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                         testOneOfType: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                     },
                 });
@@ -98,14 +134,26 @@ xdescribe('Shape Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                         testOneOfType: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                     },
                 });
@@ -122,22 +170,42 @@ xdescribe('Shape Structure', () => {
                 expect(result.toJS()).to.eql({
                     $r: 'pass',
                     $a: {},
+                    $v: {
+                        $m: null,
+                        $r: 'pass',
+                    },
                     $d: {
                         testString: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                         },
                         testOneOfType: {
                             $r: 'pass',
                             $a: {},
+                            $v: {
+                                $m: null,
+                                $r: 'pass',
+                            },
                             $d: {
                                 testString: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $m: null,
+                                        $r: 'pass',
+                                    },
                                 },
                                 testNumber: {
                                     $r: 'pass',
                                     $a: {},
+                                    $v: {
+                                        $m: null,
+                                        $r: 'pass',
+                                    },
                                 },
                             },
                         },
@@ -147,8 +215,8 @@ xdescribe('Shape Structure', () => {
         });
     });
 
-    xdescribe('Validation', () => {
-        xdescribe('using $parent', () => {
+    describe('Validation', () => {
+        describe('using $parent', () => {
             const testReqAttAValue = 'A';
             const testReqAttBValue = 'B';
             const testReqAttCValue = 'C';
@@ -262,22 +330,42 @@ xdescribe('Shape Structure', () => {
                     expect(result.toJS()).to.eql({
                         $r: 'fatal',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             testReqValueA: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueB: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueC: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueD: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testOneOfType: {
                                 $r: 'fatal',
@@ -292,6 +380,10 @@ xdescribe('Shape Structure', () => {
                                         result: 'fatal',
                                         message: 'Failing Message',
                                     },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
                                 },
                             },
                         },
@@ -314,22 +406,42 @@ xdescribe('Shape Structure', () => {
                     expect(result.toJS()).to.eql({
                         $r: 'fatal',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             testReqValueA: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueB: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueC: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueD: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testOneOfType: {
                                 $r: 'fatal',
@@ -344,6 +456,10 @@ xdescribe('Shape Structure', () => {
                                         result: 'fatal',
                                         message: 'Failing Message',
                                     },
+                                },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
                                 },
                             },
                         },
@@ -368,22 +484,42 @@ xdescribe('Shape Structure', () => {
                     expect(result.toJS()).to.eql({
                         $r: 'fatal',
                         $a: {},
+                        $v: {
+                            $m: null,
+                            $r: 'pass',
+                        },
                         $d: {
                             testReqValueA: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueB: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueC: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testReqValueD: {
                                 $r: 'pass',
                                 $a: {},
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                             },
                             testOneOfType: {
                                 $r: 'fatal',
@@ -394,6 +530,10 @@ xdescribe('Shape Structure', () => {
                                         message: 'Failing Message',
                                     },
                                 },
+                                $v: {
+                                    $m: null,
+                                    $r: 'pass',
+                                },
                                 $d: {
                                     testString: {
                                         $r: 'fatal',
@@ -403,6 +543,10 @@ xdescribe('Shape Structure', () => {
                                                 result: 'fatal',
                                                 message: 'Failing Message',
                                             },
+                                        },
+                                        $v: {
+                                            $m: null,
+                                            $r: 'pass',
                                         },
                                     },
                                 },

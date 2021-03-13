@@ -13,6 +13,7 @@ import exactLengthAspect from './exact-length-aspect';
 import registerAspect from './register-aspect';
 import uniqueAspect from './unique-aspect';
 import integerAspect from './integer-aspect';
+import enumAspect from './enum-aspect';
 
 const createAspect = (aspectValue) => {
     return new Aspect(aspectValue);
@@ -32,5 +33,6 @@ createAspect.exactLength = exactLengthAspect;
 createAspect.register = registerAspect;
 createAspect.unique = uniqueAspect;
 createAspect.integer = integerAspect;
+createAspect.enum = enumAspect;
 
 export default createAspect;
