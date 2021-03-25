@@ -4,7 +4,7 @@ import example01Logic from '../examples/example-01/src/logic';
 
 const { expect } = chai;
 
-describe('Example 01', () => {
+xdescribe('Example 01', () => {
     it('Regular', () => {
         return example01Logic(Structure).then((result) => {
             expect(result.toJS()).to.eql({
@@ -13,7 +13,7 @@ describe('Example 01', () => {
                     $m: null,
                     $r: 'pass',
                 },
-                $r: 'pass',
+                $r: 'fatal',
                 $d: {
                     demographics: {
                         $a: {},
@@ -21,7 +21,7 @@ describe('Example 01', () => {
                             $m: null,
                             $r: 'pass',
                         },
-                        $r: 'pass',
+                        $r: 'fatal',
                         $d: {
                             firstName: {
                                 $a: {},
@@ -42,10 +42,10 @@ describe('Example 01', () => {
                             lastName: {
                                 $a: {},
                                 $v: {
-                                    $m: null,
-                                    $r: 'pass',
+                                    $m: 'Null is not allowed',
+                                    $r: 'fatal',
                                 },
-                                $r: 'pass',
+                                $r: 'fatal',
                             },
                             dateOfBirth: {
                                 $a: {},
@@ -147,14 +147,14 @@ describe('Example 01', () => {
                             $m: null,
                             $r: 'pass',
                         },
-                        $r: 'pass',
+                        $r: 'fatal',
                         $d: [{
                             $a: {},
                             $v: {
                                 $m: null,
                                 $r: 'pass',
                             },
-                            $r: 'pass',
+                            $r: 'fatal',
                             $d: {
                                 relationship: {
                                     $a: {},
@@ -170,7 +170,7 @@ describe('Example 01', () => {
                                         $m: null,
                                         $r: 'pass',
                                     },
-                                    $r: 'pass',
+                                    $r: 'fatal',
                                     $d: {
                                         demographics: {
                                             $a: {},
@@ -178,7 +178,7 @@ describe('Example 01', () => {
                                                 $m: null,
                                                 $r: 'pass',
                                             },
-                                            $r: 'pass',
+                                            $r: 'fatal',
                                             $d: {
                                                 firstName: {
                                                     $a: {},
@@ -199,18 +199,18 @@ describe('Example 01', () => {
                                                 lastName: {
                                                     $a: {},
                                                     $v: {
-                                                        $m: null,
-                                                        $r: 'pass',
+                                                        $m: 'Null is not allowed',
+                                                        $r: 'fatal',
                                                     },
-                                                    $r: 'pass',
+                                                    $r: 'fatal',
                                                 },
                                                 dateOfBirth: {
                                                     $a: {},
                                                     $v: {
-                                                        $m: null,
-                                                        $r: 'pass',
+                                                        $m: 'Null is not allowed',
+                                                        $r: 'fatal',
                                                     },
-                                                    $r: 'pass',
+                                                    $r: 'fatal',
                                                 },
                                                 email: {
                                                     $a: {},
@@ -227,48 +227,48 @@ describe('Example 01', () => {
                                                         $r: 'pass',
                                                     },
                                                     $r: 'pass',
-                                                    $d: {
-                                                        street1: {
-                                                            $a: {},
-                                                            $v: {
-                                                                $m: null,
-                                                                $r: 'pass',
-                                                            },
-                                                            $r: 'pass',
-                                                        },
-                                                        street2: {
-                                                            $a: {},
-                                                            $v: {
-                                                                $m: null,
-                                                                $r: 'pass',
-                                                            },
-                                                            $r: 'pass',
-                                                        },
-                                                        city: {
-                                                            $a: {},
-                                                            $v: {
-                                                                $m: null,
-                                                                $r: 'pass',
-                                                            },
-                                                            $r: 'pass',
-                                                        },
-                                                        state: {
-                                                            $a: {},
-                                                            $v: {
-                                                                $m: null,
-                                                                $r: 'pass',
-                                                            },
-                                                            $r: 'pass',
-                                                        },
-                                                        postalCode: {
-                                                            $a: {},
-                                                            $v: {
-                                                                $m: null,
-                                                                $r: 'pass',
-                                                            },
-                                                            $r: 'pass',
-                                                        },
-                                                    },
+                                                    // $d: {
+                                                    //     street1: {
+                                                    //         $a: {},
+                                                    //         $v: {
+                                                    //             $m: null,
+                                                    //             $r: 'pass',
+                                                    //         },
+                                                    //         $r: 'pass',
+                                                    //     },
+                                                    //     street2: {
+                                                    //         $a: {},
+                                                    //         $v: {
+                                                    //             $m: null,
+                                                    //             $r: 'pass',
+                                                    //         },
+                                                    //         $r: 'pass',
+                                                    //     },
+                                                    //     city: {
+                                                    //         $a: {},
+                                                    //         $v: {
+                                                    //             $m: null,
+                                                    //             $r: 'pass',
+                                                    //         },
+                                                    //         $r: 'pass',
+                                                    //     },
+                                                    //     state: {
+                                                    //         $a: {},
+                                                    //         $v: {
+                                                    //             $m: null,
+                                                    //             $r: 'pass',
+                                                    //         },
+                                                    //         $r: 'pass',
+                                                    //     },
+                                                    //     postalCode: {
+                                                    //         $a: {},
+                                                    //         $v: {
+                                                    //             $m: null,
+                                                    //             $r: 'pass',
+                                                    //         },
+                                                    //         $r: 'pass',
+                                                    //     },
+                                                    // },
                                                 },
                                                 phones: {
                                                     $a: {},
@@ -276,7 +276,6 @@ describe('Example 01', () => {
                                                         $m: null,
                                                         $r: 'pass',
                                                     },
-                                                    $d: {},
                                                     $r: 'pass',
                                                 },
                                             },
@@ -288,7 +287,6 @@ describe('Example 01', () => {
                                                 $r: 'pass',
                                             },
                                             $r: 'pass',
-                                            $d: [],
                                         },
                                     },
                                 },
@@ -309,7 +307,7 @@ describe('Example 01', () => {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 demographics: {
                     $a: {},
@@ -317,7 +315,7 @@ describe('Example 01', () => {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'demographics.firstName': {
                     $a: {},
@@ -338,10 +336,10 @@ describe('Example 01', () => {
                 'demographics.lastName': {
                     $a: {},
                     $v: {
-                        $m: null,
-                        $r: 'pass',
+                        $m: 'Null is not allowed',
+                        $r: 'fatal',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'demographics.dateOfBirth': {
                     $a: {},
@@ -437,7 +435,7 @@ describe('Example 01', () => {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'relations.0': {
                     $a: {},
@@ -445,7 +443,7 @@ describe('Example 01', () => {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'relations.0.relationship': {
                     $a: {},
@@ -461,7 +459,7 @@ describe('Example 01', () => {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'relations.0.relation.demographics': {
                     $a: {},
@@ -469,7 +467,7 @@ describe('Example 01', () => {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'relations.0.relation.demographics.firstName': {
                     $a: {},
@@ -490,18 +488,18 @@ describe('Example 01', () => {
                 'relations.0.relation.demographics.lastName': {
                     $a: {},
                     $v: {
-                        $m: null,
-                        $r: 'pass',
+                        $m: 'Null is not allowed',
+                        $r: 'fatal',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'relations.0.relation.demographics.dateOfBirth': {
                     $a: {},
                     $v: {
-                        $m: null,
-                        $r: 'pass',
+                        $m: 'Null is not allowed',
+                        $r: 'fatal',
                     },
-                    $r: 'pass',
+                    $r: 'fatal',
                 },
                 'relations.0.relation.demographics.email': {
                     $a: {},
@@ -513,51 +511,11 @@ describe('Example 01', () => {
                 },
                 'relations.0.relation.demographics.address': {
                     $a: {},
+                    $r: 'pass',
                     $v: {
                         $m: null,
                         $r: 'pass',
                     },
-                    $r: 'pass',
-                },
-                'relations.0.relation.demographics.address.street1': {
-                    $a: {},
-                    $v: {
-                        $m: null,
-                        $r: 'pass',
-                    },
-                    $r: 'pass',
-                },
-                'relations.0.relation.demographics.address.street2': {
-                    $a: {},
-                    $v: {
-                        $m: null,
-                        $r: 'pass',
-                    },
-                    $r: 'pass',
-                },
-                'relations.0.relation.demographics.address.city': {
-                    $a: {},
-                    $v: {
-                        $m: null,
-                        $r: 'pass',
-                    },
-                    $r: 'pass',
-                },
-                'relations.0.relation.demographics.address.state': {
-                    $a: {},
-                    $v: {
-                        $m: null,
-                        $r: 'pass',
-                    },
-                    $r: 'pass',
-                },
-                'relations.0.relation.demographics.address.postalCode': {
-                    $a: {},
-                    $v: {
-                        $m: null,
-                        $r: 'pass',
-                    },
-                    $r: 'pass',
                 },
                 'relations.0.relation.demographics.phones': {
                     $a: {},

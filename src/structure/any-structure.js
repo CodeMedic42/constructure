@@ -1,8 +1,24 @@
+import isNil from 'lodash/isNil';
 import Structure from './structure';
-import ValidationResult from '../validation-result';
+import typeVerify from '../common/type-verify';
+import getOption from '../common/get-option';
 
-function verifier() {
-    return new ValidationResult();
+function verifier(options, runtime, value) {
+    const allowNull = getOption('allowNull', options, runtime.getOptions());
+
+    return typeVerify(value, allowNull, () => true);
 }
 
-export default () => new Structure(verifier);
+export default (options) => {
+    let allowNull = null;
+
+    if (!isNil(options)) {
+        ({
+            allowNull = allowNull,
+        } = options);
+    }
+
+    return new Structure(verifier.bind(this, {
+        allowNull,
+    }));
+};

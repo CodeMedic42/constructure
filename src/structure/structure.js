@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import Symbol from 'es6-symbol';
+import shortid from 'shortid';
 import Aspect from '../aspect/aspect';
 import Runtime from '../runtime';
 import processAspects from '../common/process-aspects';
@@ -9,13 +10,12 @@ const specialInternalAccessor = Symbol('structureSecret');
 
 const FIELDS = {
     verifier: Symbol('verifier'),
-    validator: Symbol('validator'),
-    additionalStructure: Symbol('additionalStructure'),
     aspects: Symbol('aspects'),
 };
 
 class Structure {
-    constructor(verifier) {
+    constructor(verifier, id = shortid.generate()) {
+        this[FIELDS.id] = id;
         this[FIELDS.verifier] = verifier;
         this[FIELDS.aspects] = {};
     }
@@ -34,7 +34,7 @@ class Structure {
         );
 
         validationResult.applyResults([results.$r]);
-        validationResult.applyAspects(results.$a);
+        validationResult.applyAspects(this[FIELDS.id], results.$a);
 
         const thisValueGroup = runtime.getThis();
 

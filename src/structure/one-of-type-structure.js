@@ -3,6 +3,8 @@ import forEach from 'lodash/forEach';
 import Structure from './structure';
 import ValidationResult from '../validation-result';
 
+// TODO: Verify what happens to to promises and extra runtime branches from failed tries.
+
 function verifier(structures, runtime, value) {
     let validationResult = null;
 

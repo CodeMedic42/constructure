@@ -27,27 +27,53 @@ function loadTests(testsPath) {
     }, []);
 }
 
-export default function buildTests(testsPath, enabledTests) {
+function getTestEnabled(testContext, testId) {
+    const { enableType, tests } = testContext;
+
+    if (enableType === 'whitelist') {
+        if (tests[testId] === true) {
+            return true;
+        }
+
+        if (isNumber(tests[testId])) {
+            return tests[testId];
+        }
+
+        return false;
+    }
+
+    if (enableType === 'blacklist') {
+        if (tests[testId] === false) {
+            return false;
+        }
+
+        if (isNumber(tests[testId])) {
+            return tests[testId];
+        }
+
+        return true;
+    }
+
+    return true;
+}
+
+export default function buildTests(testsPath, testContext) {
     const testFiles = loadTests(testsPath);
-    let specificTest = null;
-    let testCount = 0;
 
     forEach(testFiles, (testFile) => {
-        if (!isNil(enabledTests)) {
-            if (isNil(enabledTests[testFile.focus])) {
-                return;
-            }
+        let specificTest = null;
 
-            if (enabledTests[testFile.focus] === false) {
-                return;
-            }
+        const enabled = getTestEnabled(testContext, testFile.focus);
 
-            if (isNumber(enabledTests[testFile.focus])) {
-                specificTest = enabledTests[testFile.focus];
-            }
+        if (isNumber(enabled)) {
+            specificTest = enabled;
+        } else if (!enabled) {
+            return;
         }
 
         describe(testFile.focus, () => {
+            let testCount = 0;
+
             forEach(testFile.data, (testData) => {
                 describe(testData.description, () => {
                     forEach(testData.tests, (test) => {
@@ -55,14 +81,8 @@ export default function buildTests(testsPath, enabledTests) {
                             it(`${testCount} - ${test.description}`, () => {
                                 const structure = Structure.fromSchema(testData.schema);
 
-                                if (test.valid) {
-                                    return structure.run(test.data).then((validationResult) => {
-                                        expect(validationResult.getResult()).to.equal('pass');
-                                    });
-                                }
-
                                 return structure.run(test.data).then((validationResult) => {
-                                    expect(validationResult.getResult()).to.equal('fatal');
+                                    expect(validationResult.getResult()).to.equal(test.valid ? 'pass' : 'fatal');
                                 });
                             });
                         }

@@ -232,11 +232,11 @@ function processAspects(runtime, aspects = {}, typeFailure) {
                         );
                     });
                 })
-                .then((aspectResult) => {
-                    runtime.getThis().getResults().setAspect(aspectId, aspectResult);
+                // .then((aspectResult) => {
+                //     runtime.getThis().getResults().setAspect(aspectId, aspectResult);
 
-                    return aspectResult;
-                })
+                //     return aspectResult;
+                // })
                 .catch((error) => {
                     return {
                         value: null,

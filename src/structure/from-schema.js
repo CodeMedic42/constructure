@@ -345,6 +345,12 @@ function fromBooleanType() {
     return this.boolean();
 }
 
+function fromNullType() {
+    return this.nothing({
+        allowNull: true,
+    });
+}
+
 function applyEnum(schema, structure) {
     const {
         enum: enumerations,
@@ -373,6 +379,7 @@ const TYPE_PROCESSOR = {
     boolean: fromBooleanType,
     object: fromObjectType,
     array: fromArrayType,
+    null: fromNullType,
 };
 
 // function inferSchemas(schema) {

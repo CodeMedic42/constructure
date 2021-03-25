@@ -1,26 +1,12 @@
-import isNil from 'lodash/isNil';
-import { isNull } from 'lodash';
+import { isUndefined } from 'lodash';
 import Structure from './structure';
-import ValidationResult from '../validation-result';
+import typeVerify from '../common/type-verify';
+import getOption from '../common/get-option';
 
-function verifier(exactType, runtime, value) {
-    let message = exactType;
+function verifier(options, runtime, value) {
+    const allowNull = getOption('allowNull', options, runtime.getOptions());
 
-    if (exactType === 'null') {
-        if (isNull(exactType)) {
-            return new ValidationResult();
-        }
-    } else if (exactType === 'undefined') {
-        if (isNull(exactType)) {
-            return new ValidationResult();
-        }
-    } else if (isNil(value)) {
-        return new ValidationResult();
-    } else {
-        message = 'nil';
-    }
-
-    return new ValidationResult('fatal', `Must be ${message}`);
+    return typeVerify(value, allowNull, isUndefined, 'Must not exist');
 }
 
 export default (exactType) => new Structure(verifier.bind(null, exactType));

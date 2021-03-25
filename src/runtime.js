@@ -43,6 +43,10 @@ class Runtime {
         return this[FIELDS.absolutePath];
     }
 
+    getOptions() {
+        return this[FIELDS.options];
+    }
+
     branch(segment) {
         const absolutePath = this[FIELDS.absolutePath];
 

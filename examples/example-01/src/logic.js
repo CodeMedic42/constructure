@@ -1,4 +1,4 @@
-export default function getResult(Structure) {
+export default function getResult(Structure, options) {
     const personStructure = Structure.object({
         demographics: Structure.object({
             firstName: Structure.string(),
@@ -49,5 +49,5 @@ export default function getResult(Structure) {
         }],
     };
 
-    return personStructure.run(testValue);
+    return personStructure.run(testValue, options);
 }

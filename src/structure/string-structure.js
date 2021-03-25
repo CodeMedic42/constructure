@@ -1,14 +1,25 @@
 import isNil from 'lodash/isNil';
 import isString from 'lodash/isString';
 import Structure from './structure';
-import ValidationResult from '../validation-result';
+import typeVerify from '../common/type-verify';
+import getOption from '../common/get-option';
 
-function verifier(_, value) {
-    if (isNil(value) || isString(value)) {
-        return new ValidationResult();
-    }
+function verifier(options, runtime, value) {
+    const allowNull = getOption('allowNull', options, runtime.getOptions());
 
-    return new ValidationResult('fatal', 'Must be a string');
+    return typeVerify(value, allowNull, isString, 'Must be a string');
 }
 
-export default () => new Structure(verifier);
+export default (options) => {
+    let allowNull = null;
+
+    if (!isNil(options)) {
+        ({
+            allowNull = allowNull,
+        } = options);
+    }
+
+    return new Structure(verifier.bind(this, {
+        allowNull,
+    }));
+};

@@ -64,13 +64,31 @@ class ValidationResult {
             });
     }
 
-    applyAspects(aspects) {
+    applyAspects(structureId, aspects) {
         forEach(aspects, (aspectResult, aspectId) => {
+            let aspectProm = null;
+
             if (!isNil(this[FIELDS.aspects][aspectId])) {
-                throw new Error(`Aspect ${aspectId} already exists`);
+                aspectProm = this[FIELDS.aspects][aspectId]
+                    .then((aspectPromResult) => {
+                        return aspectResult.then((result) => {
+                            // eslint-disable-next-line no-param-reassign
+                            aspectPromResult[structureId] = result;
+
+                            return aspectPromResult;
+                        });
+                    });
+            } else {
+                aspectProm = aspectResult.then((result) => {
+                    this[FIELDS.aspects][aspectId] = {
+                        [structureId]: result,
+                    };
+
+                    return this[FIELDS.aspects][aspectId];
+                });
             }
 
-            this[FIELDS.aspects][aspectId] = aspectResult;
+            this[FIELDS.aspects][aspectId] = aspectProm;
         });
     }
 

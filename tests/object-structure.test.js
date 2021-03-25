@@ -3,18 +3,18 @@ import Structure, { Aspect } from '../src';
 
 const { expect } = chai;
 
-describe('Object Structure', () => {
-    describe('Value Verification', () => {
+xdescribe('Object Structure', () => {
+    xdescribe('Value Verification', () => {
         it('Null Value', () => {
             const structure = Structure.object();
 
             return structure.run(null).then((aspectValues) => {
                 expect(aspectValues.toJS()).to.eql({
-                    $r: 'pass',
+                    $r: 'fatal',
                     $a: {},
                     $v: {
-                        $r: 'pass',
-                        $m: null,
+                        $r: 'fatal',
+                        $m: 'Null is not allowed',
                     },
                 });
             });
@@ -155,8 +155,8 @@ describe('Object Structure', () => {
         });
     });
 
-    describe('Single Structure Verification', () => {
-        describe('String Structure', () => {
+    xdescribe('Single Structure Verification', () => {
+        xdescribe('String Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.string());
 
@@ -254,7 +254,7 @@ describe('Object Structure', () => {
             });
         });
 
-        describe('Number Structure', () => {
+        xdescribe('Number Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.number());
 
@@ -352,7 +352,7 @@ describe('Object Structure', () => {
             });
         });
 
-        describe('Any Structure', () => {
+        xdescribe('Any Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.any());
 
@@ -403,7 +403,7 @@ describe('Object Structure', () => {
             });
         });
 
-        describe('Array Structure', () => {
+        xdescribe('Array Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object(Structure.array());
 
@@ -502,8 +502,8 @@ describe('Object Structure', () => {
         });
     });
 
-    describe('Shaped Structure Verification', () => {
-        describe('String Structure', () => {
+    xdescribe('Shaped Structure Verification', () => {
+        xdescribe('String Structure', () => {
             it('Pass Verification', () => {
                 const structure = Structure.object({
                     property1: Structure.string(),
