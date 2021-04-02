@@ -12,11 +12,12 @@ import emailPatternAspect from './email-pattern-aspect';
 import exactLengthAspect from './exact-length-aspect';
 import registerAspect from './register-aspect';
 import uniqueAspect from './unique-aspect';
-import integerAspect from './integer-aspect';
+import divisibleAspect from './divisible-aspect';
 import enumAspect from './enum-aspect';
+import typeAspect from './type-aspect';
 
-const createAspect = (aspectValue) => {
-    return new Aspect(aspectValue);
+const createAspect = (id, value, options) => {
+    return new Aspect(id, value, options);
 };
 
 createAspect.required = requiredAspect;
@@ -32,7 +33,8 @@ createAspect.emailPattern = emailPatternAspect;
 createAspect.exactLength = exactLengthAspect;
 createAspect.register = registerAspect;
 createAspect.unique = uniqueAspect;
-createAspect.integer = integerAspect;
+createAspect.divisible = divisibleAspect;
 createAspect.enum = enumAspect;
+createAspect.type = typeAspect;
 
 export default createAspect;

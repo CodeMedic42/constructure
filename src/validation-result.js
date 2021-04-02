@@ -3,14 +3,16 @@ import Symbol from 'es6-symbol';
 import isNil from 'lodash/isNil';
 import cloneDeep from 'lodash/cloneDeep';
 import forEach from 'lodash/forEach';
-import { clone } from 'lodash';
+import { clone, mapValues } from 'lodash';
 import getWorstResult from './common/get-worst-result';
+import Type from './type';
 
 const FIELDS = {
+    observedType: Symbol('observedType'),
     aspects: Symbol('aspects'),
     result: Symbol('result'),
-    value: Symbol('value'),
     data: Symbol('data'),
+    locked: Symbol('locked'),
 };
 
 function flattenResult(initialResult) {
@@ -20,10 +22,6 @@ function flattenResult(initialResult) {
         output[path] = {
             $a: cloneDeep(validationResult[FIELDS.aspects]),
             $r: validationResult[FIELDS.result],
-            $v: {
-                $r: validationResult[FIELDS.value].result,
-                $m: validationResult[FIELDS.value].message,
-            },
         };
 
         const data = validationResult[FIELDS.data];
@@ -41,63 +39,116 @@ function flattenResult(initialResult) {
 }
 
 class ValidationResult {
-    constructor(result = 'pass', message = null) {
+    constructor(observedType) {
+        this[FIELDS.observedType] = observedType;
+        this[FIELDS.locked] = false;
         this[FIELDS.aspects] = {};
-        this[FIELDS.result] = result;
+        this[FIELDS.result] = 'pass';
         this[FIELDS.data] = null;
-        this[FIELDS.value] = {
-            result,
-            message,
-        };
+
+        const accessType = observedType.getAccessType();
+
+        if (accessType === Type.ACCESS_TYPES.KEYED) {
+            this[FIELDS.data] = {};
+        } else if (accessType === Type.ACCESS_TYPES.INDEXED) {
+            this[FIELDS.data] = [];
+        }
     }
 
-    applyResults(pendingResults) {
-        const p = pendingResults.concat(this[FIELDS.result]);
+    mergeAspect(aspectId, aspectResult) {
+        if (this[FIELDS.locked]) {
+            throw new Error('Cannot update a locked Validation');
+        }
 
-        this[FIELDS.result] = Promise.all(p)
-            .then((results) => {
-                const worst = getWorstResult(results);
+        let aspectContainer = this[FIELDS.aspects][aspectId];
 
-                this[FIELDS.result] = worst;
+        if (isNil(aspectContainer)) {
+            aspectContainer = [];
 
-                return worst;
-            });
+            this[FIELDS.aspects][aspectId] = aspectContainer;
+        }
+
+        aspectContainer.push(aspectResult);
     }
 
-    applyAspects(structureId, aspects) {
-        forEach(aspects, (aspectResult, aspectId) => {
-            let aspectProm = null;
+    mergeChild(childId, childValidationResult) {
+        if (this[FIELDS.locked]) {
+            throw new Error('Cannot update a locked Validation');
+        }
 
-            if (!isNil(this[FIELDS.aspects][aspectId])) {
-                aspectProm = this[FIELDS.aspects][aspectId]
-                    .then((aspectPromResult) => {
-                        return aspectResult.then((result) => {
-                            // eslint-disable-next-line no-param-reassign
-                            aspectPromResult[structureId] = result;
+        const existingChild = [FIELDS.data][childId];
 
-                            return aspectPromResult;
-                        });
-                    });
-            } else {
-                aspectProm = aspectResult.then((result) => {
-                    this[FIELDS.aspects][aspectId] = {
-                        [structureId]: result,
-                    };
+        if (!isNil(existingChild)) {
+            existingChild.merge(childValidationResult);
+        } else {
+            this[FIELDS.data][childId] = childValidationResult;
+        }
+    }
 
-                    return this[FIELDS.aspects][aspectId];
-                });
-            }
+    merge(validationResult) {
+        if (this[FIELDS.locked]) {
+            throw new Error('Cannot update a locked Validation');
+        }
 
-            this[FIELDS.aspects][aspectId] = aspectProm;
+        if (validationResult.getObservedType() !== this.getObservedType()) {
+            // This should NEVER happen.
+            throw new Error('Observed Types should match.');
+        }
+
+        forEach(validationResult[FIELDS.aspects], (aspectId, aspectResult) => {
+            this.mergeAspect(aspectId, aspectResult);
+        });
+
+        forEach(validationResult[FIELDS.data], (childResult, childId) => {
+            this.mergeChild(childId, childResult);
         });
     }
 
-    setData(data) {
-        this[FIELDS.data] = data;
+    lock() {
+        this[FIELDS.locked] = true;
+
+        const pendingResults = [];
+
+        this[FIELDS.aspects] = mapValues(this[FIELDS.aspects], (aspectPromises, aspectId) => {
+            forEach(aspectPromises, (aspectPromise) => {
+                const aspectResultPromise = aspectPromise.then((aspectResult) => {
+                    return aspectResult.result;
+                });
+
+                pendingResults.push(aspectResultPromise);
+            });
+
+            return Promise.all(aspectPromises).then((aspectResults) => {
+                let aspectResult = aspectResults;
+
+                if (aspectResult.length === 1) {
+                    [aspectResult] = aspectResult;
+                }
+
+                this[FIELDS.aspects][aspectId] = aspectResult;
+
+                return aspectResult;
+            });
+        });
+
+        forEach(this[FIELDS.data], (childResult) => {
+            pendingResults.push(childResult.getResult());
+        });
+
+        if (pendingResults.length > 0) {
+            this[FIELDS.result] = Promise.all(pendingResults)
+                .then((results) => {
+                    const worst = getWorstResult(results);
+
+                    this[FIELDS.result] = worst;
+
+                    return worst;
+                });
+        }
     }
 
-    setAspect(id, aspect) {
-        this[FIELDS.aspects][id] = aspect;
+    getObservedType() {
+        return this[FIELDS.observedType];
     }
 
     getAspects() {
@@ -112,14 +163,6 @@ class ValidationResult {
         return this[FIELDS.result];
     }
 
-    getValueResult() {
-        return this[FIELDS.value].result;
-    }
-
-    getValueMessage() {
-        return this[FIELDS.value].message;
-    }
-
     getData() {
         return this[FIELDS.data];
     }
@@ -132,15 +175,7 @@ class ValidationResult {
         const jsObj = {
             $a: cloneDeep(this[FIELDS.aspects]),
             $r: this[FIELDS.result],
-            $v: {
-                $r: this[FIELDS.value].result,
-                $m: this[FIELDS.value].message,
-            },
         };
-
-        if (!isNil(this[FIELDS.message])) {
-            jsObj.$m = this[FIELDS.message];
-        }
 
         if (!isNil(this[FIELDS.data])) {
             const dataCopy = clone(this[FIELDS.data]);

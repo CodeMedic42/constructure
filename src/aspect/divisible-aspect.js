@@ -1,10 +1,10 @@
 import isNil from 'lodash/isNil';
 import isFunction from 'lodash/isFunction';
-import isInteger from 'lodash/isInteger';
+import isFinite from 'lodash/isFinite';
 import Aspect from './aspect';
 
-function integerLogic(message, value, aspectValue) {
-    if (aspectValue !== true || isNil(value) || isInteger(value)) {
+function divisibleLogic(message, value, aspectValue) {
+    if (!isFinite(aspectValue) || isNil(value) || value % aspectValue === 0) {
         return null;
     }
 
@@ -17,15 +17,15 @@ function integerLogic(message, value, aspectValue) {
 
 export default (aspectValue = true, options = {}) => {
     const {
-        id = 'integer',
-        message = 'Integer',
+        id = 'divisible',
+        message = 'Divisible',
         isFatal = true,
         require,
     } = options;
 
     return new Aspect(id, aspectValue, {
         validator: {
-            onValidate: integerLogic.bind(null, message),
+            onValidate: divisibleLogic.bind(null, message),
             isFatal,
         },
         require,

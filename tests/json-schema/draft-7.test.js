@@ -6,9 +6,10 @@ describe('JSON Schema Draft 7', () => {
         enableType: 'whitelist',
         tests: {
             additionalItems: false,
-            additionalProperties: 2,
+            additionalProperties: false,
             boolean_schema: false,
             const: false,
+            properties: true,
         },
     };
 

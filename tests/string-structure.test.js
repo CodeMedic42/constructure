@@ -6,157 +6,177 @@ chai.use(chaiAsPromised);
 
 const { expect } = chai;
 
-xdescribe('String Structure', () => {
-    it('Null Value', () => {
-        const structure = Structure.string();
+describe('String Structure', () => {
+    xit('Null Value', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
+
+        // const structure = Structure.string();
 
         return structure.run(null).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
-                $a: {},
-                $v: {
-                    $r: 'fatal',
-                    $m: 'Null is not allowed',
+                $a: {
+                    type: {
+                        result: 'fatal',
+                        value: 'string',
+                        message: 'Must be a string value.',
+                    },
                 },
             });
         });
     });
 
-    it('Empty String', () => {
-        const structure = Structure.string();
+    xit('Empty String', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
 
         return structure.run('').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
-                $a: {},
-                $v: {
-                    $m: null,
-                    $r: 'pass',
+                $a: {
+                    type: {
+                        result: 'pass',
+                        value: 'string',
+                        message: null,
+                    },
                 },
             });
         });
     });
 
-    it('Basic String', () => {
-        const structure = Structure.string();
+    xit('Basic String', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
-                $a: {},
-                $v: {
-                    $m: null,
-                    $r: 'pass',
+                $a: {
+                    type: {
+                        result: 'pass',
+                        value: 'string',
+                        message: null,
+                    },
                 },
             });
         });
     });
 
-    it('Number', () => {
-        const structure = Structure.string();
+    xit('Number', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
 
         return structure.run(42).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
-                $a: {},
-                $v: {
-                    $m: 'Must be a string',
-                    $r: 'fatal',
+                $a: {
+                    type: {
+                        result: 'fatal',
+                        value: 'string',
+                        message: 'Must be a string value.',
+                    },
                 },
             });
         });
     });
 
-    it('Boolean', () => {
-        const structure = Structure.string();
+    xit('Boolean', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
 
         return structure.run(true).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
-                $a: {},
-                $v: {
-                    $m: 'Must be a string',
-                    $r: 'fatal',
+                $a: {
+                    type: {
+                        result: 'fatal',
+                        value: 'string',
+                        message: 'Must be a string value.',
+                    },
                 },
             });
         });
     });
 
-    it('Object', () => {
-        const structure = Structure.string();
+    xit('Object', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
 
         return structure.run({}).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
-                $a: {},
-                $v: {
-                    $m: 'Must be a string',
-                    $r: 'fatal',
+                $a: {
+                    type: {
+                        result: 'fatal',
+                        value: 'string',
+                        message: 'Must be a string value.',
+                    },
                 },
             });
         });
     });
 
-    it('Array', () => {
-        const structure = Structure.string();
+    xit('Array', () => {
+        const structure = Structure().aspect(Aspect.type('string'));
 
         return structure.run([]).then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
-                $a: {},
-                $v: {
-                    $m: 'Must be a string',
-                    $r: 'fatal',
+                $a: {
+                    type: {
+                        result: 'fatal',
+                        value: 'string',
+                        message: 'Must be a string value.',
+                    },
                 },
             });
         });
     });
 
-    it('Basic Required Passed', () => {
-        const structure = Structure.string()
+    xit('Basic Required Passed', () => {
+        const structure = Structure()
+            .aspect(Aspect.type('string'))
             .aspect(Aspect.required());
 
         return structure.run('test').then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'pass',
                 $a: {
+                    type: {
+                        result: 'pass',
+                        value: 'string',
+                        message: null,
+                    },
                     required: {
                         value: true,
                         result: 'pass',
                         message: null,
                     },
                 },
-                $v: {
-                    $m: null,
-                    $r: 'pass',
-                },
             });
         });
     });
 
-    it('Basic Required Fails', () => {
-        const structure = Structure.string()
+    xit('Basic Required Fails', () => {
+        const structure = Structure()
+            .aspect(Aspect.type('string'))
             .aspect(Aspect.required());
 
         return structure.run().then((aspectValues) => {
             expect(aspectValues.toJS()).to.eql({
                 $r: 'fatal',
                 $a: {
+                    type: {
+                        result: 'pass',
+                        value: 'string',
+                        message: null,
+                    },
                     required: {
                         value: true,
                         result: 'fatal',
                         message: 'Required',
                     },
                 },
-                $v: {
-                    $m: null,
-                    $r: 'pass',
-                },
             });
         });
     });
 
-    it('Basic MinLength Passed', () => {
+    xit('Basic MinLength Passed', () => {
         const structure = Structure.string()
             .aspect(Aspect.minLength(3));
 
@@ -178,7 +198,7 @@ xdescribe('String Structure', () => {
         });
     });
 
-    it('Basic MinLength Fails', () => {
+    xit('Basic MinLength Fails', () => {
         const structure = Structure.string()
             .aspect(Aspect.minLength(8));
 
@@ -200,7 +220,7 @@ xdescribe('String Structure', () => {
         });
     });
 
-    it('Basic MaxLength Passed', () => {
+    xit('Basic MaxLength Passed', () => {
         const structure = Structure.string()
             .aspect(Aspect.maxLength(8));
 
@@ -222,7 +242,7 @@ xdescribe('String Structure', () => {
         });
     });
 
-    it('Basic MaxLength Fails', () => {
+    xit('Basic MaxLength Fails', () => {
         const structure = Structure.string()
             .aspect(Aspect.maxLength(3));
 

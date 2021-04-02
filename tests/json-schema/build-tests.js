@@ -4,7 +4,7 @@ import {
 } from 'lodash';
 import fs from 'fs';
 import path from 'path';
-import Structure from '../../src';
+import { fromJSON } from '../../src';
 
 const { expect } = chai;
 
@@ -79,7 +79,7 @@ export default function buildTests(testsPath, testContext) {
                     forEach(testData.tests, (test) => {
                         if (isNil(specificTest) || testCount === specificTest) {
                             it(`${testCount} - ${test.description}`, () => {
-                                const structure = Structure.fromSchema(testData.schema);
+                                const structure = fromJSON(testData.schema);
 
                                 return structure.run(test.data).then((validationResult) => {
                                     expect(validationResult.getResult()).to.equal(test.valid ? 'pass' : 'fatal');

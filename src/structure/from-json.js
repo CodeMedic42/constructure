@@ -1,19 +1,23 @@
 /* eslint-disable no-use-before-define */
 // import { reduce } from 'bluebird';
 import {
-    // forEach,
+    forEach,
     // isBoolean,
     // isEmpty,
+    // findIndex,
+    pullAt,
     isNil,
     mapValues,
     // isArray,
     map,
+    isString,
+    // pull,
     // isNumber,
     // isString,
     // isFinite,
     // isUndefined,
 } from 'lodash';
-// import Aspect from '../aspect';
+import Aspect from '../aspect';
 import Structure from './structure';
 
 function create() {
@@ -424,8 +428,50 @@ function create() {
 // }
 
 function processType(structure, type) {
-    if (!isNil(type)) {
-        structure.aspect('type', type);
+    if (isNil(type)) {
+        return;
+    }
+
+    let typeValue = type;
+    let isInteger = false;
+
+    if (isString(typeValue)) {
+        if (typeValue === 'integer') {
+            isInteger = true;
+
+            typeValue = 'number';
+        }
+    } else {
+        let integerIndex = -1;
+        let numberIndex = -1;
+
+        forEach(typeValue, (typeId, typeIndex) => {
+            if (typeId === 'integer') {
+                integerIndex = typeIndex;
+            } else if (typeId === 'number') {
+                numberIndex = typeIndex;
+            }
+
+            return integerIndex >= 0 && numberIndex >= 0;
+        });
+
+        if (integerIndex >= 0) {
+            isInteger = true;
+
+            if (numberIndex >= 0) {
+                // Here we have both so we just need to remove 'integer'
+                pullAt(typeValue, integerIndex);
+            } else {
+                // Just replace with number.
+                typeValue[integerIndex] = 'number';
+            }
+        }
+    }
+
+    structure.aspect(Aspect.type(typeValue));
+
+    if (isInteger) {
+        structure.aspect(Aspect.divisible(1));
     }
 }
 

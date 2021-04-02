@@ -187,7 +187,6 @@ Object({
 })
 
 const structure = Structure
-    .id('')
     .keyed({
         properties: {
             key: structure
@@ -211,6 +210,7 @@ const structure = Structure
     .allOf([])
     .anyOf([])
     .oneOf([])
+    .if(structure).then().elseIf().then().else().endIf()
     .aspect('type', 'string')
     .aspect('type', () => {}, requires)
     .aspect(Aspect({

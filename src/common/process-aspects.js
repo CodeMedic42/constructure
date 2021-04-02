@@ -3,12 +3,10 @@ import isNil from 'lodash/isNil';
 import map from 'lodash/map';
 import forEach from 'lodash/forEach';
 import slice from 'lodash/slice';
-import mapValues from 'lodash/mapValues';
 import isString from 'lodash/isString';
 import findIndex from 'lodash/findIndex';
 import get from 'lodash/get';
 import isUndefined from 'lodash/isUndefined';
-import getWorstResult from './get-worst-result';
 
 function getter(target, path, defaultValue) {
     if (path.length <= 0) {
@@ -150,7 +148,7 @@ function getRequirement(runtime, path, aspect) {
     throw new Error('Invalid requirement path');
 }
 
-function runValidator(value, aspectValue, validator, fatal, requirements) {
+function runValidator(value, aspectValue, validator, fatal, requirements, observedTypeId) {
     if (isNil(aspectValue) || isNil(validator)) {
         return {
             value: aspectValue,
@@ -159,7 +157,7 @@ function runValidator(value, aspectValue, validator, fatal, requirements) {
         };
     }
 
-    return Promise.resolve(validator(value, aspectValue, requirements))
+    return Promise.resolve(validator(value, aspectValue, requirements, observedTypeId))
         .then((resultMessage) => {
             let result = 'pass';
             let message = null;
@@ -177,89 +175,70 @@ function runValidator(value, aspectValue, validator, fatal, requirements) {
         });
 }
 
-function processAspects(runtime, aspects = {}, typeFailure) {
-    const aspectPromises = {};
+function processAspects(runtime, validationResult, aspects = {}) {
+    const options = runtime.getOptions();
 
-    if (typeFailure) {
-        return {
-            $r: 'blocked',
-            $a: mapValues(aspects, () => ({
-                value: null,
-                result: 'blocked',
-                message: null,
-            })),
-        };
-    }
+    const observedTypeId = validationResult.getObservedType().getId();
 
-    const aspectGroupResultPromise = Promise.all(
-        map(aspects, (aspect, aspectId) => {
-            const aspectResultPromise = Promise.map(
-                aspect.getRequirements(),
-                (requirement) => {
-                    return getRequirement(runtime, requirement.path, requirement.aspect);
-                },
-            )
-                .then((requirements) => {
-                    let blocked = false;
-                    const requirementValues = [];
+    map(aspects, (aspect, aspectId) => {
+        const aspectResultPromise = Promise.map(
+            aspect.getRequirements(),
+            (requirement) => {
+                return getRequirement(runtime, requirement.path, requirement.aspect);
+            },
+        )
+            .then((requirements) => {
+                let blocked = false;
+                const requirementValues = [];
 
-                    forEach(requirements, (requirement) => {
-                        blocked = requirement.result === 'fatal'
+                forEach(requirements, (requirement) => {
+                    blocked = requirement.result === 'fatal'
                 || requirement.result === 'blocked';
 
-                        requirementValues.push(requirement.value);
+                    requirementValues.push(requirement.value);
 
-                        return !blocked;
-                    });
-
-                    if (blocked) {
-                        return {
-                            value: null,
-                            result: 'blocked',
-                            message: null,
-                        };
-                    }
-
-                    return Promise.resolve(
-                        aspect.getValue()(runtime.getThis().getValue(), requirementValues),
-                    ).then((aspectValueResult) => {
-                        return runValidator(
-                            runtime.getThis().getValue(),
-                            aspectValueResult,
-                            aspect.getOnValidate(),
-                            aspect.getFatal(),
-                            requirementValues,
-                        );
-                    });
-                })
-                // .then((aspectResult) => {
-                //     runtime.getThis().getResults().setAspect(aspectId, aspectResult);
-
-                //     return aspectResult;
-                // })
-                .catch((error) => {
-                    return {
-                        value: null,
-                        result: 'fatal',
-                        message: error.message,
-                    };
+                    return !blocked;
                 });
 
-            aspectPromises[aspectId] = aspectResultPromise;
+                if (blocked) {
+                    return {
+                        value: null,
+                        result: 'blocked',
+                        message: null,
+                    };
+                }
 
-            return aspectResultPromise.then((aspectResult) => {
-                return aspectResult.result;
+                return Promise.resolve(
+                    aspect.getValue()(
+                        runtime.getThis().getValue(),
+                        requirementValues,
+                        observedTypeId,
+                    ),
+                ).then((aspectValueResult) => {
+                    return runValidator(
+                        runtime.getThis().getValue(),
+                        aspectValueResult,
+                        aspect.getOnValidate(),
+                        aspect.getFatal(),
+                        requirementValues,
+                        observedTypeId,
+                    );
+                });
+            })
+            .catch((error) => {
+                return {
+                    value: null,
+                    result: 'fatal',
+                    message: error.message,
+                };
             });
-        }),
-    )
-        .then((results) => {
-            return getWorstResult(results);
-        });
 
-    return {
-        $a: aspectPromises,
-        $r: aspectGroupResultPromise,
-    };
+        validationResult.mergeAspect(aspectId, aspectResultPromise);
+
+        return aspectResultPromise.then((aspectResult) => {
+            return aspectResult.result;
+        });
+    });
 }
 
 export default processAspects;

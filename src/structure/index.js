@@ -10,9 +10,10 @@ import lazyStructure from './lazy-structure';
 import dateStructure from './date-structure';
 import nothingStructure from './nothing-structure';
 import fromSchema from './from-schema';
+import fromJSON from './from-json';
 
-const createStructure = (verifier, validator) => {
-    return new Structure(verifier, validator);
+const createStructure = (id) => {
+    return new Structure(id);
 };
 
 createStructure.any = anyStructure;
@@ -28,3 +29,7 @@ createStructure.nothing = nothingStructure;
 createStructure.fromSchema = fromSchema.bind(createStructure);
 
 export default createStructure;
+
+export {
+    fromJSON,
+};
